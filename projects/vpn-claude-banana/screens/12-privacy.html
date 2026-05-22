@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Privacy · ProxyShield</title>
+<link rel="stylesheet" href="../components/shared.css">
+<style>
+  .bg { position: absolute; inset: 0; background: var(--bg); }
+
+  .header-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 4px; margin-bottom: 14px;
+  }
+  .header-row h1 { margin: 0; font-family: var(--font-rounded); font-size: 28px; font-weight: 800; letter-spacing: -0.015em; }
+
+  /* Score card with arc */
+  .score-card {
+    background: linear-gradient(180deg, rgba(34, 230, 195, 0.10) 0%, rgba(13, 22, 40, 0) 100%), var(--bg-elev);
+    border: 1px solid rgba(34, 230, 195, 0.22);
+    border-radius: var(--r-xl);
+    padding: 18px;
+    display: flex; gap: 16px; align-items: center;
+    margin-bottom: 16px;
+  }
+  .score-arc { width: 110px; height: 110px; flex-shrink: 0; position: relative; }
+  .score-arc .num {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .score-arc .num .v {
+    font-family: var(--font-rounded);
+    font-size: 30px; font-weight: 800;
+    color: var(--on-surface);
+    line-height: 1;
+  }
+  .score-arc .num .lbl {
+    font-size: 10px; font-weight: 700;
+    color: var(--on-surface-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .feat {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 14px;
+  }
+  .feat .ico {
+    width: 36px; height: 36px;
+    border-radius: var(--r-md);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .feat .name { font-size: 15px; font-weight: 700; }
+  .feat .desc { font-size: 13px; color: var(--on-surface-muted); margin-top: 2px; }
+  .feat + .feat { border-top: 1px solid rgba(38, 54, 83, 0.55); }
+  .feat-group {
+    background: var(--surface);
+    border: 1px solid rgba(38, 54, 83, 0.55);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+
+  .lock-mini {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(106, 92, 255, 0.18);
+    color: var(--premium);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .sumbox {
+    background: var(--surface);
+    border: 1px solid rgba(38, 54, 83, 0.55);
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+  }
+  .sumbox .v { font-family: var(--font-rounded); font-size: 22px; font-weight: 800; color: var(--on-surface); line-height: 1; margin-bottom: 6px; }
+  .sumbox .lbl { font-size: 12px; color: var(--on-surface-muted); }
+
+  .scroll {
+    overflow-y: auto;
+    height: calc(844px - 47px - 88px);
+    padding-bottom: 24px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="bg"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="#F8FBFF"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="#F8FBFF"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="#F8FBFF"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="#F8FBFF"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 11.5l2-2.4a3 3 0 00-4 0l2 2.4z" fill="#F8FBFF"/><path d="M3.5 6.4a8 8 0 0110 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M0.7 3.6a12 12 0 0115.6 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+      <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="#F8FBFF" stroke-opacity="0.6" fill="none"/><rect x="2" y="2" width="19" height="9" rx="1.5" fill="#F8FBFF"/><rect x="23.5" y="4" width="2" height="5" rx="0.6" fill="#F8FBFF" opacity="0.6"/></svg>
+    </div>
+  </div>
+
+  <div class="screen-body" style="padding-bottom: 0;">
+    <div class="scroll">
+      <div class="header-row">
+        <h1>Privacy</h1>
+        <div class="icon-btn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#F8FBFF" stroke-width="1.6" fill="none"/><circle cx="10" cy="6.5" r="1" fill="#F8FBFF"/><path d="M10 9v5" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-arc">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle cx="55" cy="55" r="48" stroke="#263653" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <circle cx="55" cy="55" r="48"
+                    stroke="url(#g1)" stroke-width="6"
+                    stroke-dasharray="226 301" stroke-dashoffset="0"
+                    stroke-linecap="round" fill="none"
+                    transform="rotate(-90 55 55)"
+                    style="filter: drop-shadow(0 0 6px rgba(34, 230, 195, 0.6))"/>
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="110" y2="110">
+                <stop offset="0" stop-color="#2EF2D0"/>
+                <stop offset="1" stop-color="#0EA5E9"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="num">
+            <div class="v">75</div>
+            <div class="lbl">/100</div>
+          </div>
+        </div>
+        <div style="flex: 1;">
+          <div style="font-family: var(--font-rounded); font-size: 18px; font-weight: 800; color: var(--on-surface); line-height: 1.2;">Strong protection</div>
+          <div style="font-size: 13px; color: var(--on-surface-muted); margin-top: 6px; line-height: 1.45;">Enable auto-protect Wi-Fi and breach check to reach 100.</div>
+        </div>
+      </div>
+
+      <div class="t-cap" style="text-transform: uppercase; letter-spacing: 0.08em; margin: 4px 4px 8px; color: var(--on-surface-subtle); font-weight: 700;">Active protection</div>
+
+      <div class="feat-group" style="margin-bottom: 14px;">
+        <div class="feat">
+          <div class="ico" style="background: rgba(25, 210, 123, 0.16); color: var(--protected);">
+            <svg class="i20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex: 1;">
+            <div class="name">Tracker blocker</div>
+            <div class="desc">17 trackers blocked today</div>
+          </div>
+          <div class="toggle on"></div>
+        </div>
+        <div class="feat">
+          <div class="ico" style="background: rgba(73, 107, 255, 0.18); color: var(--secondary);">
+            <svg class="i20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M5 8h10M5 12h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex: 1;">
+            <div class="name">Ad blocker</div>
+            <div class="desc">312 ads blocked this week</div>
+          </div>
+          <div class="toggle on"></div>
+        </div>
+        <div class="feat">
+          <div class="ico" style="background: rgba(106, 92, 255, 0.16); color: var(--premium);">
+            <svg class="i20" viewBox="0 0 20 20" fill="none"><path d="M3 8l3-3h8l3 3v6c0 2-1 3-3 3H6c-2 0-3-1-3-3z" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M3 8h14" stroke="currentColor" stroke-width="1.6"/></svg>
+          </div>
+          <div style="flex: 1; display:flex; align-items:center; gap:8px;">
+            <div>
+              <div class="name">Auto-protect Wi-Fi</div>
+              <div class="desc">Connects on every untrusted network</div>
+            </div>
+          </div>
+          <div class="lock-mini">
+            <svg class="i16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="ico" style="background: rgba(34, 230, 195, 0.14); color: var(--primary);">
+            <svg class="i20" viewBox="0 0 20 20" fill="none"><path d="M5 11l3 3 7-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+          </div>
+          <div style="flex: 1;">
+            <div class="name">No-log policy active</div>
+            <div class="desc">Independently audited · Apr 2026</div>
+          </div>
+          <span class="chip chip-protected" style="height: 24px; padding: 0 8px; font-size: 11px;">On</span>
+        </div>
+      </div>
+
+      <div class="t-cap" style="text-transform: uppercase; letter-spacing: 0.08em; margin: 4px 4px 8px; color: var(--on-surface-subtle); font-weight: 700;">Tools</div>
+
+      <div class="feat-group" style="margin-bottom: 14px;">
+        <div class="feat">
+          <div class="ico" style="background: rgba(246, 184, 75, 0.16); color: var(--warning);">
+            <svg class="i20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex: 1; display:flex; align-items:center; gap: 8px;">
+            <div>
+              <div class="name">Breach check</div>
+              <div class="desc">Scan if your email leaked online</div>
+            </div>
+          </div>
+          <div class="lock-mini">
+            <svg class="i16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="ico" style="background: rgba(73, 107, 255, 0.18); color: var(--secondary);">
+            <svg class="i20" viewBox="0 0 20 20" fill="none"><path d="M3 10c0-4 3-7 7-7s7 3 7 7-3 7-7 7" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M3 10h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex: 1;">
+            <div class="name">Restricted-network mode</div>
+            <div class="desc">Bypass strict firewalls (slower)</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+      </div>
+
+      <div class="t-cap" style="text-transform: uppercase; letter-spacing: 0.08em; margin: 4px 4px 8px; color: var(--on-surface-subtle); font-weight: 700;">This week</div>
+
+      <div class="summary-grid" style="margin-top: 0;">
+        <div class="sumbox"><div class="v">312</div><div class="lbl">ads blocked</div></div>
+        <div class="sumbox"><div class="v">147</div><div class="lbl">trackers stopped</div></div>
+        <div class="sumbox"><div class="v">14h</div><div class="lbl">protected time</div></div>
+        <div class="sumbox"><div class="v">2.1 GB</div><div class="lbl">encrypted</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2 L19 6 L19 12 C19 17 15 20 11 21 C7 20 3 17 3 12 L3 6 Z" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>Connect</div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M3 11h16M11 3c2.5 3 2.5 13 0 16M11 3c-2.5 3-2.5 13 0 16" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>Locations</div>
+    <div class="tab active">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" fill="currentColor" fill-opacity="0.18"/><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+      Privacy
+    </div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M11 2v3M11 17v3M2 11h3M17 11h3M4.5 4.5l2 2M15.5 15.5l2 2M4.5 17.5l2-2M15.5 6.5l2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Settings</div>
+  </div>
+  <div class="home-indicator"></div>
+</div>
+</body>
+</html>

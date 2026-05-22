@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Splash · ProxyShield</title>
+<link rel="stylesheet" href="../components/shared.css">
+<style>
+  .splash-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(34, 230, 195, 0.22) 0%, rgba(14, 165, 233, 0.10) 30%, rgba(5, 10, 20, 0) 60%),
+      var(--bg);
+  }
+  .splash-mark {
+    width: 124px; height: 124px;
+    position: relative;
+    margin-bottom: 32px;
+  }
+  .splash-mark .ring-a, .splash-mark .ring-b, .splash-mark .ring-c {
+    position: absolute; border-radius: 50%; inset: 0;
+  }
+  .splash-mark .ring-a { border: 1px solid rgba(56, 80, 111, 0.55); }
+  .splash-mark .ring-b { inset: 16px; border: 1px solid rgba(34, 230, 195, 0.35); }
+  .splash-mark .ring-c {
+    inset: 32px;
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 24px rgba(34, 230, 195, 0.6), inset 0 0 16px rgba(34, 230, 195, 0.35);
+  }
+  .splash-shield {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .splash-shield svg {
+    filter: drop-shadow(0 0 18px rgba(46, 242, 208, 0.7));
+  }
+  .wordmark {
+    font-family: var(--font-rounded);
+    font-size: 32px; font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--on-surface);
+    margin-bottom: 8px;
+  }
+  .tagline {
+    color: var(--on-surface-muted);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+  }
+  .progress {
+    position: absolute;
+    bottom: 80px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 3px;
+    background: rgba(38, 54, 83, 0.6);
+    border-radius: var(--r-full);
+    overflow: hidden;
+  }
+  .progress::after {
+    content: ''; position: absolute; left: 0; top: 0; height: 100%;
+    width: 60%; border-radius: var(--r-full);
+    background: linear-gradient(90deg, transparent, var(--primary-glow), transparent);
+    box-shadow: 0 0 10px rgba(46, 242, 208, 0.7);
+  }
+  .signal-arcs {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="#F8FBFF"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="#F8FBFF"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="#F8FBFF"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="#F8FBFF"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 11.5l2-2.4a3 3 0 00-4 0l2 2.4z" fill="#F8FBFF"/><path d="M3.5 6.4a8 8 0 0110 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M0.7 3.6a12 12 0 0115.6 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+      <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="#F8FBFF" stroke-opacity="0.6" fill="none"/><rect x="2" y="2" width="19" height="9" rx="1.5" fill="#F8FBFF"/><rect x="23.5" y="4" width="2" height="5" rx="0.6" fill="#F8FBFF" opacity="0.6"/></svg>
+    </div>
+  </div>
+
+  <div class="splash-stage">
+    <svg class="signal-arcs" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="195" cy="360" r="240" stroke="#22E6C3" stroke-opacity="0.06" stroke-width="1"/>
+      <circle cx="195" cy="360" r="320" stroke="#22E6C3" stroke-opacity="0.04" stroke-width="1"/>
+      <circle cx="195" cy="360" r="400" stroke="#22E6C3" stroke-opacity="0.03" stroke-width="1"/>
+    </svg>
+
+    <div class="splash-mark">
+      <div class="ring-a"></div>
+      <div class="ring-b"></div>
+      <div class="ring-c"></div>
+      <div class="splash-shield">
+        <svg width="46" height="56" viewBox="0 0 46 56" fill="none">
+          <path d="M23 2 L42 10 L42 28 C42 40 33 50 23 54 C13 50 4 40 4 28 L4 10 Z"
+                fill="url(#shieldFill)" stroke="#2EF2D0" stroke-width="1.5"/>
+          <path d="M14 28 L21 34 L32 22" stroke="#041018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="shieldFill" x1="23" y1="2" x2="23" y2="54">
+              <stop offset="0" stop-color="#2EF2D0"/>
+              <stop offset="1" stop-color="#0EA5E9"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="wordmark">ProxyShield</div>
+    <div class="tagline">Private. Encrypted. One tap.</div>
+  </div>
+
+  <div class="progress"></div>
+  <div class="home-indicator"></div>
+</div>
+</body>
+</html>

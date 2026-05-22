@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Protected · ProxyShield</title>
+<link rel="stylesheet" href="../components/shared.css">
+<style>
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 50% 28%, rgba(25, 210, 123, 0.18) 0%, rgba(34, 230, 195, 0.10) 35%, rgba(5, 10, 20, 0) 60%),
+      var(--bg);
+  }
+  .stage {
+    position: relative;
+    width: 280px; height: 280px;
+    margin: 4px auto 12px;
+  }
+  .ring {
+    position: absolute; border-radius: 50%; pointer-events: none;
+  }
+  .r0 { inset: 0; border: 1px solid rgba(56, 80, 111, 0.4); }
+  .r1 { inset: 22px; border: 1px solid rgba(56, 80, 111, 0.6); }
+  .r2 { inset: 44px; border: 1px solid rgba(25, 210, 123, 0.5); }
+  .r3 {
+    inset: 60px;
+    border: 2px solid var(--protected);
+    box-shadow: 0 0 32px rgba(25, 210, 123, 0.5), inset 0 0 22px rgba(25, 210, 123, 0.3);
+  }
+  .core {
+    position: absolute; inset: 78px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 38%, rgba(25, 210, 123, 0.32) 0%, rgba(34, 230, 195, 0.16) 40%, rgba(5, 10, 20, 0.95) 75%);
+    border: 1px solid rgba(25, 210, 123, 0.6);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .core .timer {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--on-surface);
+    letter-spacing: 0.05em;
+  }
+  .core .lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--protected);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .route {
+    position: relative;
+    height: 56px;
+    margin: 4px 0 16px;
+  }
+  .route svg { display: block; width: 100%; height: 100%; }
+
+  .proof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .proof {
+    background: var(--surface);
+    border: 1px solid rgba(38, 54, 83, 0.55);
+    border-radius: var(--r-md);
+    padding: 12px;
+  }
+  .proof .lbl { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-surface-subtle); margin-bottom: 4px; font-weight: 700; }
+  .proof .val { font-family: var(--font-mono); font-size: 14px; color: var(--on-surface); font-weight: 600; }
+  .proof .sub { font-size: 12px; color: var(--on-surface-muted); margin-top: 2px; }
+
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .actions .act {
+    height: 48px;
+    background: var(--surface-soft);
+    border-radius: var(--r-full);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 14px; font-weight: 700;
+    color: var(--on-surface);
+  }
+
+  .premium-strip {
+    display: flex; gap: 12px; align-items: center;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(106, 92, 255, 0.18) 0%, rgba(73, 107, 255, 0.14) 100%);
+    border: 1px solid rgba(106, 92, 255, 0.32);
+    border-radius: var(--r-md);
+  }
+  .premium-strip .ico {
+    width: 32px; height: 32px;
+    border-radius: var(--r-sm);
+    background: linear-gradient(135deg, #6A5CFF 0%, #496BFF 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="bg"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="#F8FBFF"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="#F8FBFF"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="#F8FBFF"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="#F8FBFF"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 11.5l2-2.4a3 3 0 00-4 0l2 2.4z" fill="#F8FBFF"/><path d="M3.5 6.4a8 8 0 0110 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M0.7 3.6a12 12 0 0115.6 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+      <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="#F8FBFF" stroke-opacity="0.6" fill="none"/><rect x="2" y="2" width="19" height="9" rx="1.5" fill="#F8FBFF"/><rect x="23.5" y="4" width="2" height="5" rx="0.6" fill="#F8FBFF" opacity="0.6"/></svg>
+    </div>
+  </div>
+
+  <div class="screen-body" style="padding-bottom: 88px;">
+    <div class="app-header">
+      <div class="brand">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" stroke="#22E6C3" stroke-width="1.5"/><path d="M11 4l5 2v4c0 4-2 6-5 7-3-1-5-3-5-7V6z" fill="#22E6C3"/></svg>
+        ProxyShield
+      </div>
+      <div class="icon-btn">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="4" r="1.6" fill="#F8FBFF"/><circle cx="10" cy="10" r="1.6" fill="#F8FBFF"/><circle cx="10" cy="16" r="1.6" fill="#F8FBFF"/></svg>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin: 0 0 8px;">
+      <div class="chip chip-protected" style="margin-bottom: 10px;"><span class="dot" style="background: var(--black)"></span> Protected</div>
+      <h1 class="t-hero" style="margin: 0 0 4px; color: var(--protected);">Protected</h1>
+    </div>
+
+    <div class="stage">
+      <div class="ring r0"></div>
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+      <div class="core">
+        <svg width="36" height="42" viewBox="0 0 36 42" fill="none">
+          <path d="M18 2 L32 8 L32 22 C32 31 26 38 18 40 C10 38 4 31 4 22 L4 8 Z" fill="#19D27B" stroke="#2EF2D0" stroke-width="1.5"/>
+          <path d="M11 22 L16 27 L25 16" stroke="#041018" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="timer">00:14:32</div>
+        <div class="lbl">Encrypted</div>
+      </div>
+    </div>
+
+    <!-- Route line -->
+    <div class="route">
+      <svg viewBox="0 0 350 56" fill="none" preserveAspectRatio="none">
+        <path d="M16 28 C 90 28, 90 14, 175 14 S 260 42, 334 28" stroke="#22E6C3" stroke-width="1.5" stroke-dasharray="3 4" fill="none"/>
+        <circle cx="16" cy="28" r="6" fill="#0D1628" stroke="#9BAAC2" stroke-width="1.5"/>
+        <circle cx="175" cy="14" r="5" fill="#19D27B" stroke="#2EF2D0" stroke-width="1.5"/>
+        <circle cx="334" cy="28" r="6" fill="#0D1628" stroke="#22E6C3" stroke-width="1.5"/>
+        <text x="16" y="50" fill="#667894" font-size="10" font-family="ui-monospace, Menlo" text-anchor="middle">YOU</text>
+        <text x="175" y="50" fill="#19D27B" font-size="10" font-family="ui-monospace, Menlo" text-anchor="middle">STOCKHOLM</text>
+        <text x="334" y="50" fill="#667894" font-size="10" font-family="ui-monospace, Menlo" text-anchor="middle">WEB</text>
+      </svg>
+    </div>
+
+    <div class="proof-grid">
+      <div class="proof">
+        <div class="lbl">Public IP</div>
+        <div class="val">203.0.113.18</div>
+        <div class="sub">Hidden · was 82.119.214.36</div>
+      </div>
+      <div class="proof">
+        <div class="lbl">Server · Ping</div>
+        <div class="val">SE-04 · 24 ms</div>
+        <div class="sub">312 Mbps · WireGuard</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="act">
+        <svg class="i20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M3 10h14M10 3c2 2.5 2 11 0 14M10 3c-2 2.5-2 11 0 14" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+        Change location
+      </div>
+      <div class="act">
+        <svg class="i20" viewBox="0 0 20 20" fill="none"><rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor"/><rect x="11" y="5" width="3" height="10" rx="1" fill="currentColor"/></svg>
+        Pause 5 min
+      </div>
+    </div>
+
+    <div class="premium-strip">
+      <div class="ico">
+        <svg class="i16" viewBox="0 0 16 16" fill="none"><path d="M2 6l2-3h8l2 3-6 7z" fill="currentColor"/></svg>
+      </div>
+      <div style="flex: 1;">
+        <div style="font-size: 13px; font-weight: 700;">Auto-protect new Wi-Fi networks</div>
+        <div style="font-size: 11px; color: var(--on-surface-muted); margin-top: 2px;">Premium · never connect unsafely again.</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 4l5 5-5 5" stroke="#9BAAC2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <div class="tab active">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2 L19 6 L19 12 C19 17 15 20 11 21 C7 20 3 17 3 12 L3 6 Z" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="1.6"/><path d="M7 11 L10 14 L15 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      Connect
+    </div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M3 11h16M11 3c2.5 3 2.5 13 0 16M11 3c-2.5 3-2.5 13 0 16" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>Locations</div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>Privacy</div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M11 2v3M11 17v3M2 11h3M17 11h3M4.5 4.5l2 2M15.5 15.5l2 2M4.5 17.5l2-2M15.5 6.5l2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Settings</div>
+  </div>
+  <div class="home-indicator"></div>
+</div>
+</body>
+</html>

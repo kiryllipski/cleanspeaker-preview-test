@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Risk Scan · ProxyShield</title>
+<link rel="stylesheet" href="../components/shared.css">
+<style>
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(246, 184, 75, 0.14) 0%, transparent 35%),
+      var(--bg);
+  }
+  .pager {
+    display: flex; gap: 6px; justify-content: center; margin: 8px 0 22px;
+  }
+  .pager .dot { width: 22px; height: 4px; border-radius: 2px; background: var(--surface-soft); }
+  .pager .dot.active { background: var(--primary); width: 28px; }
+
+  .sum {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px;
+    background: var(--warning-soft);
+    border: 1px solid rgba(246, 184, 75, 0.32);
+    border-radius: var(--r-lg);
+    margin-bottom: 16px;
+  }
+  .sum .ico {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(246, 184, 75, 0.18);
+    color: var(--warning);
+    flex-shrink: 0;
+  }
+
+  .grid-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid rgba(38, 54, 83, 0.55);
+    border-radius: var(--r-md);
+    padding: 12px;
+  }
+  .stat .lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-surface-subtle); margin-bottom: 6px; }
+  .stat .val { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--on-surface); }
+
+  .risk-card {
+    display: flex; gap: 12px;
+    padding: 14px;
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    border: 1px solid rgba(38, 54, 83, 0.55);
+    align-items: flex-start;
+  }
+  .risk-card + .risk-card { margin-top: 10px; }
+  .risk-card .badge {
+    width: 36px; height: 36px;
+    border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .risk-card .name { font-size: 15px; font-weight: 700; }
+  .risk-card .desc { font-size: 13px; color: var(--on-surface-muted); margin-top: 2px; }
+  .risk-card.warn .badge { background: rgba(246, 184, 75, 0.16); color: var(--warning); }
+  .risk-card.error .badge { background: rgba(255, 90, 106, 0.14); color: var(--error); }
+  .risk-card.ok .badge { background: rgba(25, 210, 123, 0.14); color: var(--protected); }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="bg"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="#F8FBFF"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="#F8FBFF"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="#F8FBFF"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="#F8FBFF"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 11.5l2-2.4a3 3 0 00-4 0l2 2.4z" fill="#F8FBFF"/><path d="M3.5 6.4a8 8 0 0110 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M0.7 3.6a12 12 0 0115.6 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+      <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="#F8FBFF" stroke-opacity="0.6" fill="none"/><rect x="2" y="2" width="19" height="9" rx="1.5" fill="#F8FBFF"/><rect x="23.5" y="4" width="2" height="5" rx="0.6" fill="#F8FBFF" opacity="0.6"/></svg>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div style="height: 16px"></div>
+    <div class="pager">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot active"></div>
+    </div>
+
+    <h1 class="t-title" style="margin: 0 0 6px;">Privacy check</h1>
+    <p class="t-body muted" style="margin: 0 0 20px;">Here's what we found on your current network.</p>
+
+    <div class="sum">
+      <div class="ico">
+        <svg class="i24" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/><path d="M12 9v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+          <span class="t-section" style="color: var(--warning);">Medium risk</span>
+          <span class="chip chip-warning"><span class="dot" style="background: var(--black)"></span>3 issues</span>
+        </div>
+        <div class="t-cap" style="color: var(--on-surface-muted);">Your IP and network are visible to anyone on this Wi-Fi.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="stat">
+        <div class="lbl">Your IP</div>
+        <div class="val">82.119.214.36</div>
+      </div>
+      <div class="stat">
+        <div class="lbl">Approx. location</div>
+        <div class="val">Berlin, DE</div>
+      </div>
+      <div class="stat">
+        <div class="lbl">Network</div>
+        <div class="val">Cafe_Public_Wi-Fi</div>
+      </div>
+      <div class="stat">
+        <div class="lbl">Encryption</div>
+        <div class="val" style="color: var(--warning);">Open · none</div>
+      </div>
+    </div>
+
+    <div class="stack stack-sm">
+      <div class="risk-card error">
+        <div class="badge">
+          <svg class="i20" viewBox="0 0 20 20" fill="none"><rect x="3" y="8" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M7 8V6a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <div style="flex: 1;">
+          <div class="name">Wi-Fi is unencrypted</div>
+          <div class="desc">Anyone nearby can intercept what you send.</div>
+        </div>
+      </div>
+      <div class="risk-card warn">
+        <div class="badge">
+          <svg class="i20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+        </div>
+        <div style="flex: 1;">
+          <div class="name">Public IP is visible</div>
+          <div class="desc">Sites and trackers can see your real address.</div>
+        </div>
+      </div>
+      <div class="risk-card warn">
+        <div class="badge">
+          <svg class="i20" viewBox="0 0 20 20" fill="none"><path d="M3 7l7-4 7 4v6c0 4-3 6-7 7-4-1-7-3-7-7z" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+        </div>
+        <div style="flex: 1;">
+          <div class="name">Tracker blocking is off</div>
+          <div class="desc">Cross-site fingerprinting is allowed by default.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-cta">
+    <button class="btn btn-primary">Protect now</button>
+  </div>
+
+  <div class="home-indicator"></div>
+</div>
+</body>
+</html>

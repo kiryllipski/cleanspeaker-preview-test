@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ProxyShield · All Screens</title>
+<style>
+  :root {
+    --bg: #050A14;
+    --bg-elev: #0D1628;
+    --on: #F8FBFF;
+    --muted: #9BAAC2;
+    --subtle: #667894;
+    --primary: #22E6C3;
+    --premium: #6A5CFF;
+    --outline: #263653;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background:
+      radial-gradient(ellipse at top, rgba(34, 230, 195, 0.06) 0%, transparent 50%),
+      var(--bg);
+    color: var(--on);
+    font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    padding: 56px 48px 28px;
+    border-bottom: 1px solid rgba(38, 54, 83, 0.5);
+  }
+  header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 12px;
+  }
+  header h1::before {
+    content: '';
+    width: 14px; height: 14px;
+    background: var(--primary);
+    border-radius: 50%;
+    box-shadow: 0 0 16px rgba(34, 230, 195, 0.7);
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 720px;
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+  header .meta {
+    display: flex; gap: 24px; margin-top: 18px; color: var(--subtle); font-size: 13px;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+  header .meta span::before { content: '— '; color: var(--outline); margin-right: 4px; }
+
+  .group-title {
+    padding: 36px 48px 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .group-title span {
+    color: var(--primary);
+  }
+
+  .grid {
+    padding: 18px 48px 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 390px);
+    gap: 36px;
+    justify-content: center;
+  }
+
+  .card {
+    width: 390px;
+  }
+  .card .frame {
+    width: 390px;
+    height: 844px;
+    border-radius: 44px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 10px #0a0f1a,
+      0 0 0 11px rgba(38, 54, 83, 0.7),
+      0 30px 80px -20px rgba(0,0,0,0.6),
+      0 0 60px -10px rgba(34, 230, 195, 0.06);
+    background: #000;
+    position: relative;
+  }
+  .card iframe {
+    width: 390px;
+    height: 844px;
+    border: 0;
+    display: block;
+  }
+  .card .label {
+    margin-top: 22px;
+    padding: 0 4px;
+  }
+  .card .num {
+    color: var(--subtle);
+    font-size: 11px;
+    font-family: ui-monospace, Menlo, monospace;
+    letter-spacing: 0.12em;
+    margin-bottom: 4px;
+  }
+  .card .name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--on);
+    margin-bottom: 4px;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .card .desc {
+    color: var(--muted);
+    font-size: 13px;
+    font-family: -apple-system, system-ui, sans-serif;
+    line-height: 1.45;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>ProxyShield · Dark Signal Shield</h1>
+  <p>Premium VPN proxy app. 15 mobile screens at iPhone viewport (390 × 844). Tokens locked from <code>DESIGN.md</code>; all values come from the Dark Signal Shield system.</p>
+  <div class="meta">
+    <span>Onboarding · 7 screens</span>
+    <span>Core · 6 screens</span>
+    <span>Monetization · 2 screens</span>
+  </div>
+</header>
+
+<div class="group-title"><span>01</span> · Onboarding</div>
+<div class="grid">
+  <div class="card">
+    <div class="frame"><iframe src="01-splash.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 01</div>
+      <div class="name">Splash</div>
+      <div class="desc">Glowing shield mark, wordmark, loading shimmer. First impression.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="02-welcome.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 02</div>
+      <div class="name">Welcome / Hero</div>
+      <div class="desc">Stay safe online. Emotional activation with abstract radar orb + restore link.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="03-benefits.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 03</div>
+      <div class="name">Trusted servers</div>
+      <div class="desc">Premium trust before diagnostics — 3 benefits with semantic icons.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="04-goal-selection.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 04</div>
+      <div class="name">Goal selection</div>
+      <div class="desc">Pick what to optimize for. Multi-select with checkmarks.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="05-risk-scan.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 05</div>
+      <div class="name">Privacy risk scan</div>
+      <div class="desc">Visible IP + open Wi-Fi + tracker risks. Sets up the value proof moment.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="06-vpn-permission.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 06</div>
+      <div class="name">VPN permission rationale</div>
+      <div class="desc">Explains the iOS VPN profile prompt with 3 trust bullets.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="07-first-success.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 07</div>
+      <div class="name">First connection success</div>
+      <div class="desc">Proof, not confetti. IP hidden, encrypted, ping. Soft premium upsell.</div>
+    </div>
+  </div>
+</div>
+
+<div class="group-title"><span>02</span> · Core app</div>
+<div class="grid">
+  <div class="card">
+    <div class="frame"><iframe src="08-connect-unprotected.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 08</div>
+      <div class="name">Connect — unprotected</div>
+      <div class="desc">Power radar in warning state. Selected server + open-Wi-Fi banner.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="09-connect-connecting.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 09</div>
+      <div class="name">Connect — connecting</div>
+      <div class="desc">Sweep arc + 4-step diagnostic timeline. Disabled CTA.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="10-connect-protected.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 10</div>
+      <div class="name">Connect — protected</div>
+      <div class="desc">Green ring, route line, IP/server proof, change/pause, premium strip.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="11-locations.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 11</div>
+      <div class="name">Locations</div>
+      <div class="desc">Search · segmented filter · compact rows · sticky premium CTA.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="12-privacy.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 12</div>
+      <div class="name">Privacy</div>
+      <div class="desc">Score arc, active protection group, locked premium tools, weekly stats.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="13-settings.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 13</div>
+      <div class="name">Settings</div>
+      <div class="desc">Plan card · grouped iOS-style lists · protocol/kill-switch/restore.</div>
+    </div>
+  </div>
+</div>
+
+<div class="group-title"><span>03</span> · Monetization</div>
+<div class="grid" style="padding-bottom: 96px;">
+  <div class="card">
+    <div class="frame"><iframe src="14-paywall.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 14</div>
+      <div class="name">Paywall</div>
+      <div class="desc">"Get full protection" · 4 benefits · 3 plans (annual selected) · trust row.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><iframe src="15-special-offer.html"></iframe></div>
+    <div class="label">
+      <div class="num">SCREEN · 15</div>
+      <div class="name">Special offer</div>
+      <div class="desc">Post-close win-back. Countdown, slashed price, money-back row, free fallback.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

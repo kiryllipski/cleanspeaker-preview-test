@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Locations · ProxyShield</title>
+<link rel="stylesheet" href="../components/shared.css">
+<style>
+  .bg { position: absolute; inset: 0; background: var(--bg); }
+  .header-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 4px;
+    margin-bottom: 14px;
+  }
+  .header-row h1 { margin: 0; font-family: var(--font-rounded); font-size: 28px; font-weight: 800; letter-spacing: -0.015em; }
+
+  .premium-banner {
+    display: flex; gap: 12px; align-items: center;
+    padding: 14px;
+    background: linear-gradient(135deg, rgba(106, 92, 255, 0.20) 0%, rgba(73, 107, 255, 0.14) 100%);
+    border: 1px solid rgba(106, 92, 255, 0.35);
+    border-radius: var(--r-lg);
+    margin: 14px 0 16px;
+  }
+  .premium-banner .ico {
+    width: 40px; height: 40px;
+    border-radius: var(--r-md);
+    background: linear-gradient(135deg, #6A5CFF 0%, #496BFF 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white); flex-shrink: 0;
+  }
+
+  .loc-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface-raised);
+    border-radius: var(--r-md);
+    border: 1px solid rgba(38, 54, 83, 0.4);
+  }
+  .loc-row + .loc-row { margin-top: 8px; }
+  .loc-row.locked { opacity: 0.92; }
+  .flag {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(38, 54, 83, 0.6);
+    position: relative;
+  }
+  /* SE */ .f-se { background: #006AA7; }
+  .f-se::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 4px; background: #FECC00; }
+  .f-se::after { content: ''; position: absolute; left: 0; right: 0; top: 14px; height: 4px; background: #FECC00; }
+  /* NL */ .f-nl { background: linear-gradient(180deg, #AE1C28 33%, #FFFFFF 33% 66%, #21468B 66%); }
+  /* DE */ .f-de { background: linear-gradient(180deg, #000 33%, #DD0000 33% 66%, #FFCE00 66%); }
+  /* US */ .f-us { background: linear-gradient(180deg, #B22234 0 5px, #fff 5px 9px, #B22234 9px 13px, #fff 13px 17px, #B22234 17px 21px, #fff 21px 25px, #B22234 25px 32px); }
+  .f-us::before { content: ''; position: absolute; left: 0; top: 0; width: 14px; height: 18px; background: #3C3B6E; }
+  /* JP */ .f-jp { background: #fff; }
+  .f-jp::after { content: ''; position: absolute; left: 8px; top: 8px; width: 16px; height: 16px; background: #BC002D; border-radius: 50%; }
+  /* GB */ .f-gb { background: #012169; }
+  .f-gb::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 4px; background: #fff; }
+  .f-gb::after { content: ''; position: absolute; left: 0; right: 0; top: 14px; height: 4px; background: #fff; }
+  /* CH */ .f-ch { background: #DA291C; }
+  .f-ch::before { content: ''; position: absolute; left: 14px; top: 8px; width: 4px; height: 16px; background: #fff; }
+  .f-ch::after { content: ''; position: absolute; left: 8px; top: 14px; width: 16px; height: 4px; background: #fff; }
+  /* CA */ .f-ca { background: linear-gradient(90deg, #D80027 25%, #fff 25% 75%, #D80027 75%); }
+  /* SG */ .f-sg { background: linear-gradient(180deg, #ED2939 50%, #fff 50%); }
+
+  .loc-name { font-size: 15px; font-weight: 700; color: var(--on-surface); }
+  .loc-meta { font-size: 12px; color: var(--on-surface-muted); margin-top: 1px; display: flex; align-items: center; gap: 8px; }
+  .ping-dot {
+    width: 6px; height: 6px; border-radius: 50%; display: inline-block;
+  }
+  .ping-low { background: var(--protected); }
+  .ping-mid { background: var(--warning); }
+
+  .lock {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(106, 92, 255, 0.18);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--premium);
+    flex-shrink: 0;
+  }
+  .connect-pill {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--surface-soft);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--on-surface-muted);
+    flex-shrink: 0;
+  }
+  .connect-pill.active {
+    background: var(--primary); color: var(--on-primary);
+  }
+
+  .scroll {
+    overflow-y: auto;
+    height: calc(844px - 47px - 0px - 88px);
+    padding-bottom: 100px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="bg"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="#F8FBFF"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="#F8FBFF"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="#F8FBFF"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="#F8FBFF"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 11.5l2-2.4a3 3 0 00-4 0l2 2.4z" fill="#F8FBFF"/><path d="M3.5 6.4a8 8 0 0110 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M0.7 3.6a12 12 0 0115.6 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+      <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="#F8FBFF" stroke-opacity="0.6" fill="none"/><rect x="2" y="2" width="19" height="9" rx="1.5" fill="#F8FBFF"/><rect x="23.5" y="4" width="2" height="5" rx="0.6" fill="#F8FBFF" opacity="0.6"/></svg>
+    </div>
+  </div>
+
+  <div class="screen-body" style="padding-bottom: 0;">
+    <div class="scroll">
+      <div class="header-row">
+        <h1>Locations</h1>
+        <div class="icon-btn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M5 10h10M8 15h4" stroke="#F8FBFF" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#9BAAC2" stroke-width="1.6" fill="none"/><path d="M12 12l4 4" stroke="#9BAAC2" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Search 100+ countries
+      </div>
+
+      <div class="segmented" style="margin-top: 12px;">
+        <div class="seg active">All</div>
+        <div class="seg">Recommended</div>
+        <div class="seg">Streaming</div>
+        <div class="seg">Premium</div>
+      </div>
+
+      <div class="premium-banner">
+        <div class="ico">
+          <svg class="i20" viewBox="0 0 20 20" fill="none"><path d="M2 7l3-4h10l3 4-8 9z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M2 7h16" stroke="currentColor" stroke-width="1.6"/></svg>
+        </div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 700;">Unlock 80+ premium servers</div>
+          <div style="font-size: 12px; color: var(--on-surface-muted); margin-top: 2px;">Faster, ad-free, streaming-tuned routes.</div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 4l5 5-5 5" stroke="#F8FBFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="t-cap" style="text-transform: uppercase; letter-spacing: 0.08em; margin: 4px 4px 8px; color: var(--on-surface-subtle); font-weight: 700;">Recommended</div>
+
+      <div class="loc-row">
+        <div class="flag f-se"></div>
+        <div style="flex: 1;">
+          <div class="loc-name">Stockholm, Sweden</div>
+          <div class="loc-meta"><span class="ping-dot ping-low"></span>24 ms · low load · WireGuard</div>
+        </div>
+        <div class="connect-pill active">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><path d="M4 8l3 3 5-7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </div>
+      </div>
+
+      <div class="loc-row">
+        <div class="flag f-nl"></div>
+        <div style="flex: 1;">
+          <div class="loc-name">Amsterdam, Netherlands</div>
+          <div class="loc-meta"><span class="ping-dot ping-low"></span>32 ms · low load</div>
+        </div>
+        <div class="connect-pill">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="loc-row">
+        <div class="flag f-de"></div>
+        <div style="flex: 1;">
+          <div class="loc-name">Frankfurt, Germany</div>
+          <div class="loc-meta"><span class="ping-dot ping-low"></span>18 ms · low load</div>
+        </div>
+        <div class="connect-pill">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="t-cap" style="text-transform: uppercase; letter-spacing: 0.08em; margin: 18px 4px 8px; color: var(--on-surface-subtle); font-weight: 700;">All countries</div>
+
+      <div class="loc-row">
+        <div class="flag f-us"></div>
+        <div style="flex: 1;">
+          <div class="loc-name">New York, USA</div>
+          <div class="loc-meta"><span class="ping-dot ping-mid"></span>112 ms · medium load</div>
+        </div>
+        <div class="connect-pill">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="loc-row">
+        <div class="flag f-gb"></div>
+        <div style="flex: 1;">
+          <div class="loc-name">London, UK</div>
+          <div class="loc-meta"><span class="ping-dot ping-low"></span>42 ms · low load</div>
+        </div>
+        <div class="connect-pill">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="loc-row locked">
+        <div class="flag f-jp"></div>
+        <div style="flex: 1;">
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <div class="loc-name">Tokyo, Japan</div>
+            <span class="chip chip-premium" style="height: 22px; padding: 0 8px; font-size: 11px;">Premium</span>
+          </div>
+          <div class="loc-meta"><span class="ping-dot ping-low"></span>168 ms · streaming-tuned</div>
+        </div>
+        <div class="lock">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <div class="loc-row locked">
+        <div class="flag f-ch"></div>
+        <div style="flex: 1;">
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <div class="loc-name">Zurich, Switzerland</div>
+            <span class="chip chip-premium" style="height: 22px; padding: 0 8px; font-size: 11px;">Premium</span>
+          </div>
+          <div class="loc-meta"><span class="ping-dot ping-low"></span>28 ms · privacy-tuned</div>
+        </div>
+        <div class="lock">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <div class="loc-row">
+        <div class="flag f-ca"></div>
+        <div style="flex: 1;">
+          <div class="loc-name">Toronto, Canada</div>
+          <div class="loc-meta"><span class="ping-dot ping-mid"></span>96 ms · medium load</div>
+        </div>
+        <div class="connect-pill">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="loc-row locked">
+        <div class="flag f-sg"></div>
+        <div style="flex: 1;">
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <div class="loc-name">Singapore</div>
+            <span class="chip chip-premium" style="height: 22px; padding: 0 8px; font-size: 11px;">Premium</span>
+          </div>
+          <div class="loc-meta"><span class="ping-dot ping-mid"></span>184 ms · streaming-tuned</div>
+        </div>
+        <div class="lock">
+          <svg class="i16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-cta" style="bottom: 88px;">
+    <button class="btn btn-premium">
+      <svg class="i20" viewBox="0 0 20 20" fill="none"><path d="M2 7l3-4h10l3 4-8 9z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>
+      Unlock all premium locations
+    </button>
+  </div>
+
+  <div class="tabbar">
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2 L19 6 L19 12 C19 17 15 20 11 21 C7 20 3 17 3 12 L3 6 Z" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>Connect</div>
+    <div class="tab active">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.6" fill="currentColor" fill-opacity="0.18"/><path d="M3 11h16M11 3c2.5 3 2.5 13 0 16M11 3c-2.5 3-2.5 13 0 16" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      Locations
+    </div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>Privacy</div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M11 2v3M11 17v3M2 11h3M17 11h3M4.5 4.5l2 2M15.5 15.5l2 2M4.5 17.5l2-2M15.5 6.5l2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Settings</div>
+  </div>
+  <div class="home-indicator"></div>
+</div>
+</body>
+</html>

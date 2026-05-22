@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Goals · ProxyShield</title>
+<link rel="stylesheet" href="../components/shared.css">
+<style>
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(34, 230, 195, 0.12) 0%, transparent 35%),
+      var(--bg);
+  }
+  .pager {
+    display: flex; gap: 6px; justify-content: center; margin: 8px 0 24px;
+  }
+  .pager .dot { width: 22px; height: 4px; border-radius: 2px; background: var(--surface-soft); }
+  .pager .dot.active { background: var(--primary); width: 28px; }
+
+  .goal {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 16px;
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    border: 1.5px solid var(--outline);
+    cursor: pointer;
+  }
+  .goal.selected {
+    border-color: var(--primary);
+    background: linear-gradient(180deg, rgba(34, 230, 195, 0.08) 0%, rgba(34, 230, 195, 0.0) 100%);
+    box-shadow: 0 0 0 3px rgba(34, 230, 195, 0.10);
+  }
+  .goal + .goal { margin-top: 12px; }
+  .goal .ico {
+    width: 44px; height: 44px;
+    border-radius: var(--r-md);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: var(--surface-soft);
+    color: var(--on-surface);
+  }
+  .goal.selected .ico { background: rgba(34, 230, 195, 0.16); color: var(--primary); }
+  .goal-name { font-size: 16px; font-weight: 700; flex: 1; }
+  .check {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--outline-strong);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .goal.selected .check {
+    border-color: var(--primary);
+    background: var(--primary);
+  }
+  .goal.selected .check::after {
+    content: ''; position: absolute; left: 6px; top: 2px;
+    width: 6px; height: 12px;
+    border-right: 2px solid var(--on-primary);
+    border-bottom: 2px solid var(--on-primary);
+    transform: rotate(45deg);
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="bg"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="#F8FBFF"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="#F8FBFF"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="#F8FBFF"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="#F8FBFF"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 11.5l2-2.4a3 3 0 00-4 0l2 2.4z" fill="#F8FBFF"/><path d="M3.5 6.4a8 8 0 0110 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M0.7 3.6a12 12 0 0115.6 0" stroke="#F8FBFF" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+      <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="#F8FBFF" stroke-opacity="0.6" fill="none"/><rect x="2" y="2" width="19" height="9" rx="1.5" fill="#F8FBFF"/><rect x="23.5" y="4" width="2" height="5" rx="0.6" fill="#F8FBFF" opacity="0.6"/></svg>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div style="height: 24px"></div>
+    <div class="pager">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div style="margin-bottom: 28px;">
+      <h1 class="t-hero" style="margin: 0 0 10px;">What matters<br>most to you?</h1>
+      <p class="t-body muted" style="margin: 0;">Choose what we should optimize for first. You can change this later.</p>
+    </div>
+
+    <div class="stack stack-md">
+      <div class="goal selected">
+        <div class="ico">
+          <svg class="i24" viewBox="0 0 24 24" fill="none"><path d="M12 3a4 4 0 014 4v3h1.5a2.5 2.5 0 012.5 2.5v6A2.5 2.5 0 0117.5 21h-11A2.5 2.5 0 014 18.5v-6A2.5 2.5 0 016.5 10H8V7a4 4 0 014-4z" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="15" r="1.5" fill="currentColor"/></svg>
+        </div>
+        <div class="goal-name">Secure unsafe Wi-Fi</div>
+        <div class="check"></div>
+      </div>
+      <div class="goal selected">
+        <div class="ico">
+          <svg class="i24" viewBox="0 0 24 24" fill="none"><path d="M3 12c4-6 14-6 18 0-4 6-14 6-18 0z" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/><path d="M5 5l14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="goal-name">Hide my IP</div>
+        <div class="check"></div>
+      </div>
+      <div class="goal">
+        <div class="ico">
+          <svg class="i24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+        </div>
+        <div class="goal-name">Access blocked apps &amp; sites</div>
+        <div class="check"></div>
+      </div>
+      <div class="goal selected">
+        <div class="ico">
+          <svg class="i24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M5 5l14 14" stroke="#FF5A6A" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="goal-name">Stop trackers &amp; ads</div>
+        <div class="check"></div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; padding: 14px 16px; background: var(--surface-glass); border-radius: var(--r-md); border: 1px solid rgba(38,54,83,0.4); display:flex; gap: 10px; align-items: flex-start;">
+      <svg class="i20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;"><circle cx="10" cy="10" r="9" stroke="#22E6C3" stroke-width="1.5" fill="none"/><circle cx="10" cy="6" r="1.2" fill="#22E6C3"/><path d="M10 10v5" stroke="#22E6C3" stroke-width="2" stroke-linecap="round"/></svg>
+      <div class="t-cap" style="color: var(--on-surface-muted);">We'll personalize your protection plan and tune server picks based on your selection.</div>
+    </div>
+  </div>
+
+  <div class="sticky-cta">
+    <button class="btn btn-primary">Run privacy check</button>
+  </div>
+
+  <div class="home-indicator"></div>
+</div>
+</body>
+</html>
