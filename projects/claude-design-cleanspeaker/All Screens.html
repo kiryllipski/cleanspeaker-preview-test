@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CleanSpeaker — All Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css"/>
+</head>
+<body>
+<div class="gallery">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#5EE6FF,#2A7BFF);box-shadow:0 0 24px rgba(94,230,255,0.45)"></div>
+    <h1>CleanSpeaker — Android UI System</h1>
+    <a href="CleanSpeaker.html" style="margin-left:auto;font-size:13px;color:var(--cyan)">← Open interactive prototype</a>
+  </div>
+  <p class="lead">Premium speaker-rescue utility for Android. Onboarding builds trust through personalized diagnostics, then surfaces a special-offer paywall that unlocks the full rescue plan. Aesthetic: dark device-console, glowing cyan/blue waveforms, soft-glass surfaces, oversized numeric readouts.</p>
+  <div class="meta-row">
+    <div><b>10</b> screens · core flow + bonus</div>
+    <div><b>Conversion-tuned</b> · onboarding → paywall in 6 taps</div>
+    <div><b>Material You</b>-friendly dark theme · 390×820</div>
+    <div><b>Tokens</b> · cyan #5EE6FF · blue #2A7BFF · violet #9B6BFF</div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin:24px 0 0">
+    <a href="All Screens.html" style="padding:8px 16px;font-size:13px;font-weight:600;border-radius:11px;color:var(--cyan);background:rgba(94,230,255,.08);border:1px solid rgba(94,230,255,.3);text-decoration:none">v1 (current)</a>
+    <a href="All Screens v2.html" style="padding:8px 16px;font-size:13px;font-weight:600;border-radius:11px;color:#8AA0BD;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.065);text-decoration:none">v2</a>
+    <a href="All Screens v3.html" style="padding:8px 16px;font-size:13px;font-weight:600;border-radius:11px;color:#8AA0BD;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.065);text-decoration:none">v3 → Zen Console</a>
+    <a href="All Screens v4.html" style="padding:8px 16px;font-size:13px;font-weight:600;border-radius:11px;color:#8AA0BD;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.065);text-decoration:none">v4 → Reworked Flow</a>
+  </div>
+  <div class="grid-screens" id="grid"></div>
+</div>
+
+<script src="assets/screens.js"></script>
+<script>
+  const { screens } = window.CleanSpeaker;
+  document.getElementById("grid").innerHTML = Object.entries(screens).map(([n,s])=>`
+    <div class="screen-card">
+      <div class="label">
+        <span class="n">${String(n).padStart(2,"0")}</span>
+        <span class="nm">${s.title}</span>
+        <span class="nt">${s.note}</span>
+      </div>
+      <div class="stage-shrink">
+        <div class="phone" data-screen-label="${String(n).padStart(2,"0")} ${s.title}">
+          <div class="screen">${s.html()}</div>
+        </div>
+      </div>
+    </div>`).join("");
+  // disable nav inside gallery
+  document.querySelectorAll("[data-go]").forEach(el=>el.addEventListener("click",e=>e.preventDefault()));
+</script>
+</body>
+</html>

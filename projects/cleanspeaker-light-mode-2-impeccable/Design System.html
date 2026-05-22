@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CleanSpeaker — Design System</title>
+<link rel="stylesheet" href="tokens.css" />
+<style>
+  body {
+    background: #EAEEF4;
+    min-height: 100vh;
+    padding: 32px 56px 80px;
+  }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1240px; margin: 0 auto 36px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+  .brand-dot { width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, #2A95FF, #0066D6);
+    box-shadow: 0 6px 16px rgba(10,132,255,0.32); }
+  .brand-name { font-size: 16px; }
+  .brand-sub  { font-size: 11px; color: var(--fg-2); margin-top: -2px;
+                letter-spacing: 0.18em; text-transform: uppercase; }
+  .nav-tabs { display: flex; gap: 4px; padding: 4px; background: var(--bg-1);
+              border: 1px solid var(--hairline); border-radius: 999px; }
+  .nav-tab { all: unset; cursor: pointer; padding: 8px 16px; border-radius: 999px;
+             font-size: 13px; font-weight: 500; color: var(--fg-1); }
+  .nav-tab.active { background: var(--fg-0); color: #fff; }
+
+  .container {
+    max-width: 1240px; margin: 0 auto;
+    display: grid; grid-template-columns: 240px 1fr; gap: 56px;
+  }
+  .sidebar {
+    position: sticky; top: 24px; align-self: start;
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 16px;
+    background: var(--bg-1); border: 1px solid var(--hairline);
+    border-radius: 16px;
+  }
+  .side-eyebrow {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--fg-2); padding: 8px 8px 4px;
+  }
+  .side-link {
+    all: unset; cursor: pointer;
+    padding: 8px 10px; border-radius: 10px;
+    font-size: 13px; color: var(--fg-1);
+  }
+  .side-link:hover { background: var(--bg-2); color: var(--fg-0); }
+
+  section { margin-bottom: 72px; scroll-margin-top: 32px; }
+  .section-title {
+    font-size: 28px; font-weight: 600; letter-spacing: -0.025em;
+    margin: 0 0 6px;
+  }
+  .section-eyebrow {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-2); font-weight: 500;
+  }
+  .section-desc {
+    font-size: 14px; color: var(--fg-1); line-height: 1.55;
+    max-width: 580px; margin: 12px 0 28px;
+  }
+
+  .card-doc {
+    background: var(--bg-1); border: 1px solid var(--hairline);
+    border-radius: 20px; padding: 24px;
+  }
+
+  /* color swatches */
+  .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .swatch {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+    background: #fff;
+  }
+  .swatch-tile { height: 96px; }
+  .swatch-meta { padding: 12px 14px; }
+  .swatch-name { font-size: 13px; font-weight: 600; }
+  .swatch-val  { font-size: 11px; color: var(--fg-2); font-family: var(--f-mono); margin-top: 2px; }
+
+  /* type scale */
+  .type-row {
+    display: grid; grid-template-columns: 140px 1fr 200px;
+    align-items: baseline; gap: 24px;
+    padding: 20px 0; border-bottom: 1px solid var(--hairline);
+  }
+  .type-row:last-child { border: none; }
+  .type-label {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--fg-2);
+  }
+  .type-spec { font-size: 12px; color: var(--fg-2); font-family: var(--f-mono); text-align: right; }
+
+  /* radii / spacing */
+  .grid-radii { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .radius-cell {
+    height: 96px;
+    background: linear-gradient(135deg, #DDEAF8, #FFFFFF);
+    border: 1px solid var(--hairline);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  .radius-name { font-size: 13px; font-weight: 600; }
+  .radius-val { font-size: 11px; color: var(--fg-2); font-family: var(--f-mono); margin-top: 4px; }
+
+  /* primitives grid */
+  .prim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .prim-card {
+    background: var(--bg-1); border: 1px solid var(--hairline);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .prim-stage {
+    background:
+      linear-gradient(0deg, var(--bg-1), var(--bg-1)),
+      radial-gradient(80% 100% at 50% 0%, #DDEAF8, transparent 60%);
+    padding: 28px; min-height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    border-bottom: 1px solid var(--hairline);
+    background:
+      radial-gradient(80% 100% at 50% 0%, #EAF3FF 0%, #FFFFFF 60%);
+  }
+  .prim-meta { padding: 14px 16px; }
+  .prim-name { font-size: 13px; font-weight: 600; }
+  .prim-desc { font-size: 12px; color: var(--fg-2); margin-top: 3px; }
+
+  /* tokens table */
+  .table { width: 100%; border-collapse: collapse; }
+  .table th, .table td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 13px;
+  }
+  .table th { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+              color: var(--fg-2); font-weight: 500; }
+  .table .mono { font-family: var(--f-mono); color: var(--fg-1); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <div>
+      <div class="brand-name">CleanSpeaker</div>
+      <div class="brand-sub">Design System · v1</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <a class="nav-tab" href="All Screens.html">All Screens</a>
+    <a class="nav-tab active" href="Design System.html">Design System</a>
+    <a class="nav-tab" href="Prototype.html">Prototype</a>
+  </div>
+</div>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="side-eyebrow">Foundations</div>
+    <a class="side-link" href="#color">Color</a>
+    <a class="side-link" href="#type">Typography</a>
+    <a class="side-link" href="#radii">Radii & Spacing</a>
+    <a class="side-link" href="#motion">Motion</a>
+    <div class="side-eyebrow" style="margin-top: 8px;">Components</div>
+    <a class="side-link" href="#buttons">Buttons</a>
+    <a class="side-link" href="#cards">Cards & Rows</a>
+    <a class="side-link" href="#feedback">Feedback</a>
+    <a class="side-link" href="#viz">Visualizations</a>
+    <a class="side-link" href="#chrome">Chrome</a>
+    <a class="side-link" href="#icons">Icons</a>
+  </aside>
+
+  <main>
+    <header style="margin-bottom: 56px;">
+      <div class="section-eyebrow">Design System</div>
+      <h1 style="font-size: 44px; font-weight: 600; letter-spacing: -0.025em; margin: 12px 0 12px;">
+        Tokens & primitives.
+      </h1>
+      <p style="font-size: 15px; color: var(--fg-1); line-height: 1.55; max-width: 640px; margin: 0;">
+        Single-accent system, light base. Numbers always render in JetBrains Mono with tabular figures.
+        Surfaces stay flat. Gradient is reserved for primary CTAs and the active cleaning state only.
+      </p>
+    </header>
+
+    <section id="color">
+      <div class="section-eyebrow">01 · Foundations</div>
+      <h2 class="section-title">Color</h2>
+      <p class="section-desc">Four surface levels, four text levels, one accent in four tones. Hairlines use rgba on slate so they keep their feel on tinted surfaces.</p>
+
+      <h3 style="font-size: 14px; margin: 0 0 12px; color: var(--fg-2); letter-spacing: 0.18em; text-transform: uppercase;">Surfaces</h3>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-tile" style="background: var(--bg-0);"></div><div class="swatch-meta"><div class="swatch-name">bg-0 · Canvas</div><div class="swatch-val">#F4F7FB</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--bg-1);"></div><div class="swatch-meta"><div class="swatch-name">bg-1 · Card</div><div class="swatch-val">#FFFFFF</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--bg-2);"></div><div class="swatch-meta"><div class="swatch-name">bg-2 · Quiet</div><div class="swatch-val">#EEF3F9</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--bg-3);"></div><div class="swatch-meta"><div class="swatch-name">bg-3 · Deep</div><div class="swatch-val">#E3EBF4</div></div></div>
+      </div>
+
+      <h3 style="font-size: 14px; margin: 28px 0 12px; color: var(--fg-2); letter-spacing: 0.18em; text-transform: uppercase;">Text</h3>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-tile" style="background: var(--fg-0);"></div><div class="swatch-meta"><div class="swatch-name">fg-0 · Primary</div><div class="swatch-val">#0B1220</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--fg-1);"></div><div class="swatch-meta"><div class="swatch-name">fg-1 · Secondary</div><div class="swatch-val">#475569</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--fg-2);"></div><div class="swatch-meta"><div class="swatch-name">fg-2 · Tertiary</div><div class="swatch-val">#8190A6</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--fg-3);"></div><div class="swatch-meta"><div class="swatch-name">fg-3 · Quaternary</div><div class="swatch-val">#B7C0CE</div></div></div>
+      </div>
+
+      <h3 style="font-size: 14px; margin: 28px 0 12px; color: var(--fg-2); letter-spacing: 0.18em; text-transform: uppercase;">Accent · Single</h3>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-tile" style="background: var(--cy-0);"></div><div class="swatch-meta"><div class="swatch-name">cy-0 · Tint</div><div class="swatch-val">#E6F1FF</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--cy-1);"></div><div class="swatch-meta"><div class="swatch-name">cy-1 · Main</div><div class="swatch-val">#0A84FF</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--cy-2);"></div><div class="swatch-meta"><div class="swatch-name">cy-2 · Hover</div><div class="swatch-val">#0066D6</div></div></div>
+        <div class="swatch"><div class="swatch-tile" style="background: var(--cy-3);"></div><div class="swatch-meta"><div class="swatch-name">cy-3 · Pressed</div><div class="swatch-val">#004FAB</div></div></div>
+      </div>
+    </section>
+
+    <section id="type">
+      <div class="section-eyebrow">02 · Foundations</div>
+      <h2 class="section-title">Typography</h2>
+      <p class="section-desc">Geist for interface, JetBrains Mono for any numeric reading. Tracking tightens with size; uppercase eyebrow labels open up to 0.18em for breathing room.</p>
+
+      <div class="card-doc">
+        <div class="type-row">
+          <div class="type-label">Display</div>
+          <div style="font-size: 30px; font-weight: 600; letter-spacing: -0.025em;">Bring your sound back.</div>
+          <div class="type-spec">30 / 33 · -0.025em · 600</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">H1</div>
+          <div style="font-size: 26px; font-weight: 600; letter-spacing: -0.02em;">What's the problem?</div>
+          <div class="type-spec">26 / 30 · -0.02em · 600</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">H2</div>
+          <div style="font-size: 20px; font-weight: 600; letter-spacing: -0.02em;">Clean complete</div>
+          <div class="type-spec">20 / 24 · -0.02em · 600</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Title</div>
+          <div style="font-size: 17px; font-weight: 600; letter-spacing: -0.01em;">Manual frequency</div>
+          <div class="type-spec">17 / 21 · -0.01em · 600</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Body</div>
+          <div style="font-size: 15px; color: var(--fg-1);">Remove water, dust and debris with guided cleaning.</div>
+          <div class="type-spec">15 / 22 · 0 · 400</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Sub</div>
+          <div style="font-size: 13px; color: var(--fg-2);">3 days free, then $19.99/year.</div>
+          <div class="type-spec">13 / 18 · 0 · 400</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Eyebrow</div>
+          <div style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-2);">Quick setup</div>
+          <div class="type-spec">11 · 0.18em · 500</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Mono</div>
+          <div style="font-family: var(--f-mono); font-size: 32px; font-weight: 600; letter-spacing: -0.02em;">450 Hz</div>
+          <div class="type-spec">JetBrains Mono · tnum</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="radii">
+      <div class="section-eyebrow">03 · Foundations</div>
+      <h2 class="section-title">Radii & Spacing</h2>
+      <p class="section-desc">Five radii plus a pill. Spacing is a 4-px scale, capped at 40 px; everything in between snaps to one of the steps.</p>
+
+      <h3 style="font-size: 14px; margin: 0 0 12px; color: var(--fg-2); letter-spacing: 0.18em; text-transform: uppercase;">Radii</h3>
+      <div class="grid-radii">
+        <div class="radius-cell" style="border-radius: 10px;"><div class="radius-name">r-sm</div><div class="radius-val">10 px</div></div>
+        <div class="radius-cell" style="border-radius: 14px;"><div class="radius-name">r-md</div><div class="radius-val">14 px</div></div>
+        <div class="radius-cell" style="border-radius: 20px;"><div class="radius-name">r-lg</div><div class="radius-val">20 px</div></div>
+        <div class="radius-cell" style="border-radius: 26px;"><div class="radius-name">r-xl</div><div class="radius-val">26 px</div></div>
+        <div class="radius-cell" style="border-radius: 999px;"><div class="radius-name">r-pill</div><div class="radius-val">∞</div></div>
+      </div>
+
+      <h3 style="font-size: 14px; margin: 28px 0 12px; color: var(--fg-2); letter-spacing: 0.18em; text-transform: uppercase;">Spacing scale</h3>
+      <div class="card-doc">
+        <table class="table">
+          <thead><tr><th>Token</th><th>Px</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">s-1</td><td class="mono">4</td><td>Tight chip / icon gap</td></tr>
+            <tr><td class="mono">s-2</td><td class="mono">8</td><td>Stack between primitives</td></tr>
+            <tr><td class="mono">s-3</td><td class="mono">12</td><td>Card row padding</td></tr>
+            <tr><td class="mono">s-4</td><td class="mono">16</td><td>Section spacing</td></tr>
+            <tr><td class="mono">s-5</td><td class="mono">20</td><td>Card padding · screen padding</td></tr>
+            <tr><td class="mono">s-6</td><td class="mono">24</td><td>Header offset</td></tr>
+            <tr><td class="mono">s-7</td><td class="mono">32</td><td>Group spacing</td></tr>
+            <tr><td class="mono">s-8</td><td class="mono">40</td><td>Page-level spacing</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="motion">
+      <div class="section-eyebrow">04 · Foundations</div>
+      <h2 class="section-title">Motion</h2>
+      <p class="section-desc">One easing curve, cubic-bezier(0.2, 0.8, 0.2, 1). Three durations. Animations always explain action; they never just decorate.</p>
+
+      <div class="card-doc">
+        <table class="table">
+          <thead><tr><th>Role</th><th>Duration</th><th>Where it appears</th></tr></thead>
+          <tbody>
+            <tr><td>Tap feedback</td><td class="mono">120 ms</td><td>Button scale, row press</td></tr>
+            <tr><td>Transition</td><td class="mono">260 ms</td><td>Screen change, option select</td></tr>
+            <tr><td>Reveal</td><td class="mono">420 ms</td><td>Result confetti, check draw-on</td></tr>
+            <tr><td>Breathing orb</td><td class="mono">1.4 s loop</td><td>Welcome, clean active, downsell</td></tr>
+            <tr><td>CTA sheen</td><td class="mono">3.6 s loop</td><td>Primary buttons</td></tr>
+            <tr><td>Ripple emit</td><td class="mono">2.6 s loop</td><td>Clean active, sound test</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="buttons">
+      <div class="section-eyebrow">05 · Components</div>
+      <h2 class="section-title">Buttons</h2>
+      <p class="section-desc">Primary uses the gradient + sheen treatment. Accent is flat for high-frequency use. Ghost is reserved for tertiary actions.</p>
+
+      <div id="root-buttons"></div>
+    </section>
+
+    <section id="cards">
+      <div class="section-eyebrow">06 · Components</div>
+      <h2 class="section-title">Cards & Rows</h2>
+      <p class="section-desc">Cards are flat with hairline borders. Option rows snap to dark fill when active, with a check on the right.</p>
+      <div id="root-cards"></div>
+    </section>
+
+    <section id="feedback">
+      <div class="section-eyebrow">07 · Components</div>
+      <h2 class="section-title">Feedback & State</h2>
+      <p class="section-desc">Step indicators, ring progress, plan cards. Numbers always render in mono.</p>
+      <div id="root-feedback"></div>
+    </section>
+
+    <section id="viz">
+      <div class="section-eyebrow">08 · Components</div>
+      <h2 class="section-title">Visualizations</h2>
+      <p class="section-desc">Live, animated. The orb is canvas; the waveform, dial, and ring are SVG with RAF-driven updates.</p>
+      <div id="root-viz"></div>
+    </section>
+
+    <section id="chrome">
+      <div class="section-eyebrow">09 · Components</div>
+      <h2 class="section-title">Chrome</h2>
+      <p class="section-desc">Status bar and header. The consistent top of every screen.</p>
+      <div id="root-chrome"></div>
+    </section>
+
+    <section id="icons">
+      <div class="section-eyebrow">10 · Components</div>
+      <h2 class="section-title">Icons</h2>
+      <p class="section-desc">22 outline icons at 1.6 stroke. Sized via prop; recolored via currentColor.</p>
+      <div id="root-icons"></div>
+    </section>
+
+  </main>
+</div>
+
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+
+<script type="text/babel" src="primitives.jsx"></script>
+
+<script type="text/babel" data-presets="env,react">
+const { useState } = React;
+
+function PrimCard({ name, desc, children, big }) {
+  return (
+    <div className="prim-card" style={big ? { gridColumn: 'span 2' } : null}>
+      <div className="prim-stage">{children}</div>
+      <div className="prim-meta">
+        <div className="prim-name">{name}</div>
+        <div className="prim-desc">{desc}</div>
+      </div>
+    </div>
+  );
+}
+
+/* Buttons */
+function Buttons() {
+  return (
+    <div className="prim-grid">
+      <PrimCard name="btn-primary" desc="Gradient + shadow + sheen loop">
+        <button className="btn btn-primary" style={{ width: 200 }}>Get Started</button>
+      </PrimCard>
+      <PrimCard name="btn-accent" desc="Flat accent for in-content use">
+        <button className="btn btn-accent" style={{ width: 200 }}>Continue</button>
+      </PrimCard>
+      <PrimCard name="btn-soft" desc="Quiet, low-emphasis">
+        <button className="btn btn-soft" style={{ width: 200 }}>Skip for now</button>
+      </PrimCard>
+      <PrimCard name="btn-ghost" desc="Tertiary, no fill">
+        <button className="btn btn-ghost" style={{ width: 200 }}>Maybe later</button>
+      </PrimCard>
+      <PrimCard name="icon-btn" desc="38×38 round, navigation">
+        <button className="icon-btn">{ICONS.back()}</button>
+      </PrimCard>
+      <PrimCard name="Chip" desc="Status pill on glass">
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '7px 12px', borderRadius: 999,
+          background: 'rgba(255,255,255,0.85)',
+          border: '1px solid var(--hairline)',
+          fontSize: 12.5, fontWeight: 500,
+        }}>{ICONS.wave(14)} 450 Hz</div>
+      </PrimCard>
+    </div>
+  );
+}
+
+/* Cards */
+function CardsDemo() {
+  const [active, setActive] = useState('water');
+  return (
+    <div className="prim-grid">
+      <PrimCard name="Card" desc="Primary content container" big>
+        <div className="card" style={{ width: 320 }}>
+          <div className="t-eyebrow">Session</div>
+          <h3 style={{ margin: '6px 0 4px', fontSize: 18, fontWeight: 600 }}>Water Clean</h3>
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--fg-1)' }}>450 Hz · 2:30 · adaptive vibration</p>
+        </div>
+      </PrimCard>
+      <PrimCard name="Card-quiet" desc="Secondary / nested">
+        <div className="card-quiet" style={{ width: 280, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ color: 'var(--cy-1)' }}>{ICONS.shield(20)}</div>
+          <div style={{ fontSize: 13, color: 'var(--fg-1)' }}>Safe for all speakers.</div>
+        </div>
+      </PrimCard>
+      <PrimCard name="OptionRow" desc="Selector with active dark fill" big>
+        <div style={{ width: 320, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <OptionRow icon={ICONS.water(20)} title="Water in speaker" subtitle="Muffled or low sound"
+            active={active === 'water'} onClick={() => setActive('water')} />
+          <OptionRow icon={ICONS.dust(20)} title="Dust or sand" subtitle="Crackling or buzzing"
+            active={active === 'dust'} onClick={() => setActive('dust')} />
+        </div>
+      </PrimCard>
+    </div>
+  );
+}
+
+/* Feedback */
+function FeedbackDemo() {
+  return (
+    <div className="prim-grid">
+      <PrimCard name="Progress" desc="Step indicator">
+        <div style={{ width: 220 }}><Progress steps={3} current={2} /></div>
+      </PrimCard>
+      <PrimCard name="ProgressRing" desc="Cycle progress">
+        <ProgressRing size={160} stroke={10} progress={0.7}
+          label="70%" sublabel="Cleaning" />
+      </PrimCard>
+      <PrimCard name="PlanCard" desc="Paywall pricing row" big>
+        <div style={{ width: 320, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <PlanCard name="Yearly" sub="3-day free trial" price="$1.66/mo"
+            badge="Best" savings="Save 60%" active onClick={() => {}} />
+          <PlanCard name="Weekly" sub="Billed weekly" price="$4.99" onClick={() => {}} />
+        </div>
+      </PrimCard>
+      <PrimCard name="Banner" desc="Custom sponsored card" big>
+        <div style={{ width: 320 }}><Banner /></div>
+      </PrimCard>
+    </div>
+  );
+}
+
+/* Visualizations */
+function VizDemo() {
+  return (
+    <div className="prim-grid">
+      <PrimCard name="GlowOrb" desc="Canvas · ambient hero" big>
+        <GlowOrb size={220} />
+      </PrimCard>
+      <PrimCard name="Waveform" desc="RAF · animated sine">
+        <Waveform width={260} height={70} />
+      </PrimCard>
+      <PrimCard name="CircularDial" desc="Frequency selector">
+        <CircularDial size={180} value={450} />
+      </PrimCard>
+      <PrimCard name="HapticPulse" desc="Vibration intensity bars">
+        <HapticPulse intensity={0.7} width={240} />
+      </PrimCard>
+      <PrimCard name="RippleWaves" desc="Layered concentric rings">
+        <div style={{ width: 180, height: 180, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <RippleWaves size={180} />
+        </div>
+      </PrimCard>
+      <PrimCard name="SpeakerCone" desc="Decorative speaker icon">
+        <SpeakerCone size={140} />
+      </PrimCard>
+    </div>
+  );
+}
+
+/* Chrome */
+function ChromeDemo() {
+  return (
+    <div className="prim-grid">
+      <PrimCard name="CSStatusBar" desc="Android · time, signal, battery" big>
+        <div style={{ width: 360, background: 'var(--bg-1)', border: '1px solid var(--hairline)', borderRadius: 12 }}>
+          <CSStatusBar />
+        </div>
+      </PrimCard>
+      <PrimCard name="CSHeader" desc="Back, title, right slot" big>
+        <div style={{ width: 360, background: 'var(--bg-1)', border: '1px solid var(--hairline)', borderRadius: 12 }}>
+          <CSHeader onBack={() => {}} title="Sound Test" right={<button className="icon-btn">{ICONS.settings(18)}</button>} />
+        </div>
+      </PrimCard>
+    </div>
+  );
+}
+
+/* Icons */
+function IconsDemo() {
+  return (
+    <div style={{
+      display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: 6,
+      background: 'var(--bg-1)', border: '1px solid var(--hairline)', borderRadius: 20, padding: 16,
+    }}>
+      {Object.entries(ICONS).map(([k, fn]) => (
+        <div key={k} style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+          padding: '14px 8px', borderRadius: 12,
+          background: 'var(--bg-2)',
+        }}>
+          <div style={{ color: 'var(--fg-0)' }}>{fn(24)}</div>
+          <div style={{ fontSize: 11, color: 'var(--fg-2)', fontFamily: 'var(--f-mono)' }}>{k}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root-buttons')).render(<Buttons />);
+ReactDOM.createRoot(document.getElementById('root-cards')).render(<CardsDemo />);
+ReactDOM.createRoot(document.getElementById('root-feedback')).render(<FeedbackDemo />);
+ReactDOM.createRoot(document.getElementById('root-viz')).render(<VizDemo />);
+ReactDOM.createRoot(document.getElementById('root-chrome')).render(<ChromeDemo />);
+ReactDOM.createRoot(document.getElementById('root-icons')).render(<IconsDemo />);
+</script>
+
+</body>
+</html>

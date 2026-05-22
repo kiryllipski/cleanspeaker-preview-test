@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Active Cleaning — Animation Variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/v4.css"/>
+</head>
+<body>
+<div class="anim-shell">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <div class="brand-dot"></div>
+    <h1>Active Cleaning — Animation Variants</h1>
+  </div>
+  <p class="lead">Шесть направлений анимации экрана очистки. Каждый фрейм автоматически зацикливается. Вариант B заполняет фрейм целиком. Варианты в группе «Target-aware» подсвечивают часть телефона, которая чистится — динамик сверху, снизу или беспроводные наушники рядом.</p>
+  <a href="All Screens v4.html" class="back">← Back to v4 gallery</a>
+
+  <div class="anim-section-h">Standalone variants</div>
+  <div class="anim-frames">
+
+    <!-- A: canonical zen orb + steam (current) -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">A</span><span class="nm">Zen orb · canonical</span><span class="nt">Calm · v3/v4 default</span></div>
+      <div class="a-body" id="frame-a"></div>
+    </div>
+
+    <!-- B: full-fill orb (occupies entire frame) -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">B</span><span class="nm">Full-fill orb</span><span class="nt">Maximal · fills frame</span></div>
+      <div class="a-body">
+        <div class="av-fullfill">
+          <div class="aura"></div>
+          <div class="core"></div>
+        </div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10">
+          <div style="text-align:center;font-family:'JetBrains Mono',monospace">
+            <div style="font-size:64px;font-weight:800;color:#F4FBFF;text-shadow:0 0 30px rgba(94,230,255,.8);letter-spacing:-0.045em">880<span style="font-size:20px;font-family:Manrope;color:rgba(244,251,255,.85);font-weight:600;margin-left:4px">Hz</span></div>
+            <div style="font-size:11px;letter-spacing:0.22em;color:rgba(244,251,255,.75);text-transform:uppercase;margin-top:8px;font-weight:700">mid-freq sweep</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: waveform tunnel -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">C</span><span class="nm">Waveform tunnel</span><span class="nt">Outward rings · hypnotic</span></div>
+      <div class="a-body">
+        <div class="av-tunnel">
+          <div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div>
+          <div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div>
+          <div class="core-text">
+            <div class="hz">880<span>Hz</span></div>
+            <div style="font-size:11px;letter-spacing:0.22em;color:var(--text-2);text-transform:uppercase;margin-top:8px;font-weight:700;font-family:Manrope">dust dislodge</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D: liquid mercury ejection -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">D</span><span class="nm">Mercury ejection</span><span class="nt">Liquid metaphor · vertical</span></div>
+      <div class="a-body">
+        <div class="av-mercury">
+          <div class="droplet"></div>
+          <div class="droplet d2"></div>
+          <div class="droplet d3"></div>
+          <div class="droplet d4"></div>
+          <div class="pool"></div>
+        </div>
+        <div style="position:absolute;top:34%;left:0;right:0;text-align:center;z-index:10">
+          <div style="font-size:42px;font-weight:800;color:#F4FBFF;text-shadow:0 0 22px rgba(94,230,255,.7);letter-spacing:-0.04em;font-family:'JetBrains Mono',monospace">165<span style="font-size:14px;color:var(--text-2);margin-left:3px;font-family:Manrope">Hz</span></div>
+          <div style="font-size:11px;letter-spacing:0.22em;color:var(--text-2);text-transform:uppercase;margin-top:8px;font-weight:700">water eject</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- E: ring-grid frequency sweep -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">E</span><span class="nm">Ring-grid sweep</span><span class="nt">Instrumental · radar feel</span></div>
+      <div class="a-body">
+        <div class="av-grid">
+          <svg viewBox="-160 -160 320 320">
+            <defs>
+              <linearGradient id="rgArc" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#5EE6FF"/><stop offset="1" stop-color="#2A7BFF"/>
+              </linearGradient>
+            </defs>
+            <circle r="140" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+            <circle r="110" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+            <circle r="80"  fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+            <circle r="140" fill="none" stroke="url(#rgArc)" stroke-width="4" stroke-linecap="round"
+              stroke-dasharray="180 700" transform="rotate(-90)"
+              style="filter:drop-shadow(0 0 12px rgba(94,230,255,.7))"/>
+            ${Array.from({length:60}).map((_,i)=>{
+              const a=(i/60)*Math.PI*2, r1=148, r2=i%5===0?164:158;
+              const x1=Math.cos(a)*r1, y1=Math.sin(a)*r1, x2=Math.cos(a)*r2, y2=Math.sin(a)*r2;
+              return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i%5===0?'rgba(94,230,255,.6)':'rgba(255,255,255,.18)'}" stroke-width="${i%5===0?1.6:1}"/>`;
+            }).join("")}
+          </svg>
+        </div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10">
+          <div style="text-align:center;font-family:'JetBrains Mono',monospace">
+            <div style="font-size:42px;font-weight:800;color:#F4FBFF;text-shadow:0 0 18px rgba(94,230,255,.6);letter-spacing:-0.04em">4.0<span style="font-size:14px;color:var(--text-2);margin-left:3px;font-family:Manrope">kHz</span></div>
+            <div style="font-size:10.5px;letter-spacing:0.22em;color:var(--text-2);text-transform:uppercase;margin-top:6px;font-weight:700;font-family:Manrope">cone reset</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F: animated speaker mesh (dot grid + droplet) — homage to v2 -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">F</span><span class="nm">Mesh & droplet</span><span class="nt">Literal · grille metaphor</span></div>
+      <div class="a-body">
+        <div id="frame-f"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="anim-section-h">Target-aware variants — анимация подсвечивает чистимую часть телефона</div>
+  <div class="anim-frames">
+
+    <!-- G: earpiece highlight -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">G1</span><span class="nm">Phone glow · Earpiece</span><span class="nt">Top driver lit</span></div>
+      <div class="a-body">
+        <div class="av-phone-glow">
+          <div class="phone-outline-wrap">
+            <div class="phone-outline">
+              <div class="phone-outline-screen"></div>
+              <div class="po-earpiece-dot"></div>
+              <div class="zone-earpiece"></div>
+            </div>
+            <div class="phone-outline-label">cleaning · earpiece · 880 Hz</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- H: bottom speaker highlight -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">G2</span><span class="nm">Phone glow · Bottom</span><span class="nt">Loudspeaker lit</span></div>
+      <div class="a-body">
+        <div class="av-phone-glow">
+          <div class="phone-outline-wrap">
+            <div class="phone-outline">
+              <div class="phone-outline-screen"></div>
+              <div class="po-bottom-dots">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="zone-bottom"></div>
+            </div>
+            <div class="phone-outline-label">cleaning · bottom · 165 Hz</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- I: headphones highlight (phone + glow off corner) -->
+    <div class="anim-frame">
+      <div class="a-label"><span class="n">G3</span><span class="nm">Phone glow · Headphones</span><span class="nt">Wireless pair lit</span></div>
+      <div class="a-body">
+        <div class="av-phone-glow">
+          <div class="phone-outline-wrap">
+            <div class="phone-outline">
+              <div class="phone-outline-screen"></div>
+            </div>
+            <div class="zone-headphones"></div>
+            <!-- earbud mini -->
+            <svg style="position:absolute;top:-14px;right:-14px;width:60px;height:60px;z-index:2" viewBox="0 0 60 60">
+              <ellipse cx="22" cy="28" rx="14" ry="12" fill="#E8EFF7"/>
+              <path d="M14 36 Q 12 50 22 56 Q 28 54 28 44 Z" fill="#D8DFEA"/>
+              <circle cx="22" cy="28" r="5" fill="#1a212f"/>
+              <circle cx="22" cy="28" r="3.4" fill="#03060C"/>
+              <circle cx="22" cy="28" r="3.4" fill="rgba(94,230,255,.45)"/>
+            </svg>
+            <div class="phone-outline-label">cleaning · headphones · 880 Hz</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/screens.v4.js"></script>
+<script>
+  // Mount variant A — canonical phone-sized clean view scaled to frame
+  const A = window.CleanSpeakerV4.cleaningScreen("active","earpiece");
+  const aHost = document.getElementById("frame-a");
+  aHost.innerHTML = `<div style="position:absolute;inset:0;background:transparent" id="frame-a-inner">${A}</div>`;
+  // Hide the statusbar and topbar to make the body of A look like just the animation
+  const inner = document.getElementById("frame-a-inner");
+  inner.querySelectorAll(".statusbar, .topbar").forEach(el=>el.remove());
+
+  // Mount variant F — mesh dot grid + droplet (homage to v2)
+  const fHost = document.getElementById("frame-f");
+  fHost.innerHTML = `
+    <svg width="100%" height="100%" viewBox="0 0 320 480" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="cyanDotF" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#7BEFFF"/><stop offset="1" stop-color="#2A7BFF"/>
+        </linearGradient>
+        <linearGradient id="dropF" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#C5F4FF"/><stop offset="1" stop-color="#2A7BFF"/>
+        </linearGradient>
+        <linearGradient id="splF" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#5EE6FF"/><stop offset="1" stop-color="#9B6BFF"/>
+        </linearGradient>
+      </defs>
+      <g transform="translate(160 260)">
+        <circle r="30" fill="none" stroke="url(#splF)" stroke-width="1.4" opacity="0">
+          <animate attributeName="r" values="30;130" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.8;0" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="30" fill="none" stroke="url(#splF)" stroke-width="1.4" opacity="0">
+          <animate attributeName="r" values="30;130" dur="2.4s" begin="0.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.8;0" dur="2.4s" begin="0.8s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="30" fill="none" stroke="url(#splF)" stroke-width="1.4" opacity="0">
+          <animate attributeName="r" values="30;130" dur="2.4s" begin="1.6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.8;0" dur="2.4s" begin="1.6s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+      <g transform="translate(90 230)">
+        ${Array.from({length:5}).map((_,r)=>Array.from({length:11}).map((__,c)=>{
+          const cx=c*14, cy=r*14, dx=cx-70, dy=cy-28, glow=Math.hypot(dx,dy)<26;
+          return `<circle cx="${cx}" cy="${cy}" r="4" fill="${glow?'url(#cyanDotF)':'#1c2436'}"/>`;
+        }).join("")).join("")}
+      </g>
+      <g transform="translate(160 246)">
+        <path d="M0 -22 C -8 -12 -10 -2 -10 4 a 10 10 0 0 0 20 0 C 10 -2 8 -12 0 -22 Z" fill="url(#dropF)" stroke="#5EE6FF" stroke-width="0.6"
+          style="transform-origin:50% 100%;filter:drop-shadow(0 0 6px rgba(94,230,255,.7))">
+          <animateTransform attributeName="transform" type="translate" values="0 8; 0 -70; 0 -110" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="2.4s" repeatCount="indefinite"/>
+        </path>
+      </g>
+      <text x="160" y="380" text-anchor="middle" font-family="JetBrains Mono" font-size="36" font-weight="800" fill="#F4FBFF" letter-spacing="-1.5" style="text-shadow:0 0 20px rgba(94,230,255,.7)">
+        165<tspan font-size="14" fill="#7E8FA8" dx="3" font-family="Manrope">Hz</tspan>
+      </text>
+      <text x="160" y="404" text-anchor="middle" font-family="Manrope" font-size="11" font-weight="700" fill="#7E8FA8" letter-spacing="2.4">WATER EJECT</text>
+    </svg>`;
+</script>
+</body>
+</html>

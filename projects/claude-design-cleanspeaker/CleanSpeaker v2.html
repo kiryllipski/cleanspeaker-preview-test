@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CleanSpeaker v2 — Interactive Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/v2.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <div class="brand-name">CleanSpeaker</div>
+        <div class="brand-sub">v2 · Premium Android</div>
+      </div>
+    </div>
+    <div class="nav-title">Flow</div>
+    <div id="nav"></div>
+    <div class="nav-title" style="margin-top:18px">Views</div>
+    <a class="nav-item" href="All Screens v2.html">Open screens gallery →</a>
+    <a class="nav-item" href="CleanSpeaker.html" style="color:var(--text-3)">← Back to v1 prototype</a>
+    <div style="margin-top:24px;padding:12px;border-radius:11px;background:rgba(94,230,255,.06);border:1px solid rgba(94,230,255,.18);font-size:11px;line-height:1.5;color:var(--text-2)">
+      Tap CTAs to walk the flow. Splash animates once on load — refresh to replay.
+    </div>
+  </aside>
+  <main class="stage">
+    <div class="phone" data-screen-label="CleanSpeaker v2">
+      <div class="screen" id="screen"></div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/screens.v2.js"></script>
+<script>
+  const { screens } = window.CleanSpeakerV2;
+  document.getElementById("nav").innerHTML = Object.entries(screens).map(([n,s])=>
+    `<div class="nav-item" data-go="${n}"><span class="nav-num">${String(n).padStart(2,"0")}</span>${s.title}</div>`
+  ).join("");
+
+  let current = 0; // always start at splash on load to demo animation
+  function go(n){
+    n = parseInt(n,10); if(!(n in screens)) return;
+    current = n;
+    document.getElementById("screen").innerHTML = screens[n].html();
+    document.querySelectorAll(".sidebar .nav-item").forEach(el=>{
+      el.classList.toggle("active", el.dataset.go === String(n));
+    });
+    document.querySelectorAll("[data-go]").forEach(el=>{
+      el.addEventListener("click",(e)=>{e.preventDefault(); go(el.dataset.go);});
+    });
+    if(n===0){ setTimeout(()=>{ if(current===0) go(1); }, 2200); }
+  }
+  go(0);
+</script>
+</body>
+</html>

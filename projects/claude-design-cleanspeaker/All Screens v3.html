@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CleanSpeaker v3 — Zen Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/v3.css"/>
+</head>
+<body>
+<div class="gallery">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <div class="brand-dot"></div>
+    <h1>CleanSpeaker v3 — Zen Console</h1>
+  </div>
+  <p class="lead">Третья итерация. Принцип: один фокус на экране, никаких дублей информации, hairline-прогресс везде, ритм дыхания 5.4s как единая «частота» приложения. Орб используется как ядро во всех heavy-моментах (splash, onboarding, paywall, active clean, result) — единая ось вместо россыпи карточек, плашек и метрик.</p>
+  <div class="meta-row">
+    <div><b>10 screens</b> · единый язык</div>
+    <div><b>Type:</b> Manrope · JetBrains Mono</div>
+    <div><b>Motion:</b> 1 cue / screen · 5.4s breath</div>
+    <div><b>Density:</b> ~40% меньше элементов vs v2</div>
+  </div>
+  <div class="gallery-tabs">
+    <a href="All Screens.html" class="g-tab">v1</a>
+    <a href="All Screens v2.html" class="g-tab">v2</a>
+    <a href="All Screens v3.html" class="g-tab on">v3 (current)</a>
+    <a href="All Screens v4.html" class="g-tab">v4 → Reworked Flow</a>
+  </div>
+  <div class="grid-screens" id="grid"></div>
+</div>
+
+<script src="assets/screens.v3.js"></script>
+<script>
+  const { screens } = window.CleanSpeakerV3;
+  document.getElementById("grid").innerHTML = Object.entries(screens).map(([n,s])=>`
+    <div class="screen-card">
+      <div class="label">
+        <span class="n">${String(n).padStart(2,"0")}</span>
+        <span class="nm">${s.title}</span>
+        <span class="nt">${s.note}</span>
+      </div>
+      <div class="stage-shrink">
+        <div class="phone" data-screen-label="${String(n).padStart(2,"0")} ${s.title}">
+          <div class="screen">${s.html()}</div>
+        </div>
+      </div>
+    </div>`).join("");
+  document.querySelectorAll("[data-go]").forEach(el=>el.addEventListener("click",e=>e.preventDefault()));
+</script>
+</body>
+</html>

@@ -3,222 +3,151 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CleanSpeaker Preview Test</title>
+  <title>CleanSpeaker Preview Catalog</title>
   <style>
-    :root {
-      color-scheme: light;
-      --bg: #f5f7fb;
-      --panel: #ffffff;
-      --text: #172033;
-      --muted: #667085;
-      --line: #d9e1ef;
-      --accent: #2563eb;
-      --accent-soft: #e8f0ff;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background: var(--bg);
-    }
-    header {
-      padding: 34px 28px 22px;
-      border-bottom: 1px solid var(--line);
-      background: var(--panel);
-    }
-    .wrap {
-      width: min(1180px, calc(100vw - 32px));
-      margin: 0 auto;
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.05;
-      letter-spacing: 0;
-    }
-    .lead {
-      margin: 0;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.5;
-    }
-    main { padding: 26px 0 44px; }
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-    .project {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .project-head {
-      padding: 18px 18px 14px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      border-bottom: 1px solid var(--line);
-    }
-    h2 {
-      margin: 0 0 4px;
-      font-size: 20px;
-      line-height: 1.2;
-      letter-spacing: 0;
-    }
-    .meta {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    a.button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      padding: 0 12px;
-      border-radius: 6px;
-      border: 1px solid var(--line);
-      color: var(--text);
-      background: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    a.button.primary {
-      color: #fff;
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-    .shots {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      padding: 14px;
-      background: #fbfcff;
-    }
-    figure {
-      margin: 0;
-      min-width: 0;
-    }
-    figure a {
-      display: block;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
-      background: var(--accent-soft);
-      aspect-ratio: 412 / 829;
-    }
-    img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-    }
-    figcaption {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.25;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    @media (max-width: 900px) {
-      .projects { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 560px) {
-      header { padding: 26px 18px 18px; }
-      .wrap { width: min(100vw - 20px, 1180px); }
-      .project-head { display: block; }
-      .actions { justify-content: flex-start; margin-top: 12px; }
-      .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
+    :root { color-scheme: light; --bg:#f5f7fb; --panel:#fff; --text:#172033; --muted:#667085; --line:#d9e1ef; --accent:#2563eb; --accent-soft:#e8f0ff; }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
+    header{padding:34px 28px 22px;border-bottom:1px solid var(--line);background:var(--panel)} .wrap{width:min(1240px,calc(100vw - 32px));margin:0 auto}
+    h1{margin:0 0 8px;font-size:clamp(28px,4vw,44px);line-height:1.05;letter-spacing:0}.lead{margin:0;color:var(--muted);font-size:16px;line-height:1.5}.summary{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);font-size:13px;background:#fbfcff}
+    main{padding:26px 0 44px}.projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.project{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}.project-head{padding:18px 18px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line)}
+    h2{margin:0 0 4px;font-size:20px;line-height:1.2;letter-spacing:0}.meta{margin:0;color:var(--muted);font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}a.button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 12px;border-radius:6px;border:1px solid var(--line);color:var(--text);background:#fff;text-decoration:none;font-weight:700;font-size:13px;white-space:nowrap}a.button.primary{color:#fff;background:var(--accent);border-color:var(--accent)}
+    .shots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px;background:#fbfcff}figure{margin:0;min-width:0}figure a{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--accent-soft);aspect-ratio:412/829}img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}figcaption{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    @media(max-width:980px){.projects{grid-template-columns:1fr}}@media(max-width:560px){header{padding:26px 18px 18px}.wrap{width:min(100vw - 20px,1240px)}.project-head{display:block}.actions{justify-content:flex-start;margin-top:12px}.shots{grid-template-columns:repeat(2,minmax(0,1fr))}}
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <h1>CleanSpeaker Preview Test</h1>
-      <p class="lead">Two static design projects prepared for GitHub Pages: live HTML previews plus captured app-screen galleries.</p>
+<header><div class="wrap"><h1>CleanSpeaker Preview Catalog</h1><p class="lead">Public GitHub Pages catalog with live HTML previews and captured app-screen galleries.</p><div class="summary"><span class="pill">11 projects</span><span class="pill">201 screenshots</span></div></div></header>
+<main class="wrap"><section class="projects" aria-label="Projects"><article class="project">
+    <div class="project-head">
+      <div><h2>CleanSpeaker Claude Design v3</h2><p class="meta">23 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/cleanspeaker-claude-design-v3/All%20Screens.html">Open</a><a class="button" href="projects/cleanspeaker-claude-design-v3/Prototype.html">Prototype</a><a class="button" href="screenshots/cleanspeaker-claude-design-v3/01-Use%20your%20speaker.png">Screens</a></div>
     </div>
-  </header>
-
-  <main class="wrap">
-    <section class="projects" aria-label="Projects">
-      <article class="project">
-        <div class="project-head">
-          <div>
-            <h2>CleanSpeaker Claude Design v3</h2>
-            <p class="meta">23 captured screens</p>
-          </div>
-          <div class="actions">
-            <a class="button primary" href="projects/cleanspeaker-claude-design-v3/All%20Screens.html">Open all screens</a>
-            <a class="button" href="projects/cleanspeaker-claude-design-v3/Prototype.html">Prototype</a>
-          </div>
-        </div>
-        <div class="shots">
-          <figure>
-            <a href="screenshots/cleanspeaker-claude-design-v3/01-Use%20your%20speaker.png"><img src="screenshots/cleanspeaker-claude-design-v3/01-Use%20your%20speaker.png" alt="Use your speaker"></a>
-            <figcaption>Use your speaker</figcaption>
-          </figure>
-          <figure>
-            <a href="screenshots/cleanspeaker-claude-design-v3/09-Try%20Pro%20free%20for%203%20days.png"><img src="screenshots/cleanspeaker-claude-design-v3/09-Try%20Pro%20free%20for%203%20days.png" alt="Try Pro free for 3 days"></a>
-            <figcaption>Try Pro free</figcaption>
-          </figure>
-          <figure>
-            <a href="screenshots/cleanspeaker-claude-design-v3/14-14Water%20EjectAction.png"><img src="screenshots/cleanspeaker-claude-design-v3/14-14Water%20EjectAction.png" alt="Water eject action"></a>
-            <figcaption>Water Eject</figcaption>
-          </figure>
-          <figure>
-            <a href="screenshots/cleanspeaker-claude-design-v3/20-20SettingsSystem.png"><img src="screenshots/cleanspeaker-claude-design-v3/20-20SettingsSystem.png" alt="Settings system"></a>
-            <figcaption>Settings</figcaption>
-          </figure>
-        </div>
-      </article>
-
-      <article class="project">
-        <div class="project-head">
-          <div>
-            <h2>CleanSpeaker Claude Design v4</h2>
-            <p class="meta">10 captured states</p>
-          </div>
-          <div class="actions">
-            <a class="button primary" href="projects/cleanspeaker-claude-design-v4/CleanSpeaker.html">Open prototype</a>
-            <a class="button" href="screenshots/cleanspeaker-claude-design-v4/01-splash.png">Screenshots</a>
-          </div>
-        </div>
-        <div class="shots">
-          <figure>
-            <a href="screenshots/cleanspeaker-claude-design-v4/01-splash.png"><img src="screenshots/cleanspeaker-claude-design-v4/01-splash.png" alt="Splash"></a>
-            <figcaption>Splash</figcaption>
-          </figure>
-          <figure>
-            <a href="screenshots/cleanspeaker-claude-design-v4/02-onboarding.png"><img src="screenshots/cleanspeaker-claude-design-v4/02-onboarding.png" alt="Onboarding"></a>
-            <figcaption>Onboarding</figcaption>
-          </figure>
-          <figure>
-            <a href="screenshots/cleanspeaker-claude-design-v4/03-trust.png"><img src="screenshots/cleanspeaker-claude-design-v4/03-trust.png" alt="Trust"></a>
-            <figcaption>Trust</figcaption>
-          </figure>
-          <figure>
-            <a href="screenshots/cleanspeaker-claude-design-v4/04-paywall.png"><img src="screenshots/cleanspeaker-claude-design-v4/04-paywall.png" alt="Paywall"></a>
-            <figcaption>Paywall</figcaption>
-          </figure>
-        </div>
-      </article>
-    </section>
-  </main>
+    <div class="shots">
+      <figure><a href="screenshots/cleanspeaker-claude-design-v3/01-Use%20your%20speaker.png"><img src="screenshots/cleanspeaker-claude-design-v3/01-Use%20your%20speaker.png" alt="CleanSpeaker Claude Design v3 preview"></a><figcaption>01-Use your speaker</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-claude-design-v3/02-02WelcomeSplash.png"><img src="screenshots/cleanspeaker-claude-design-v3/02-02WelcomeSplash.png" alt="CleanSpeaker Claude Design v3 preview"></a><figcaption>02-02WelcomeSplash</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-claude-design-v3/03-Whats%20wrong-.png"><img src="screenshots/cleanspeaker-claude-design-v3/03-Whats%20wrong-.png" alt="CleanSpeaker Claude Design v3 preview"></a><figcaption>03-Whats wrong-</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-claude-design-v3/04-When%20did%20it%20start-.png"><img src="screenshots/cleanspeaker-claude-design-v3/04-When%20did%20it%20start-.png" alt="CleanSpeaker Claude Design v3 preview"></a><figcaption>04-When did it start-</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>CleanSpeaker Claude Design v4</h2><p class="meta">10 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/cleanspeaker-claude-design-v4/CleanSpeaker.html">Open</a><a class="button" href="screenshots/cleanspeaker-claude-design-v4/01-splash.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/cleanspeaker-claude-design-v4/01-splash.png"><img src="screenshots/cleanspeaker-claude-design-v4/01-splash.png" alt="CleanSpeaker Claude Design v4 preview"></a><figcaption>01-splash</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-claude-design-v4/02-onboarding.png"><img src="screenshots/cleanspeaker-claude-design-v4/02-onboarding.png" alt="CleanSpeaker Claude Design v4 preview"></a><figcaption>02-onboarding</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-claude-design-v4/03-trust.png"><img src="screenshots/cleanspeaker-claude-design-v4/03-trust.png" alt="CleanSpeaker Claude Design v4 preview"></a><figcaption>03-trust</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-claude-design-v4/04-paywall.png"><img src="screenshots/cleanspeaker-claude-design-v4/04-paywall.png" alt="CleanSpeaker Claude Design v4 preview"></a><figcaption>04-paywall</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>claude-design-Cleaner6</h2><p class="meta">12 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/claude-design-cleaner6/all-screens.html">Open</a><a class="button" href="projects/claude-design-cleaner6/prototype.html">Prototype</a><a class="button" href="screenshots/claude-design-cleaner6/01-01-splash-brand-intro-begin.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/claude-design-cleaner6/01-01-splash-brand-intro-begin.png"><img src="screenshots/claude-design-cleaner6/01-01-splash-brand-intro-begin.png" alt="claude-design-Cleaner6 preview"></a><figcaption>01-01-splash-brand-intro-begin</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleaner6/02-02-problem-discovery-onboarding-q1.png"><img src="screenshots/claude-design-cleaner6/02-02-problem-discovery-onboarding-q1.png" alt="claude-design-Cleaner6 preview"></a><figcaption>02-02-problem-discovery-onboarding-q1</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleaner6/03-03-timeline-onboarding-q2.png"><img src="screenshots/claude-design-cleaner6/03-03-timeline-onboarding-q2.png" alt="claude-design-Cleaner6 preview"></a><figcaption>03-03-timeline-onboarding-q2</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleaner6/04-04-acoustic-diagnostic-loading-3-stage.png"><img src="screenshots/claude-design-cleaner6/04-04-acoustic-diagnostic-loading-3-stage.png" alt="claude-design-Cleaner6 preview"></a><figcaption>04-04-acoustic-diagnostic-loading-3-stage</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>CleanSpeaker-Antigravity</h2><p class="meta">18 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/cleanspeaker-antigravity/index.html">Open</a><a class="button" href="screenshots/cleanspeaker-antigravity/01-splash-loader.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/cleanspeaker-antigravity/01-splash-loader.png"><img src="screenshots/cleanspeaker-antigravity/01-splash-loader.png" alt="CleanSpeaker-Antigravity preview"></a><figcaption>01-splash-loader</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-antigravity/02-onboarding-1.png"><img src="screenshots/cleanspeaker-antigravity/02-onboarding-1.png" alt="CleanSpeaker-Antigravity preview"></a><figcaption>02-onboarding-1</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-antigravity/03-onboarding-2.png"><img src="screenshots/cleanspeaker-antigravity/03-onboarding-2.png" alt="CleanSpeaker-Antigravity preview"></a><figcaption>03-onboarding-2</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-antigravity/04-onboarding-3.png"><img src="screenshots/cleanspeaker-antigravity/04-onboarding-3.png" alt="CleanSpeaker-Antigravity preview"></a><figcaption>04-onboarding-3</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>CleanSpeaker-Antigravity copy</h2><p class="meta">18 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/cleanspeaker-antigravity-copy/index.html">Open</a><a class="button" href="screenshots/cleanspeaker-antigravity-copy/01-0-loader.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/cleanspeaker-antigravity-copy/01-0-loader.png"><img src="screenshots/cleanspeaker-antigravity-copy/01-0-loader.png" alt="CleanSpeaker-Antigravity copy preview"></a><figcaption>01-0-loader</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-antigravity-copy/02-1-purge.png"><img src="screenshots/cleanspeaker-antigravity-copy/02-1-purge.png" alt="CleanSpeaker-Antigravity copy preview"></a><figcaption>02-1-purge</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-antigravity-copy/03-2-extract.png"><img src="screenshots/cleanspeaker-antigravity-copy/03-2-extract.png" alt="CleanSpeaker-Antigravity copy preview"></a><figcaption>03-2-extract</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-antigravity-copy/04-3-calibrate.png"><img src="screenshots/cleanspeaker-antigravity-copy/04-3-calibrate.png" alt="CleanSpeaker-Antigravity copy preview"></a><figcaption>04-3-calibrate</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>claude-design-CleanSpeaker CleanSpeaker</h2><p class="meta">10 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/claude-design-cleanspeaker/CleanSpeaker.html">Open</a><a class="button" href="screenshots/claude-design-cleanspeaker-clean/01-01onboarding-start.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/claude-design-cleanspeaker-clean/01-01onboarding-start.png"><img src="screenshots/claude-design-cleanspeaker-clean/01-01onboarding-start.png" alt="claude-design-CleanSpeaker CleanSpeaker preview"></a><figcaption>01-01onboarding-start</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleanspeaker-clean/02-02problem-selection.png"><img src="screenshots/claude-design-cleanspeaker-clean/02-02problem-selection.png" alt="claude-design-CleanSpeaker CleanSpeaker preview"></a><figcaption>02-02problem-selection</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleanspeaker-clean/03-03condition-urgency.png"><img src="screenshots/claude-design-cleanspeaker-clean/03-03condition-urgency.png" alt="claude-design-CleanSpeaker CleanSpeaker preview"></a><figcaption>03-03condition-urgency</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleanspeaker-clean/04-04rescue-plan-ready.png"><img src="screenshots/claude-design-cleanspeaker-clean/04-04rescue-plan-ready.png" alt="claude-design-CleanSpeaker CleanSpeaker preview"></a><figcaption>04-04rescue-plan-ready</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>CleanSpeaker-light-mode-2-impeccable</h2><p class="meta">23 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/cleanspeaker-light-mode-2-impeccable/All%20Screens.html">Open</a><a class="button" href="projects/cleanspeaker-light-mode-2-impeccable/Prototype.html">Prototype</a><a class="button" href="screenshots/cleanspeaker-light-mode-2-impeccable/01-01welcomehero.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/cleanspeaker-light-mode-2-impeccable/01-01welcomehero.png"><img src="screenshots/cleanspeaker-light-mode-2-impeccable/01-01welcomehero.png" alt="CleanSpeaker-light-mode-2-impeccable preview"></a><figcaption>01-01welcomehero</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-light-mode-2-impeccable/02-02permissionpermission.png"><img src="screenshots/cleanspeaker-light-mode-2-impeccable/02-02permissionpermission.png" alt="CleanSpeaker-light-mode-2-impeccable preview"></a><figcaption>02-02permissionpermission</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-light-mode-2-impeccable/03-03q1-problemquestion.png"><img src="screenshots/cleanspeaker-light-mode-2-impeccable/03-03q1-problemquestion.png" alt="CleanSpeaker-light-mode-2-impeccable preview"></a><figcaption>03-03q1-problemquestion</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-light-mode-2-impeccable/04-04q2-whenquestion.png"><img src="screenshots/cleanspeaker-light-mode-2-impeccable/04-04q2-whenquestion.png" alt="CleanSpeaker-light-mode-2-impeccable preview"></a><figcaption>04-04q2-whenquestion</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>SpekerCleaner screens-v5</h2><p class="meta">27 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/spekercleaner-screens-v5/index.html">Open</a><a class="button" href="screenshots/spekercleaner-screens-v5/01-01-splash.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/spekercleaner-screens-v5/01-01-splash.png"><img src="screenshots/spekercleaner-screens-v5/01-01-splash.png" alt="SpekerCleaner screens-v5 preview"></a><figcaption>01-01-splash</figcaption></figure>
+      <figure><a href="screenshots/spekercleaner-screens-v5/02-02-onboarding-1-hook.png"><img src="screenshots/spekercleaner-screens-v5/02-02-onboarding-1-hook.png" alt="SpekerCleaner screens-v5 preview"></a><figcaption>02-02-onboarding-1-hook</figcaption></figure>
+      <figure><a href="screenshots/spekercleaner-screens-v5/03-03-onboarding-2-how-it-works.png"><img src="screenshots/spekercleaner-screens-v5/03-03-onboarding-2-how-it-works.png" alt="SpekerCleaner screens-v5 preview"></a><figcaption>03-03-onboarding-2-how-it-works</figcaption></figure>
+      <figure><a href="screenshots/spekercleaner-screens-v5/04-04-onboarding-3-reviews-trust.png"><img src="screenshots/spekercleaner-screens-v5/04-04-onboarding-3-reviews-trust.png" alt="SpekerCleaner screens-v5 preview"></a><figcaption>04-04-onboarding-3-reviews-trust</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>claude-design-CleanSpeaker All Screens</h2><p class="meta">20 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/claude-design-cleanspeaker/All%20Screens.html">Open</a><a class="button" href="screenshots/claude-design-cleanspeaker-all-screens/01-01-onboarding-start-promise-waveform-hero.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/claude-design-cleanspeaker-all-screens/01-01-onboarding-start-promise-waveform-hero.png"><img src="screenshots/claude-design-cleanspeaker-all-screens/01-01-onboarding-start-promise-waveform-hero.png" alt="claude-design-CleanSpeaker All Screens preview"></a><figcaption>01-01-onboarding-start-promise-waveform-hero</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleanspeaker-all-screens/02-01-onboarding-start.png"><img src="screenshots/claude-design-cleanspeaker-all-screens/02-01-onboarding-start.png" alt="claude-design-CleanSpeaker All Screens preview"></a><figcaption>02-01-onboarding-start</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleanspeaker-all-screens/03-02-problem-selection-pick-the-symptom.png"><img src="screenshots/claude-design-cleanspeaker-all-screens/03-02-problem-selection-pick-the-symptom.png" alt="claude-design-CleanSpeaker All Screens preview"></a><figcaption>03-02-problem-selection-pick-the-symptom</figcaption></figure>
+      <figure><a href="screenshots/claude-design-cleanspeaker-all-screens/04-02-problem-selection.png"><img src="screenshots/claude-design-cleanspeaker-all-screens/04-02-problem-selection.png" alt="claude-design-CleanSpeaker All Screens preview"></a><figcaption>04-02-problem-selection</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>cleanspeaker project</h2><p class="meta">23 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/cleanspeaker-project/All%20Screens.html">Open</a><a class="button" href="projects/cleanspeaker-project/Prototype.html">Prototype</a><a class="button" href="screenshots/cleanspeaker-project/01-01permissionsystem.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/cleanspeaker-project/01-01permissionsystem.png"><img src="screenshots/cleanspeaker-project/01-01permissionsystem.png" alt="cleanspeaker project preview"></a><figcaption>01-01permissionsystem</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-project/02-02welcomesplash.png"><img src="screenshots/cleanspeaker-project/02-02welcomesplash.png" alt="cleanspeaker project preview"></a><figcaption>02-02welcomesplash</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-project/03-03q1-problemonboarding.png"><img src="screenshots/cleanspeaker-project/03-03q1-problemonboarding.png" alt="cleanspeaker project preview"></a><figcaption>03-03q1-problemonboarding</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-project/04-04q2-timingonboarding.png"><img src="screenshots/cleanspeaker-project/04-04q2-timingonboarding.png" alt="cleanspeaker project preview"></a><figcaption>04-04q2-timingonboarding</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>CleanSpeaker-light-mode-2</h2><p class="meta">17 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/cleanspeaker-light-mode-2/All%20Screens.html">Open</a><a class="button" href="projects/cleanspeaker-light-mode-2/Prototype.html">Prototype</a><a class="button" href="screenshots/cleanspeaker-light-mode-2/01-01-problem-intent.png">Screens</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/cleanspeaker-light-mode-2/01-01-problem-intent.png"><img src="screenshots/cleanspeaker-light-mode-2/01-01-problem-intent.png" alt="CleanSpeaker-light-mode-2 preview"></a><figcaption>01-01-problem-intent</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-light-mode-2/02-02-trust-process.png"><img src="screenshots/cleanspeaker-light-mode-2/02-02-trust-process.png" alt="CleanSpeaker-light-mode-2 preview"></a><figcaption>02-02-trust-process</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-light-mode-2/03-03-value-toolkit.png"><img src="screenshots/cleanspeaker-light-mode-2/03-03-value-toolkit.png" alt="CleanSpeaker-light-mode-2 preview"></a><figcaption>03-03-value-toolkit</figcaption></figure>
+      <figure><a href="screenshots/cleanspeaker-light-mode-2/04-04-paywall-special-offer.png"><img src="screenshots/cleanspeaker-light-mode-2/04-04-paywall-special-offer.png" alt="CleanSpeaker-light-mode-2 preview"></a><figcaption>04-04-paywall-special-offer</figcaption></figure>
+    </div>
+  </article></section></main>
 </body>
 </html>

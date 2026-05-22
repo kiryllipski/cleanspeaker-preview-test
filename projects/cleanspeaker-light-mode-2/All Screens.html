@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CleanSpeaker · All Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="tokens.css"/>
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<style>
+  body { background: var(--bg-0); }
+  .lineup-frame { transform-origin: top left; }
+  .group-title {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--cy-3);
+    margin-bottom: 8px;
+  }
+  .group-name {
+    font-size: 28px; font-weight: 600; letter-spacing: -0.02em;
+    color: var(--fg-0); margin-bottom: 10px; line-height: 1.1;
+  }
+  .group-desc { font-size: 13.5px; color: var(--fg-1); line-height: 1.5; max-width: 200px; }
+  .lineup-divider {
+    height: 1px; background: var(--hairline);
+    margin: 32px 0 0;
+  }
+  .page-title-row {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 24px; margin-bottom: 24px;
+  }
+  .lineup-stat {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-1);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    font-size: 12px; color: var(--fg-1);
+  }
+  .lineup-stat .mono { color: var(--fg-0); font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="primitives.jsx"></script>
+<script type="text/babel" src="screens-onboarding.jsx"></script>
+<script type="text/babel" src="screens-app.jsx"></script>
+<script type="text/babel" src="screens-extra.jsx"></script>
+<script type="text/babel" data-presets="react">
+
+const noNav = () => {};
+const noState = {};
+const noSet = () => {};
+
+const GROUPS = [
+  {
+    eyebrow: 'Phase 01',
+    name: 'Onboarding',
+    desc: 'Three convincing screens that frame the problem, the process, and the toolkit before the first paywall.',
+    frames: [
+      { id: 'problem', name: 'Problem',  tag: 'Intent', C: window.ScrProblem },
+      { id: 'trust',   name: 'Trust',    tag: 'Process', C: window.ScrTrust },
+      { id: 'value',   name: 'Value',    tag: 'Toolkit', C: window.ScrValue },
+    ],
+  },
+  {
+    eyebrow: 'Phase 02',
+    name: 'Monetization',
+    desc: 'The special offer paywall after onboarding and the post-aha upsell after a muffled result.',
+    frames: [
+      { id: 'paywall', name: 'Paywall',  tag: 'Special offer', C: window.ScrPaywall },
+      { id: 'muffled', name: 'Upsell',   tag: 'Deep Clean', C: window.ScrResultMuffled },
+    ],
+  },
+  {
+    eyebrow: 'Phase 03',
+    name: 'Home',
+    desc: 'Free home with banner and locked Advanced tools, premium home with everything unlocked.',
+    frames: [
+      { id: 'home-free',    name: 'Home — Free',    tag: 'Default', C: window.ScrHomeFree },
+      { id: 'home-premium', name: 'Home — Premium', tag: 'Unlocked', C: window.ScrHomePremium },
+      { id: 'premium-tools', name: 'Premium Tools', tag: 'Locked surface', C: window.ScrPremiumTools },
+    ],
+  },
+  {
+    eyebrow: 'Phase 04',
+    name: 'Rescue flow',
+    desc: 'The core action sequence — setup, active clean, recovery and completion states.',
+    frames: [
+      { id: 'setup',          name: 'Setup',          tag: 'Pre-flight', C: window.ScrSetup },
+      { id: 'clean-active',   name: 'Clean — Active', tag: 'Action', C: window.ScrCleanActive },
+      { id: 'clean-stopped',  name: 'Clean — Stopped',tag: 'Recovery', C: window.ScrCleanStopped },
+      { id: 'clean-complete', name: 'Clean — Done',   tag: 'Hand-off', C: window.ScrCleanComplete },
+    ],
+  },
+  {
+    eyebrow: 'Phase 05',
+    name: 'Verify & resolve',
+    desc: 'User-judged proof of result, then a positive or stronger-clean branch.',
+    frames: [
+      { id: 'sound-test',   name: 'Sound Test',   tag: 'Verify', C: window.ScrSoundTest },
+      { id: 'result-better',name: 'Result — Better', tag: 'Positive loop', C: window.ScrResultBetter },
+    ],
+  },
+  {
+    eyebrow: 'Phase 06',
+    name: 'Premium tools',
+    desc: 'Three flagship premium screens that justify the upgrade.',
+    frames: [
+      { id: 'manual-hz', name: 'Manual Hz', tag: 'Frequency', C: window.ScrManualHz },
+      { id: 'vibration', name: 'Vibration', tag: 'Haptics',   C: window.ScrVibration },
+      { id: 'deep-clean',name: 'Deep Clean',tag: 'Multi-step',C: window.ScrDeepClean },
+    ],
+  },
+];
+
+let counter = 0;
+
+function App() {
+  const total = GROUPS.reduce((n, g) => n + g.frames.length, 0);
+  return (
+    <div className="lineup-page">
+      <div style={{ maxWidth: 1180, margin: '0 auto 56px' }}>
+        <div className="page-title-row">
+          <div>
+            <div className="eyebrow" style={{ color: 'var(--cy-3)', marginBottom: 12 }}>CleanSpeaker · All Screens</div>
+            <div style={{ fontSize: 44, fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05 }}>Every screen,<br/>one canvas.</div>
+            <div style={{ fontSize: 15, color: 'var(--fg-1)', marginTop: 14, maxWidth: 540 }}>
+              Static lineup of the full P0 flow plus three premium tool previews. Each frame renders the live primitive set used in the prototype.
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 8, flexDirection: 'column' }}>
+            <div className="lineup-stat"><span className="mono">{String(total).padStart(2, '0')}</span> screens</div>
+            <div className="lineup-stat"><span className="mono">06</span> flow phases</div>
+            <div className="lineup-stat"><span className="mono">17</span> primitives</div>
+          </div>
+        </div>
+      </div>
+
+      {GROUPS.map((g, gi) => (
+        <div key={g.name} className="lineup-group">
+          <div className="lineup-meta">
+            <div className="group-title">{g.eyebrow}</div>
+            <div className="group-name">{g.name}</div>
+            <div className="group-desc">{g.desc}</div>
+          </div>
+          {g.frames.map((f) => {
+            counter += 1;
+            const num = String(counter).padStart(2, '0');
+            const C = f.C;
+            return (
+              <div key={f.id} style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className="lineup-frame">
+                  {C ? <C nav={noNav} state={noState} set={noSet}/> : <div className="cs-screen" style={{display:'flex',alignItems:'center',justifyContent:'center'}}>Missing screen: {f.id}</div>}
+                </div>
+                <div className="lineup-caption">
+                  <strong>{num}</strong> · {f.name} · {f.tag}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+
+      <div style={{ maxWidth: 1180, margin: '40px auto 0', borderTop: '1px solid var(--hairline)', paddingTop: 32, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+        <div style={{ fontSize: 12, color: 'var(--fg-2)', letterSpacing: '0.05em' }}>CleanSpeaker Rescue · Light mode · Android 412 × 828 dp</div>
+        <div style={{ fontSize: 12, color: 'var(--fg-2)' }} className="mono">v1.0 · {new Date().toISOString().slice(0,10)}</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

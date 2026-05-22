@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>CleanSpeaker — All Screens</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="tokens.css"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 700px at 30% 10%, rgba(37,182,245,0.08), transparent 60%),
+        radial-gradient(1200px 700px at 80% 90%, rgba(14,124,196,0.06), transparent 60%),
+        #04070D;
+      font-family: var(--f-ui);
+      color: var(--fg-0);
+      overflow-x: auto;
+    }
+    .lineup {
+      padding: 50px 56px 70px;
+      display: flex; flex-direction: column;
+      min-width: max-content;
+    }
+    .header {
+      max-width: 920px;
+      margin-bottom: 38px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 40px;
+    }
+    .header-text { max-width: 600px; }
+    .doc-links {
+      display: flex; gap: 10px;
+      flex-shrink: 0;
+    }
+    .doc-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(91,213,255,0.06);
+      border: 1px solid rgba(91,213,255,0.22);
+      color: var(--cy-1);
+      text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: all 0.2s ease;
+    }
+    .doc-link:hover {
+      background: rgba(91,213,255,0.12);
+      border-color: rgba(91,213,255,0.4);
+      transform: translateY(-1px);
+    }
+    .doc-link .ico {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: rgba(91,213,255,0.10);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .doc-link .nm { font-size: 13px; font-weight: 600; color: var(--fg-0); }
+    .doc-link .sub { font-size: 10px; color: var(--fg-2); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 12px; border-radius: 999px;
+      background: rgba(91,213,255,0.08);
+      border: 1px solid rgba(91,213,255,0.25);
+      font-size: 10px; font-weight: 600; color: var(--cy-1);
+      letter-spacing: 0.22em; text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .eyebrow::before {
+      content: ''; width: 6px; height: 6px; border-radius: 999px;
+      background: var(--cy-1); box-shadow: 0 0 8px var(--cy-1);
+    }
+    h1 {
+      font-size: 36px; font-weight: 600; margin: 0 0 10px;
+      letter-spacing: -0.02em; line-height: 1.1;
+    }
+    .sub {
+      font-size: 15px; color: var(--fg-1); max-width: 600px;
+      line-height: 1.55; margin: 0;
+    }
+
+    .group-tabs {
+      display: flex; gap: 36px;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 36px; padding-bottom: 18px;
+    }
+    .group-tab {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .group-tab .count {
+      font-family: var(--f-mono); font-size: 11px;
+      color: var(--fg-3); letter-spacing: 0.15em;
+    }
+    .group-tab .name {
+      font-size: 14px; font-weight: 600; color: var(--fg-0);
+    }
+    .group-tab.muted .name { color: var(--fg-2); }
+
+    .row {
+      display: flex; gap: 32px;
+      margin-bottom: 50px;
+      align-items: flex-start;
+    }
+    .row-meta {
+      width: 220px; flex-shrink: 0; padding-top: 8px;
+      position: sticky; left: 56px;
+    }
+    .row-no {
+      font-family: var(--f-mono); font-size: 11px;
+      color: var(--cy-1); letter-spacing: 0.2em; margin-bottom: 6px;
+    }
+    .row-title {
+      font-size: 22px; font-weight: 600; letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+    .row-desc {
+      font-size: 13px; color: var(--fg-2); line-height: 1.5;
+      margin: 0;
+    }
+
+    .frames {
+      display: flex; gap: 28px;
+      flex-wrap: nowrap;
+    }
+    .frame {
+      flex-shrink: 0;
+      display: flex; flex-direction: column;
+      align-items: center;
+    }
+    .frame-screen {
+      width: 412px;
+      height: 828px;
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+      background: #04070D;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.05),
+        0 24px 60px -20px rgba(0,0,0,0.6),
+        0 0 40px -10px rgba(91,213,255,0.10);
+    }
+    .frame-screen > div { width: 100%; height: 100%; }
+    .frame-caption {
+      margin-top: 14px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--fg-1);
+    }
+    .frame-caption .num {
+      font-family: var(--f-mono); color: var(--cy-1);
+      font-size: 11px; letter-spacing: 0.15em;
+    }
+    .frame-caption .name { font-weight: 600; }
+    .frame-caption .tag {
+      padding: 2px 8px; border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--hairline);
+      font-size: 10px; color: var(--fg-2);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* Bottom legend */
+    .legend {
+      margin-top: 60px;
+      max-width: 900px;
+      padding: 24px 28px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--hairline-2);
+    }
+    .legend h3 {
+      font-size: 11px; letter-spacing: 0.22em; color: var(--fg-2);
+      text-transform: uppercase; margin: 0 0 14px;
+      font-weight: 600;
+    }
+    .legend-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
+    }
+    .legend-item .swatch {
+      width: 100%; height: 56px; border-radius: 10px;
+      border: 1px solid var(--hairline);
+    }
+    .legend-item .label {
+      font-size: 11px; color: var(--fg-1); margin-top: 8px;
+      font-family: var(--f-mono); letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <div class="lineup">
+    <div class="header">
+      <div class="header-text">
+        <div class="eyebrow">CleanSpeaker — full flow</div>
+        <h1>All screens, in order.</h1>
+        <p class="sub">Premium Android utility designed for first-session conversion. Onboarding builds diagnostic trust, the rescue plan justifies the trial, and the cleaning flow delivers a tangible, audible result.</p>
+      </div>
+      <div class="doc-links">
+        <a class="doc-link" href="Documentation.html">
+          <div class="ico">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M4 3 h7 l3 3 v9 a1 1 0 0 1-1 1 H4 a1 1 0 0 1-1-1 V4 a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.4"/><path d="M11 3 v3 h3" stroke="currentColor" stroke-width="1.4"/><line x1="6" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="6" y1="13" x2="9" y2="13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div class="nm">Documentation</div>
+            <div class="sub">Engineer handoff</div>
+          </div>
+        </a>
+        <a class="doc-link" href="Design System.html">
+          <div class="ico">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/><circle cx="13" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4"/><rect x="3" y="11" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.4"/><path d="M11 11 L15 15 M15 11 L11 15" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div class="nm">Design System</div>
+            <div class="sub">Figma import</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group-tabs">
+      <div class="group-tab"><span class="count">01 — 11</span><span class="name">Onboarding & Conversion</span></div>
+      <div class="group-tab"><span class="count">12 — 19</span><span class="name">Core App & Cleaning</span></div>
+      <div class="group-tab"><span class="count">20 — 23</span><span class="name">Dev States & Modals</span></div>
+    </div>
+
+    <div id="lineup-root"></div>
+
+    <div class="legend">
+      <h3>Design system</h3>
+      <div class="legend-grid">
+        <div class="legend-item">
+          <div class="swatch" style="background: #04070D;"></div>
+          <div class="label">#04070D — base</div>
+        </div>
+        <div class="legend-item">
+          <div class="swatch" style="background: linear-gradient(180deg, #6FDDFF, #25B6F5, #0E8FD0); box-shadow: 0 0 24px rgba(91,213,255,0.5);"></div>
+          <div class="label">cyan-1 — accent</div>
+        </div>
+        <div class="legend-item">
+          <div class="swatch" style="background: rgba(255,255,255,0.04); border: 1px solid var(--hairline-2);"></div>
+          <div class="label">glass — panels</div>
+        </div>
+        <div class="legend-item">
+          <div class="swatch" style="background: linear-gradient(90deg, #6CE5A7, #F7C26B, #FF7878); opacity: 0.8;"></div>
+          <div class="label">status — ok / warn / risk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="primitives.jsx"></script>
+  <script type="text/babel" src="screens-onboarding.jsx"></script>
+  <script type="text/babel" src="screens-app.jsx"></script>
+  <script type="text/babel" src="screens-extra.jsx"></script>
+
+  <script type="text/babel">
+    const ROWS = [
+      {
+        no: '01',
+        title: 'Onboarding & conversion',
+        desc: 'Welcome → problem discovery → analyzing → personalized rescue plan → social proof → special-offer paywall, with downsell on close. Every step builds confidence in the diagnosis.',
+        scenes: [
+          { id: '01', name: 'Permission', tag: 'System',     C: ScrPermission, props: {} },
+          { id: '02', name: 'Welcome',     tag: 'Splash',     C: ScrWelcome, props: {} },
+          { id: '03', name: 'Q1 · Problem', tag: 'Onboarding', C: ScrQ1,
+            props: { state: { problem: 'water' } } },
+          { id: '04', name: 'Q2 · Timing',  tag: 'Onboarding', C: ScrQ2,
+            props: { state: { problem: 'water', when: 'today' } } },
+          { id: '05', name: 'Q3 · Device',  tag: 'Onboarding', C: ScrQ3,
+            props: { state: { problem: 'water', when: 'today', phone: 'Samsung Galaxy S24 Ultra' } } },
+          { id: '06', name: 'Analyzing',    tag: 'Diagnostic', C: ScrAnalyzing,
+            props: { state: { phone: 'Samsung Galaxy S24 Ultra' } } },
+          { id: '07', name: 'Rescue plan',  tag: 'Result',     C: ScrPlan,
+            props: { state: { problem: 'water' } } },
+          { id: '08', name: 'Rating',       tag: 'Trust',      C: ScrRating, props: {} },
+          { id: '09', name: 'Special offer', tag: 'Paywall',   C: ScrPaywall, props: {} },
+          { id: '10', name: 'Downsell',      tag: 'Recovery',  C: ScrDownsell, props: {} },
+          { id: '11', name: 'Push prompt',   tag: 'System',    C: ScrPush, props: {} },
+        ],
+      },
+      {
+        no: '02',
+        title: 'Core app & cleaning',
+        desc: 'Home (first-run + returning), 4 Quick Rescue actions, the 3-stage Deep Clean cycle, sound test with frequency response, success report, Manual Hz Pro tool, and the new Pulse Clean haptic mode.',
+        scenes: [
+          { id: '12', name: 'Empty Home',   tag: 'First run', C: ScrEmptyHome, props: {} },
+          { id: '13', name: 'Home',         tag: 'Returning', C: ScrHome, props: {} },
+          { id: '14', name: 'Water Eject',  tag: 'Action',    C: ScrAction,
+            props: { state: { action: { id: 'water-eject', t: 'Water Eject', sub: '165 Hz', i: null } } } },
+          { id: '15', name: 'Deep Clean',   tag: 'Cycle',     C: ScrCycle,
+            props: { state: { action: null } } },
+          { id: '16', name: 'Result',       tag: 'Success',   C: ScrResult, props: {} },
+          { id: '17', name: 'Sound Test',   tag: 'Tool',      C: ScrTest, props: {} },
+          { id: '18', name: 'Pulse Clean',  tag: 'Pro · new', C: ScrPulse, props: {} },
+          { id: '19', name: 'Manual Hz',    tag: 'Pro',       C: ScrManual, props: {} },
+        ],
+      },
+      {
+        no: '03',
+        title: 'Dev-ready states & modals',
+        desc: 'Settings, locked premium feature, mid-cycle abort confirm, and offline fallback. These are the full set of states needed to ship the app.',
+        scenes: [
+          { id: '20', name: 'Settings',     tag: 'System',    C: ScrSettings, props: {} },
+          { id: '21', name: 'Premium lock', tag: 'Modal',     C: ScrLocked, props: {} },
+          { id: '22', name: 'Abort cycle',  tag: 'Modal',     C: ScrAbortModal, props: {} },
+          { id: '23', name: 'Offline',      tag: 'Edge case', C: ScrOffline, props: {} },
+        ],
+      },
+    ];
+
+    /* For all-screens view, suppress nav transitions */
+    function StaticScene({ C, props }) {
+      const noNav = () => {};
+      const set = () => {};
+      const stateBase = props.state || {};
+      // Make action icons work in static state
+      if (stateBase.action && !stateBase.action.i) {
+        stateBase.action.i = ICONS.water(22);
+      }
+      return <C nav={noNav} state={stateBase} set={set}/>;
+    }
+
+    function Row({ row }) {
+      return (
+        <div className="row">
+          <div className="row-meta">
+            <div className="row-no">SECTION {row.no}</div>
+            <h2 className="row-title">{row.title}</h2>
+            <p className="row-desc">{row.desc}</p>
+          </div>
+          <div className="frames">
+            {row.scenes.map(s => (
+              <div className="frame" key={s.id}>
+                <div className="frame-screen">
+                  <StaticScene C={s.C} props={s.props}/>
+                </div>
+                <div className="frame-caption">
+                  <span className="num">{s.id}</span>
+                  <span className="name">{s.name}</span>
+                  <span className="tag">{s.tag}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      return <>{ROWS.map(r => <Row key={r.no} row={r}/>)}</>;
+    }
+
+    ReactDOM.createRoot(document.getElementById('lineup-root')).render(<App/>);
+  </script>
+</body>
+</html>

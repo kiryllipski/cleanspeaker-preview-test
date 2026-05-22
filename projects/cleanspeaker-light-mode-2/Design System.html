@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CleanSpeaker · Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="tokens.css"/>
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<style>
+  .ds-hero {
+    background:
+      radial-gradient(60% 60% at 80% 0%, var(--cy-0) 0%, rgba(224,244,251,0) 60%),
+      var(--bg-1);
+    border: 1px solid var(--hairline);
+    border-radius: 24px;
+    padding: 48px 56px;
+    margin-bottom: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ds-hero-title { font-size: 44px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.06; margin: 0; }
+  .ds-hero-sub { font-size: 16px; color: var(--fg-1); margin-top: 14px; max-width: 540px; line-height: 1.55; }
+  .ds-sec-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cy-3); margin-bottom: 8px; }
+  .ds-sec-title { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+  .ds-sec-sub { font-size: 14px; color: var(--fg-1); margin-top: 8px; line-height: 1.55; max-width: 580px; }
+  .ds-rule { font-size: 12.5px; color: var(--fg-2); margin-top: 12px; line-height: 1.55; font-family: var(--f-ui); }
+  .ds-rule strong { color: var(--fg-0); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="primitives.jsx"></script>
+<script type="text/babel" data-presets="react">
+
+function Swatch({ name, val, color }) {
+  return (
+    <div className="ds-swatch">
+      <div className="ds-swatch-block" style={{ background: color, border: '1px solid var(--hairline)' }}/>
+      <div className="ds-swatch-meta">
+        <div className="ds-swatch-name">{name}</div>
+        <div className="ds-swatch-val">{val}</div>
+      </div>
+    </div>
+  );
+}
+
+function TokenList({ rows }) {
+  return (
+    <div>
+      {rows.map(r => (
+        <div key={r.name} className="token-row">
+          <div className="swatch-mini" style={{ background: r.preview || r.val, border: r.border ? `1px solid ${r.border}` : '1px solid var(--hairline)' }}/>
+          <div>
+            <div className="name">{r.label || r.name}</div>
+            <div style={{ fontSize: 11.5, color: 'var(--fg-2)', marginTop: 2 }}>{r.note}</div>
+          </div>
+          <div className="val">{r.val}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Section({ eyebrow, title, sub, children }) {
+  return (
+    <div className="ds-section">
+      <div className="ds-sec-eyebrow">{eyebrow}</div>
+      <div className="ds-sec-title">{title}</div>
+      {sub && <div className="ds-sec-sub">{sub}</div>}
+      <div style={{ marginTop: 28 }}>{children}</div>
+    </div>
+  );
+}
+
+function ComponentBlock({ name, note, children, stageStyle }) {
+  return (
+    <div className="ds-component">
+      <div className="ds-component-meta">
+        <div className="ds-component-name">{name}</div>
+        <div className="ds-component-note">{note}</div>
+      </div>
+      <div className="ds-component-stage" style={stageStyle}>{children}</div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="ds-page">
+      <div className="ds-wrap">
+
+        {/* HERO */}
+        <div className="ds-hero">
+          <div style={{ position: 'absolute', right: -40, top: -40 }}>
+            <GlowOrb size={260} intensity={0.85}/>
+          </div>
+          <div className="eyebrow" style={{ color: 'var(--cy-3)', marginBottom: 14 }}>Design System · v1.0</div>
+          <h1 className="ds-hero-title">Air-tech utility.<br/>Light, calm, decisive.</h1>
+          <p className="ds-hero-sub">Tokens, type, primitives and patterns that build the entire CleanSpeaker product. One accent color, four surface tones, RAF-driven hero animations, and a strict no-clutter posture.</p>
+          <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
+            <span className="lineup-stat" style={{ background: 'var(--bg-1)' }}>17 screens</span>
+            <span className="lineup-stat" style={{ background: 'var(--bg-1)' }}>17 primitives</span>
+            <span className="lineup-stat" style={{ background: 'var(--bg-1)' }}>1 accent · 4 tones</span>
+          </div>
+        </div>
+
+        <Section eyebrow="01 · Foundations" title="Surfaces" sub="Four light surface tones, one above the other in elevation. The brand never goes pure white or pure black — both extremes are tinted toward the cyan hue.">
+          <div className="ds-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+            <Swatch name="bg-0 — canvas"  val="#F4F5F7" color="#F4F5F7"/>
+            <Swatch name="bg-1 — card"    val="#FFFFFF" color="#FFFFFF"/>
+            <Swatch name="bg-2 — subtle"  val="#ECEEF2" color="#ECEEF2"/>
+            <Swatch name="bg-3 — deeper"  val="#E3E6EC" color="#E3E6EC"/>
+          </div>
+        </Section>
+
+        <Section eyebrow="01 · Foundations" title="Text" sub="Four tiers of contrast — never #000. Body text targets 60ch line length.">
+          <TokenList rows={[
+            { name: 'fg-0', label: 'fg-0 · Primary',     val: '#0B1220', note: 'Headlines, primary actions', preview: '#0B1220' },
+            { name: 'fg-1', label: 'fg-1 · Secondary',   val: '#475569', note: 'Body, descriptions', preview: '#475569' },
+            { name: 'fg-2', label: 'fg-2 · Tertiary',    val: '#8190A6', note: 'Captions, labels, meta', preview: '#8190A6' },
+            { name: 'fg-3', label: 'fg-3 · Quaternary', val: '#B7C0CE', note: 'Placeholders, disabled', preview: '#B7C0CE' },
+          ]}/>
+        </Section>
+
+        <Section eyebrow="01 · Foundations" title="Accent — cyan" sub="One brand color, four tones. Hover and pressed states only — no secondary accents.">
+          <div className="ds-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+            <Swatch name="cy-0 — tint"    val="#E0F4FB" color="#E0F4FB"/>
+            <Swatch name="cy-1 — main"    val="#0EA5E9" color="#0EA5E9"/>
+            <Swatch name="cy-2 — hover"   val="#0284C7" color="#0284C7"/>
+            <Swatch name="cy-3 — pressed" val="#075A8C" color="#075A8C"/>
+          </div>
+        </Section>
+
+        <Section eyebrow="02 · Type" title="Hierarchy" sub="Geist for UI. JetBrains Mono with tabular-nums for any number, frequency or percentage. Tight tracking on headings, never positive.">
+          <div className="ds-grid" style={{ gridTemplateColumns: '1fr', gap: 0, border: '1px solid var(--hairline)', borderRadius: 14, padding: '4px 18px', background: 'var(--bg-1)' }}>
+            {[
+              { label: 'Eyebrow', cls: 'eyebrow', sample: 'Special offer', meta: '11px · 600 · 0.18em UPPER · fg-2' },
+              { label: 'Display', cls: 'h-display', sample: 'Sound restored.', meta: '34px · 600 · -0.025em' },
+              { label: 'H1', cls: 'h-1', sample: 'Bring sound back.', meta: '28px · 600 · -0.022em' },
+              { label: 'H2', cls: 'h-2', sample: 'Three quick checks first.', meta: '22px · 600 · -0.02em' },
+              { label: 'H3', cls: 'h-3', sample: 'Manual Hz', meta: '17px · 600 · -0.014em' },
+              { label: 'Body', cls: 'body', sample: 'Sound waves push the moisture out.', meta: '15px · 400 · -0.005em' },
+              { label: 'Body sm', cls: 'body-sm', sample: 'Sweep tuned to dislodge stubborn water.', meta: '13px · 400 · -0.003em · fg-1' },
+              { label: 'Caption', cls: 'caption', sample: 'No commitment · Cancel anytime', meta: '12px · 400 · fg-2' },
+            ].map(r => (
+              <div key={r.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr 220px', alignItems: 'baseline', padding: '18px 0', borderTop: '1px solid var(--hairline)' }}>
+                <div style={{ fontSize: 12, color: 'var(--fg-2)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600 }}>{r.label}</div>
+                <div className={r.cls}>{r.sample}</div>
+                <div className="mono" style={{ fontSize: 11, color: 'var(--fg-2)', textAlign: 'right' }}>{r.meta}</div>
+              </div>
+            ))}
+          </div>
+          <div className="ds-rule"><strong>Rule.</strong> Every numeric value uses <span className="mono">font-family: var(--f-mono)</span> with <span className="mono">'tnum'</span>. Hz, %, timer digits, dates — never proportional.</div>
+        </Section>
+
+        <Section eyebrow="03 · Shape" title="Radii & geometry" sub="Five steps plus pill. Reserve pill for buttons and chips. r-lg (20px) for primary cards, r-md (14px) for nested or quiet cards.">
+          <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
+            {[
+              { name: 'r-sm', val: '10px', size: 80 },
+              { name: 'r-md', val: '14px', size: 100 },
+              { name: 'r-lg', val: '20px', size: 120 },
+              { name: 'r-xl', val: '26px', size: 140 },
+              { name: 'r-pill', val: '999', size: 100 },
+            ].map(r => (
+              <div key={r.name} style={{ textAlign: 'center' }}>
+                <div style={{ width: r.size, height: r.size, background: 'var(--cy-0)', border: '1px solid var(--cy-soft)', borderRadius: r.val, marginBottom: 10 }}/>
+                <div style={{ fontSize: 12, fontWeight: 600 }}>{r.name}</div>
+                <div className="mono" style={{ fontSize: 11, color: 'var(--fg-2)', marginTop: 2 }}>{r.val}{r.name === 'r-pill' ? 'px' : 'px'}</div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section eyebrow="04 · Components" title="Buttons" sub="One primary per screen. The cyan gradient is the only place in the UI where gradient is allowed.">
+          <div className="ds-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+            <ComponentBlock name="Primary" note="Cyan gradient + ambient shadow. One per screen.">
+              <div style={{ width: '100%', maxWidth: 320 }}>
+                <CTAButton>Start Premium</CTAButton>
+              </div>
+            </ComponentBlock>
+            <ComponentBlock name="Accent" note="Flat cyan. For inline or secondary primary use only.">
+              <div style={{ width: '100%', maxWidth: 320 }}>
+                <CTAButton variant="accent">I'm ready</CTAButton>
+              </div>
+            </ComponentBlock>
+            <ComponentBlock name="Ghost" note="Transparent. Pairs with a primary above it.">
+              <div style={{ width: '100%', maxWidth: 320 }}>
+                <CTAButton variant="ghost">Run basic again</CTAButton>
+              </div>
+            </ComponentBlock>
+            <ComponentBlock name="Disabled primary" note="Solid neutral with bg-3 / fg-3. Use when a precondition is unmet.">
+              <div style={{ width: '100%', maxWidth: 320 }}>
+                <CTAButton disabled>Confirm 1 / 3 checks</CTAButton>
+              </div>
+            </ComponentBlock>
+          </div>
+        </Section>
+
+        <Section eyebrow="04 · Components" title="Cards & rows" sub="Two surfaces. card sits on bg-0, card-quiet sits on cards. Never nest cards.">
+          <div className="ds-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+            <ComponentBlock name="OptionCard (active)" note="Tap to select. Active state inverts to fg-0 with a cyan checkmark.">
+              <div style={{ width: 320 }}>
+                <OptionCard icon={ICONS.water(20)} title="Water in speaker" sub="Muffled or low sound" active onClick={() => {}}/>
+              </div>
+            </ComponentBlock>
+            <ComponentBlock name="OptionCard (locked)" note="PRO chip, lock glyph, leads to paywall.">
+              <div style={{ width: 320 }}>
+                <OptionCard icon={ICONS.hz(20)} title="Manual Hz" sub="Fine frequency control" locked onClick={() => {}}/>
+              </div>
+            </ComponentBlock>
+            <ComponentBlock name="ToolTile" note="Square 110px tile for tool grids. Accent variant for the primary one.">
+              <div style={{ display: 'flex', gap: 10, width: 320 }}>
+                <ToolTile icon={ICONS.water(20)} label="Water Clean" sub="Eject water" accent/>
+                <ToolTile icon={ICONS.dust(20)} label="Dust Clean" sub="Loosen debris"/>
+              </div>
+            </ComponentBlock>
+            <ComponentBlock name="Banner (sponsored)" note="Quiet bg-2 surface. Must not visually compete with the primary CTA.">
+              <div style={{ width: 320 }}>
+                <Banner title="Soundwell" desc="Premium ear care · Try 7 days free" action="Open"/>
+              </div>
+            </ComponentBlock>
+          </div>
+        </Section>
+
+        <Section eyebrow="04 · Components" title="Animated primitives" sub="All Canvas/SVG, RAF-driven, 60fps. No external assets, no Lottie.">
+          <div className="ds-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+            <ComponentBlock name="GlowOrb" note="Canvas. Halo + ripple rings + glass core. Used as hero on welcome, complete, sound-test.">
+              <GlowOrb size={200}/>
+            </ComponentBlock>
+            <ComponentBlock name="ProgressRing" note="SVG strokeDashoffset. Holds the timer / progress numeral.">
+              <ProgressRing size={180} progress={0.62}>
+                <div style={{ textAlign: 'center' }}>
+                  <div className="mono" style={{ fontSize: 30, fontWeight: 600 }}>00:38</div>
+                  <div className="mono" style={{ fontSize: 11, color: 'var(--cy-2)', marginTop: 4 }}>62%</div>
+                </div>
+              </ProgressRing>
+            </ComponentBlock>
+            <ComponentBlock name="Waveform" note="RAF sine + harmonic. Idle amplitude drifts; play action spikes.">
+              <Waveform width={300} height={80} amplitude={0.8}/>
+            </ComponentBlock>
+            <ComponentBlock name="CircularDial" note="40 tick marks, log-scale sweep arc, breathing pin head.">
+              <CircularDial size={180} value={1200}/>
+            </ComponentBlock>
+            <ComponentBlock name="HapticPulse" note="22 vertical bars, envelope-shaped, used for vibration patterns.">
+              <HapticPulse width={260} height={80}/>
+            </ComponentBlock>
+            <ComponentBlock name="SpeakerCone" note="SVG concentric rings, radial gradient core, expanding sound rings.">
+              <SpeakerCone size={160}/>
+            </ComponentBlock>
+            <ComponentBlock name="WaterDropParticles" note="12 drops orbiting outward with sinusoidal opacity.">
+              <WaterDropParticles width={200} height={200}/>
+            </ComponentBlock>
+            <ComponentBlock name="DustParticles" note="36 dots dispersing radially, opacity fading out.">
+              <DustParticles width={200} height={200}/>
+            </ComponentBlock>
+          </div>
+        </Section>
+
+        <Section eyebrow="04 · Components" title="Chips & step indicator">
+          <div className="ds-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+            <ComponentBlock name="Frequency chip" note="Mono numeric data. Always cy-0 background, cy-3 text.">
+              <span className="chip">450 Hz</span>
+            </ComponentBlock>
+            <ComponentBlock name="PRO chip" note="Identifies locked premium features.">
+              <LockChip/>
+            </ComponentBlock>
+            <ComponentBlock name="Soft chip" note="bg-2 neutral, uppercase, used for meta.">
+              <span className="chip-soft">2 min</span>
+            </ComponentBlock>
+            <ComponentBlock name="Progress (step dots)" note="Three steps, cyan fills current and previous.">
+              <div style={{ width: 200 }}>
+                <Progress steps={3} current={2}/>
+              </div>
+            </ComponentBlock>
+          </div>
+        </Section>
+
+        <Section eyebrow="04 · Components" title="Icons" sub="Hand-tuned 24px SVG line set. Currentcolor for adaptability.">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 14, padding: '24px', background: 'var(--bg-1)', border: '1px solid var(--hairline)', borderRadius: 18 }}>
+            {Object.entries(ICONS).map(([name, fn]) => (
+              <div key={name} style={{ textAlign: 'center' }}>
+                <div style={{ width: 56, height: 56, borderRadius: 14, background: 'var(--bg-0)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--fg-0)', marginBottom: 8 }}>{fn(22)}</div>
+                <div className="mono" style={{ fontSize: 11, color: 'var(--fg-2)' }}>{name}</div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section eyebrow="05 · Patterns" title="Composition rules" sub="The few non-negotiables that keep the product calm and decisive.">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+            <Pattern n="01" title="One primary CTA per screen" body="Banners, sponsored cards and secondary actions must look visually quieter than the primary button. If a screen needs two, one must be ghost."/>
+            <Pattern n="02" title="Mono for any number" body="Hz, percentages, timer digits, prices. Tabular-nums on. Never proportional figures."/>
+            <Pattern n="03" title="Gradient only in two places" body="The active-clean light glow and the primary CTA. Nowhere else. No gradient text. No glass cards."/>
+            <Pattern n="04" title="No fake proof" body="Sound Test never invents before/after percentages. The user's ear is the only source of truth."/>
+            <Pattern n="05" title="Active clean is sacred" body="No ads, no paywall, no secondary CTA, no layout change while the timer runs."/>
+            <Pattern n="06" title="No bottom tabbar" body="Navigation is contextual. Back chevron + headline + right slot is the only header."/>
+          </div>
+        </Section>
+
+        <div style={{ borderTop: '1px solid var(--hairline)', paddingTop: 32, marginTop: 32, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ fontSize: 12, color: 'var(--fg-2)' }}>CleanSpeaker · Design System v1.0</div>
+          <div className="mono" style={{ fontSize: 12, color: 'var(--fg-2)' }}>Geist · JetBrains Mono · OKLCH-tinted neutrals</div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+function Pattern({ n, title, body }) {
+  return (
+    <div style={{ background: 'var(--bg-1)', border: '1px solid var(--hairline)', borderRadius: 18, padding: 24 }}>
+      <div className="mono" style={{ fontSize: 12, color: 'var(--cy-3)', letterSpacing: '0.12em', marginBottom: 14 }}>{n}</div>
+      <div style={{ fontSize: 17, fontWeight: 600, letterSpacing: '-0.012em', marginBottom: 10 }}>{title}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--fg-1)', lineHeight: 1.55 }}>{body}</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

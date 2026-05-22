@@ -1,0 +1,26 @@
+[
+  {
+    "prompt": "onboarding-speaker-evidence",
+    "model": "gemini-3-pro-image-preview",
+    "generated": "onboarding-speaker-evidence__generated.jpg",
+    "status": "ok"
+  },
+  {
+    "prompt": "cleaning-driver-ejection",
+    "model": "gemini-3-pro-image-preview",
+    "generated": "cleaning-driver-ejection__generated.jpg",
+    "status": "ok"
+  },
+  {
+    "prompt": "result-before-after-evidence",
+    "model": "gemini-3-pro-image-preview",
+    "generated": "result-before-after-evidence__generated.jpg",
+    "status": "ok"
+  },
+  {
+    "prompt": "lab-console-paywall",
+    "model": "gemini-3-pro-image-preview",
+    "generated": "lab-console-paywall__generated.jpg",
+    "status": "ok"
+  }
+]

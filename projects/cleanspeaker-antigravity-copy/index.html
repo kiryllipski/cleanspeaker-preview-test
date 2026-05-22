@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CleanSpeaker — Pro Audio Terminal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="workspace-container">
+    
+    <!-- Sidebar Navigation Dashboard -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand-section">
+          <div class="brand-icon">CS</div>
+          <div class="brand-name">
+            CleanSpeaker
+            <span>[ SYS.V.2.0 ]</span>
+          </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+          <button class="sidebar-btn active" data-tab="interactive-prototype">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+            </svg>
+            Live Terminal
+          </button>
+          
+          <button class="sidebar-btn" data-tab="all-screens">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 4.5v15m6-15v15m-10.5-3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 18 4.5H4.5A2.25 2.25 0 0 0 2.25 6.75v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+            </svg>
+            State Matrix
+          </button>
+          
+          <button class="sidebar-btn" data-tab="design-system">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1-1.622-3.395m3.42-3.485a16.002 16.002 0 0 0-1.62-3.388m3.425 3.42a15.996 15.996 0 0 1 3.395 1.622m-4.708-2.92a1.5 1.5 0 1 1-3-.001 1.5 1.5 0 0 1 3 .001Zm6.562 10.76a1.5 1.5 0 1 1-3-.001 1.5 1.5 0 0 1 3 .001Z" />
+            </svg>
+            System Specs
+          </button>
+        </nav>
+      </div>
+      
+      <div class="sidebar-footer">
+        Acoustic Engineering UI<br>
+        Brutalist Audio Standard.
+      </div>
+    </aside>
+    
+    <!-- Main Dashboard Panel -->
+    <main class="main-panel">
+      
+      <!-- TAB 1: INTERACTIVE PROTOTYPE -->
+      <section id="interactive-prototype" class="dashboard-tab active">
+        <div class="tab-header">
+          <h1 class="tab-title">Interactive Terminal</h1>
+          <p class="tab-desc">Simulate the redesigned high-tech speaker recovery interface.</p>
+        </div>
+        
+        <div class="prototype-workspace">
+          
+          <!-- Viewport phone emulator -->
+          <div class="phone-viewport-container">
+            
+            <!-- Audio toggle control -->
+            <div id="btn-global-audio-mute" class="audio-status-indicator muted">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="square" stroke-linejoin="miter" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+              </svg>
+              <span>AUDIO OFF</span>
+            </div>
+            
+            <div id="simulated-device-frame" class="phone-canvas">
+              
+              <!-- Android Status Bar Simulation -->
+              <div class="phone-status-bar">
+                <span id="statusBarClock">10:42</span>
+                <div class="status-icons">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c3.9 3.51 10 3.14 13.43-.8l1.43 1.43c1.54-1.23 2.28-3.18 2.28-5.61 0-4.97-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+                </div>
+              </div>
+              
+              <!-- Home Android Navigation Line -->
+              <div class="phone-home-indicator"></div>
+              
+              <!-- Screens Wrapper -->
+              <div class="phone-screens-wrapper">
+                
+                <!-- 1. SPLASH SCREEN -->
+                <div class="phone-screen screen-splash active" id="view-splash">
+                  <div class="splash-logo-container">
+                    <div class="logo-orb-pulsing">CS</div>
+                    <h1 class="splash-title">Clean<span>Speaker</span></h1>
+                    <p class="splash-subtitle">Acoustic Engineering</p>
+                  </div>
+                </div>
+                
+                <!-- 2. ONBOARDING SCREEN -->
+                <div class="phone-screen screen-onboarding" id="view-onboarding">
+                  <div class="onboarding-carousel" id="onboardingCarousel">
+                    
+                    <div class="onboarding-slide active" data-slide="0">
+                      <div class="slide-illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="square" stroke-linejoin="miter" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                        </svg>
+                      </div>
+                      <h2 class="slide-title">System Purge</h2>
+                      <p class="slide-desc">Execute high-frequency acoustic waves to violently expel trapped liquids from hardware grills.</p>
+                    </div>
+                    
+                    <div class="onboarding-slide" data-slide="1">
+                      <div class="slide-illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="square" stroke-linejoin="miter" d="M12 3v1.5m0 15V21m-7.5-7.5h1.5m13.5 0h1.5m-2.122-6.378-.707.707m-9.9 9.9-.707.707m1.414-11.314-.707-.707m9.9 9.9.707-.707M12 9.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5z" />
+                        </svg>
+                      </div>
+                      <h2 class="slide-title">Particulate Extract</h2>
+                      <p class="slide-desc">Trigger industrial haptic motor sequences to dislodge sand and micro-dust from audio chambers.</p>
+                    </div>
+                    
+                    <div class="onboarding-slide" data-slide="2">
+                      <div class="slide-illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="square" stroke-linejoin="miter" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 7.5a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-3a3 3 0 0 1-3-3v-9z" />
+                        </svg>
+                      </div>
+                      <h2 class="slide-title">Output Calibration</h2>
+                      <p class="slide-desc">Analyze and restore output db levels to factory baseline clarity after clearing operations.</p>
+                    </div>
+                    
+                  </div>
+                  
+                  <div class="carousel-indicators" id="carouselIndicators">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </div>
+                  
+                  <button class="btn-cta" id="btn-onboarding-continue">
+                    Initialize
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                      <path stroke-linecap="square" stroke-linejoin="miter" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <!-- 3. TRUST SCREEN -->
+                <div class="phone-screen screen-trust" id="view-trust">
+                  <div class="trust-top">
+                    <div class="trust-badge">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                      DATA: VERIFIED
+                    </div>
+                    <h2 class="trust-title">500K+ Devices Recovered</h2>
+                    <p class="trust-subtitle">Global acoustic telemetry data logged.</p>
+                  </div>
+                  
+                  <div class="reviews-container">
+                    <div class="review-card-rotator active" id="trustReview1">
+                      <div class="stars-row">
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                      </div>
+                      <p class="review-text">"Hardware fell in water. Post-cycle telemetry showed 100% baseline restoration. Brutally effective utility."</p>
+                      <div class="review-author">Log 409 // S24_Ultra</div>
+                    </div>
+                    <div class="review-card-rotator" id="trustReview2">
+                      <div class="stars-row">
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                      </div>
+                      <p class="review-text">"Flawless UI. Manual sweep functionality allowed me to target a specific resonance that cleared trapped dust."</p>
+                      <div class="review-author">Log 812 // PXL_8_Pro</div>
+                    </div>
+                  </div>
+                  
+                  <button class="btn-cta" id="btn-trust-continue">
+                    Proceed
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                      <path stroke-linecap="square" stroke-linejoin="miter" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <!-- 4. PAYWALL SCREEN -->
+                <div class="phone-screen screen-paywall" id="view-paywall">
+                  <div class="paywall-header">
+                    <button class="btn-close-paywall" id="btn-close-paywall">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M6 18 18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                    <span class="paywall-badge">SYS.PRO_ACCESS</span>
+                  </div>
+                  
+                  <div class="paywall-promo">
+                    <h2 class="paywall-title">OVERRIDE <span>LIMITS</span></h2>
+                    <p class="paywall-subtitle">Deploy unrestricted acoustic sequences.</p>
+                  </div>
+                  
+                  <ul class="paywall-features">
+                    <li class="pw-feature-item">
+                      <span class="pw-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                      </span>
+                      <span>MAX Power Frequency Array</span>
+                    </li>
+                    <li class="pw-feature-item">
+                      <span class="pw-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                      </span>
+                      <span>Full Sweep (20Hz - 20kHz)</span>
+                    </li>
+                    <li class="pw-feature-item">
+                      <span class="pw-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                      </span>
+                      <span>Haptic Overdrive Modes</span>
+                    </li>
+                    <li class="pw-feature-item">
+                      <span class="pw-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                      </span>
+                      <span>Zero Interruption Env.</span>
+                    </li>
+                  </ul>
+                  
+                  <div class="paywall-options">
+                    
+                    <div class="paywall-card active" data-option="yearly">
+                      <span class="pw-badge-save">SAVE 60%</span>
+                      <div class="pw-card-left">
+                        <div class="pw-radio"></div>
+                        <div>
+                          <span class="pw-label">ANNUAL PROTOCOL</span>
+                          <span class="pw-subtext">3 Day Beta Trial</span>
+                        </div>
+                      </div>
+                      <div class="pw-card-right">
+                        <span class="pw-price">$19.99<span style="font-size:10px; font-weight:500;">/yr</span></span>
+                        <span class="pw-old-price">$49.99</span>
+                      </div>
+                    </div>
+                    
+                    <div class="paywall-card" data-option="weekly">
+                      <div class="pw-card-left">
+                        <div class="pw-radio"></div>
+                        <div>
+                          <span class="pw-label">7-DAY PASS</span>
+                          <span class="pw-subtext">Temporary Access</span>
+                        </div>
+                      </div>
+                      <div class="pw-card-right">
+                        <span class="pw-price">$4.99<span style="font-size:10px; font-weight:500;">/wk</span></span>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  
+                  <button class="btn-cta" id="btn-paywall-subscribe">
+                    EXECUTE FREE TRIAL
+                  </button>
+                  <p class="pw-footer-text">SECURE GATEWAY. CANCEL IN OS SETTINGS.</p>
+                </div>
+                
+                <!-- 5. SPECIAL OFFER PAYWALL -->
+                <div class="phone-screen screen-paywall screen-special-offer" id="view-special-offer">
+                  <div class="paywall-header">
+                    <button class="btn-close-paywall" id="btn-close-special-offer">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M6 18 18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                    <span class="so-badge">WARNING: CRITICAL DISCOUNT</span>
+                  </div>
+                  
+                  <div class="paywall-promo">
+                    <h2 class="paywall-title">SYSTEM EVENT: <span>50% OFF</span></h2>
+                    <p class="paywall-subtitle">Permanent license acquisition required.</p>
+                  </div>
+                  
+                  <div class="so-discount-box">
+                    <div class="so-discount-percent">HALVED</div>
+                    <p style="font-size:11px; margin: 8px 0; color:var(--text-muted); font-family:var(--font-mono); text-transform:uppercase;">One-time payment unlock.</p>
+                    <div style="margin-top: 12px; font-family:var(--font-mono);">
+                      <span class="so-old-p">$29.99</span>
+                      <span class="so-new-p" style="color:var(--accent-hot);">$14.99</span>
+                    </div>
+                  </div>
+                  
+                  <button class="btn-cta btn-special" id="btn-special-offer-buy">
+                    ACQUIRE LIFETIME NODE
+                  </button>
+                  <p class="pw-footer-text">NO RECURRING LOGS. INSTANT UPGRADE.</p>
+                </div>
+                
+                <!-- MAIN APP SHELL -->
+                <div class="phone-screen" id="view-app-shell" style="padding: 0;">
+                  <div class="main-app-shell">
+                    
+                    <div class="main-screen-container">
+                      
+                      <!-- TAB A: CLEANER (AUTOMATIC) -->
+                      <div class="shell-tab-view active" id="shell-tab-cleaner">
+                        <div class="cleaner-tab-content">
+                          <div class="cleaner-header">
+                            <h2 class="cleaner-title">AUTO ROUTINE</h2>
+                            <p class="cleaner-subtitle">Execute algorithmic extraction</p>
+                          </div>
+                          
+                          <div class="clean-wheel-container" id="cleanerContainerOuter">
+                            <div class="clean-wheel-pulse"></div>
+                            
+                            <svg class="svg-wheel-ring">
+                              <circle class="circle-bg" cx="120" cy="120" r="110" />
+                              <circle id="cleanerCircleProgress" class="circle-progress" cx="120" cy="120" r="110" />
+                            </svg>
+                            
+                            <div class="wheel-inner">
+                              <span class="wheel-inner-label" id="cleanerProgressLabel">STATUS: IDLE</span>
+                              <span class="wheel-inner-value" id="cleanerProgressTime">1:00</span>
+                              <span class="wheel-inner-unit" id="cleanerProgressPct">READY</span>
+                            </div>
+                          </div>
+                          
+                          <div class="waveform-canvas-container">
+                            <div class="wave-bar" style="height: 10%;"></div>
+                            <div class="wave-bar" style="height: 30%;"></div>
+                            <div class="wave-bar" style="height: 20%;"></div>
+                            <div class="wave-bar" style="height: 50%;"></div>
+                            <div class="wave-bar" style="height: 70%;"></div>
+                            <div class="wave-bar" style="height: 40%;"></div>
+                            <div class="wave-bar" style="height: 60%;"></div>
+                            <div class="wave-bar" style="height: 20%;"></div>
+                            <div class="wave-bar" style="height: 30%;"></div>
+                          </div>
+                          
+                          <div class="cleaner-action-box">
+                            <button class="btn-cleaner-trigger" id="btnCleanerStartStop">
+                              <svg id="cleanPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                              <svg id="cleanStopIcon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                              <span id="cleanerBtnLabel">INITIATE</span>
+                            </button>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      
+                      <!-- TAB B: MANUAL -->
+                      <div class="shell-tab-view" id="shell-tab-manual">
+                        <div class="manual-tab-content">
+                          <div class="cleaner-header" style="margin-bottom:12px;">
+                            <h2 class="cleaner-title">MANUAL OVERRIDE</h2>
+                            <p class="cleaner-subtitle">Y-Axis array manipulation</p>
+                          </div>
+                          
+                          <div class="manual-gesture-pad" id="manualGesturePad">
+                            <div class="manual-grid-overlay"></div>
+                            
+                            <div class="hz-display-box" style="z-index: 10;">
+                              <span class="hz-val-label" id="manualHzDisplay">290</span>
+                              <div class="hz-lbl-unit">HZ FREQ</div>
+                              
+                              <div class="swipe-hint">
+                                <svg viewBox="0 0 24 24"><path d="M12 2L4.5 9.5H9v8h6v-8h4.5zM12 22l7.5-7.5H15v-8H9v8H4.5z"/></svg>
+                                SWIPE Y-AXIS
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div class="manual-actions-row">
+                            <button class="btn-manual-pop-trigger" id="btnTriggerWavePopover">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 7.5a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-3a3 3 0 0 1-3-3v-9z" />
+                              </svg>
+                              <span id="manualWaveText">SINE_WAV</span>
+                            </button>
+                            
+                            <button class="btn-manual-pop-trigger" id="btnTriggerVibPopover">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5" />
+                              </svg>
+                              <span id="manualVibText">HAPTIC: 0</span>
+                            </button>
+                          </div>
+                          
+                          <div class="popover-card-menu" id="popoverWaveMenu">
+                            <div class="popover-title-bar">SELECT_WAVEFORM</div>
+                            <div class="popover-grid-options">
+                              <button class="pop-option-btn active" data-wave="sine">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Z" /></svg>
+                                <span>SINE</span>
+                              </button>
+                              <button class="pop-option-btn" data-wave="square">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" d="M5.25 5.25h13.5v13.5H5.25z" /></svg>
+                                <span>SQUARE</span>
+                              </button>
+                              <button class="pop-option-btn" data-wave="triangle">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" d="M12 3L21 21H3z" /></svg>
+                                <span>TRIANG</span>
+                              </button>
+                              <button class="pop-option-btn" data-wave="sawtooth">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" d="M2.25 21h19.5v-6l-6.5 4.5v-6L8.75 18v-6L2.25 16.5z" /></svg>
+                                <span>RAMP</span>
+                              </button>
+                              <button class="pop-option-btn" data-wave="harmonious">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" d="M9 9l3 3-3 3m-6 0l3-3-3-3m12 0l3 3-3-3m-6 0l3-3-3-3" /></svg>
+                                <span>HARMON</span>
+                              </button>
+                            </div>
+                          </div>
+                          
+                          <div class="popover-card-menu" id="popoverVibMenu">
+                            <div class="popover-title-bar">HAPTIC_INTENSITY</div>
+                            <div class="popover-grid-options">
+                              <button class="pop-option-btn active" data-vib="off">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18.36 18.36l-1.42-1.42M5.64 5.64l1.42 1.42m11.3 0l-1.42 1.42M5.64 18.36l1.42-1.42M12 8v8m-4-6v4m8-4v4"/></svg>
+                                <span>OFF</span>
+                              </button>
+                              <button class="pop-option-btn" data-vib="medium">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9.05 4.51A10 10 0 0115 4.5m-8 3.5a5 5 0 018 0M7.5 12h9m-9 4a5 5 0 008 0"/></svg>
+                                <span>LVL_1</span>
+                              </button>
+                              <button class="pop-option-btn" data-vib="intense">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                <span>LVL_2</span>
+                              </button>
+                            </div>
+                          </div>
+                          
+                          <div style="margin: 8px 0;">
+                            <button class="btn-cleaner-trigger" id="btnManualSoundStartStop">
+                              <svg id="manualPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                              <svg id="manualStopIcon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                              <span>TOGGLE OUTPUT</span>
+                            </button>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      
+                      <!-- TAB C: SETTINGS -->
+                      <div class="shell-tab-view" id="shell-tab-settings">
+                        <div class="settings-tab-content">
+                          <div class="settings-header">SYSTEM_PREFS</div>
+                          
+                          <div class="promo-settings-card" id="btnSettingsPromoPro">
+                            <h3 class="promo-title">>> UPGRADE: PRO</h3>
+                            <p class="promo-desc">Unlock raw frequency access and strip ad modules.</p>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <button class="settings-row-item" id="btnSettingRemoveAds">
+                              <div class="settings-row-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="square" stroke-linejoin="miter" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                                </svg>
+                                DISABLE AD_MODULE
+                              </div>
+                            </button>
+                            <button class="settings-row-item" id="btnSettingSpeakerTest">
+                              <div class="settings-row-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="square" stroke-linejoin="miter" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2Zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2ZM9 10l12-3" />
+                                </svg>
+                                RUN DIAGNOSTICS
+                              </div>
+                            </button>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <button class="settings-row-item" id="btnSettingSupport">
+                              <div class="settings-row-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="square" stroke-linejoin="miter" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                </svg>
+                                OPEN TICKET
+                              </div>
+                            </button>
+                            <button class="settings-row-item" id="btnSettingRateUs">
+                              <div class="settings-row-left">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="square" stroke-linejoin="miter" d="M11.48 3.499c.195-.39.73-.39.925 0l2.352 4.767 5.23.76a.545.545 0 0 1 .3 1.144l-3.786 3.69.893 5.21c.094.55-.486.97-1.011.71l-4.673-2.457-4.673 2.457c-.524.26-1.103-.16-1.01-.71l.892-5.21-3.787-3.69a.545.545 0 0 1 .3-1.144l5.23-.761 2.352-4.767Z" />
+                                </svg>
+                                SUBMIT TELEMETRY RATING
+                              </div>
+                            </button>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      
+                    </div>
+                    
+                    <!-- ADMOB -->
+                    <div class="custom-admob-banner" id="shellAdMobBanner">
+                      <div class="ad-badge">AD_SYS</div>
+                      <div class="ad-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                      </div>
+                      <div class="ad-text">
+                        <div class="ad-title">CLEANSPEAKER_PRO</div>
+                        <div class="ad-desc">Bypass restrictions. Zero ads.</div>
+                      </div>
+                      <button class="ad-cta" id="btnAdMobCta">UPGRADE</button>
+                    </div>
+                    
+                    <!-- NAV -->
+                    <nav class="phone-bottom-nav-container">
+                      <button class="nav-item-btn active" data-shell-tab="cleaner">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="square" stroke-linejoin="miter" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                        </svg>
+                        <span>AUTO</span>
+                      </button>
+                      
+                      <button class="nav-item-btn" data-shell-tab="manual">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="square" stroke-linejoin="miter" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                        </svg>
+                        <span>MANUAL</span>
+                      </button>
+                      
+                      <button class="nav-item-btn nav-pro-badge" data-shell-tab="pro">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="square" stroke-linejoin="miter" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+                        </svg>
+                        <span>PRO</span>
+                      </button>
+                      
+                      <button class="nav-item-btn" data-shell-tab="settings">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="square" stroke-linejoin="miter" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.936 6.936 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                          <path stroke-linecap="square" stroke-linejoin="miter" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                        <span>SYS</span>
+                      </button>
+                    </nav>
+                    
+                  </div>
+                </div>
+                
+                <!-- 6. SOUND TEST -->
+                <div class="phone-screen screen-sound-test" id="view-sound-test">
+                  <div class="paywall-header">
+                    <div style="width:32px;"></div>
+                    <span class="paywall-badge">DIAGNOSTIC_MODE</span>
+                  </div>
+                  
+                  <div class="sound-test-container">
+                    <div class="sound-test-header">
+                      <h2>ACOUSTIC TEST</h2>
+                      <p>Run sweep to verify output.</p>
+                    </div>
+                    
+                    <div class="sound-orb-ripple" id="btnTestSoundPlay">
+                      <svg id="soundTestPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                      <svg id="soundTestStopIcon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </div>
+                    
+                    <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-bottom:12px; font-weight:700;">LOG_RESULT_STARS</div>
+                    <div class="rating-stars-interactive" id="soundTestStars">
+                      <svg data-val="1" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                      <svg data-val="2" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                      <svg data-val="3" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                      <svg data-val="4" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                      <svg data-val="5" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </div>
+                  </div>
+                  
+                  <button class="btn-cta" id="btn-sound-test-complete">
+                    FINALIZE
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                      <path stroke-linecap="square" stroke-linejoin="miter" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <!-- 7. RESULT -->
+                <div class="phone-screen screen-result" id="view-result">
+                  <div class="paywall-header">
+                    <div style="width:32px;"></div>
+                    <span class="paywall-badge">OUTPUT_REPORT</span>
+                  </div>
+                  
+                  <div class="result-details">
+                    <div class="result-success-orb">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="square" stroke-linejoin="miter" d="m4.5 12.75 6 6 9-13.5" />
+                      </svg>
+                    </div>
+                    
+                    <h2 class="res-headline">ALL SYSTEMS GO</h2>
+                    <p class="res-subtitle" style="font-family:var(--font-mono); font-size:12px;">Acoustic levels restored.</p>
+                    
+                    <div class="percent-restored-card">
+                      <div class="res-pct-val" id="resPercentVal">92%</div>
+                      <div class="res-pct-lbl">OPTIMAL_RESTORED</div>
+                    </div>
+                    
+                    <div>
+                      <button class="res-test-btn" id="btnResultRetest">RE-RUN DIAGNOSTICS</button>
+                    </div>
+                  </div>
+                  
+                  <button class="btn-cta" id="btn-result-finish">
+                    RETURN TO SYS
+                  </button>
+                </div>
+                
+              </div>
+              
+              <!-- NATIVE DIALOGS -->
+              <div class="native-mock-modal" id="modalSupportSupport">
+                <div class="native-modal-body">
+                  <h3 class="modal-header-text">SYS_SUPPORT</h3>
+                  <div class="modal-form-item">
+                    <label for="sup-email">IDENTIFIER (EMAIL)</label>
+                    <input type="email" id="sup-email" class="modal-form-input" placeholder="id@domain.com" value="user@domain.net">
+                  </div>
+                  <div class="modal-form-item">
+                    <label for="sup-msg">ERROR_LOG</label>
+                    <textarea id="sup-msg" class="modal-form-input modal-form-textarea" placeholder="Dump hardware error log here..."></textarea>
+                  </div>
+                  <div class="modal-actions-grid">
+                    <button class="btn-modal-cancel" id="btnSupportCancel">ABORT</button>
+                    <button class="btn-modal-submit" id="btnSupportSubmit">TRANSMIT</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="native-mock-modal" id="modalGooglePlayRating">
+                <div class="rating-dialog-native">
+                  <div class="rate-dialog-title">LOG_RATING</div>
+                  <div class="rate-dialog-desc">Confirm hardware rescue status by transmitting a rating log.</div>
+                  
+                  <div class="rate-stars-row" id="dialogRateStars">
+                    <svg data-rate="1" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg data-rate="2" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg data-rate="3" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg data-rate="4" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg data-rate="5" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                  
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="rate-dialog-action" id="btnRateDialogDismiss" style="color:var(--text-muted)">SKIP</button>
+                    <button class="rate-dialog-action" id="btnRateDialogSubmit">EXECUTE</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="toast-msg-container" id="toastContainer">
+                <div class="toast-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="square" stroke-linejoin="miter" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                </div>
+                <div id="toastMessageText">Log confirmed.</div>
+              </div>
+              
+            </div>
+          </div>
+          
+          <!-- Remote Panel -->
+          <div class="prototype-info-card" style="overflow-y: auto; max-height: 770px;">
+            <h3>Developer Remote</h3>
+            <p>Direct terminal injection endpoints.</p>
+            
+            <div class="remote-control-panel">
+              
+              <div>
+                <div class="remote-section-title">01_INTRO_SEQ</div>
+                <div class="remote-buttons-grid">
+                  <button class="remote-btn" data-state="splash" onclick="window.simulator.jumpToState('splash', this)">[0] Loader</button>
+                  <button class="remote-btn" data-state="onboarding-0" onclick="window.simulator.jumpToState('onboarding-0', this)">[1] Purge</button>
+                  <button class="remote-btn" data-state="onboarding-1" onclick="window.simulator.jumpToState('onboarding-1', this)">[2] Extract</button>
+                  <button class="remote-btn" data-state="onboarding-2" onclick="window.simulator.jumpToState('onboarding-2', this)">[3] Calibrate</button>
+                  <button class="remote-btn" data-state="trust" onclick="window.simulator.jumpToState('trust', this)">[4] Data</button>
+                  <button class="remote-btn" data-state="rate-dialog" onclick="window.simulator.jumpToState('rate-dialog', this)">[5] Rating</button>
+                </div>
+              </div>
+              
+              <div>
+                <div class="remote-section-title">02_CORE_SYS</div>
+                <div class="remote-buttons-grid">
+                  <button class="remote-btn" data-state="cleaner-idle" onclick="window.simulator.jumpToState('cleaner-idle', this)">Auto (Standby)</button>
+                  <button class="remote-btn" data-state="cleaner-active" onclick="window.simulator.jumpToState('cleaner-active', this)">Auto (Exec)</button>
+                  <button class="remote-btn" data-state="manual" onclick="window.simulator.jumpToState('manual', this)">Manual UI</button>
+                  <button class="remote-btn" data-state="manual-wave" onclick="window.simulator.jumpToState('manual-wave', this)">WAV Menu</button>
+                  <button class="remote-btn" data-state="manual-vib" onclick="window.simulator.jumpToState('manual-vib', this)">HPTC Menu</button>
+                </div>
+              </div>
+              
+              <div>
+                <div class="remote-section-title">03_DIAGNOSTICS</div>
+                <div class="remote-buttons-grid">
+                  <button class="remote-btn" data-state="sound-test" onclick="window.simulator.jumpToState('sound-test', this)">Diag (Standby)</button>
+                  <button class="remote-btn" data-state="sound-test-active" onclick="window.simulator.jumpToState('sound-test-active', this)">Diag (Exec)</button>
+                  <button class="remote-btn" data-state="result" onclick="window.simulator.jumpToState('result', this)">Results</button>
+                  <button class="remote-btn" data-state="settings" onclick="window.simulator.jumpToState('settings', this)">Settings</button>
+                  <button class="remote-btn remote-btn-full" data-state="support-modal" onclick="window.simulator.jumpToState('support-modal', this)">Ticket Form</button>
+                </div>
+              </div>
+              
+              <div>
+                <div class="remote-section-title">04_GATEWAY</div>
+                <div class="remote-buttons-grid">
+                  <button class="remote-btn" data-state="paywall" onclick="window.simulator.jumpToState('paywall', this)">PRO Paywall</button>
+                  <button class="remote-btn" data-state="special-offer" onclick="window.simulator.jumpToState('special-offer', this)">DISC Offer</button>
+                </div>
+                
+                <div class="pro-toggle-section">
+                  <div class="pro-toggle-label">
+                    <span>AUTH_STATE</span>
+                    <span class="remote-badge" id="remoteProStatusBadge">FREE TIER</span>
+                  </div>
+                  <div class="pro-toggle-btn-row">
+                    <button class="pro-toggle-btn active-free" id="btnToggleFreeMode" onclick="window.simulator.setProStatus(false)">USER [ADS]</button>
+                    <button class="pro-toggle-btn" id="btnToggleProMode" onclick="window.simulator.setProStatus(true)">ROOT [PRO]</button>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          
+        </div>
+      </section>
+      
+      <!-- TAB 2 & 3: GRID & SYSTEM -->
+      <section id="all-screens" class="dashboard-tab">
+        <div class="tab-header">
+          <h1 class="tab-title">State Matrix</h1>
+          <p class="tab-desc">All UI nodes parsed in grid layout.</p>
+        </div>
+        <div class="all-screens-grid-layout" id="screensGridLayout"></div>
+      </section>
+      
+      <section id="design-system" class="dashboard-tab">
+        <div class="tab-header">
+          <h1 class="tab-title">System Specs</h1>
+          <p class="tab-desc">Neo-Brutalist Audio Terminal Tokens.</p>
+        </div>
+        <div class="design-system-grid">
+          <div class="ds-card">
+            <h3>COLOR_TOKENS</h3>
+            <div class="color-swatch-list">
+              <div class="swatch-item">
+                <div class="swatch-color" style="background: var(--primary);"></div>
+                <div class="swatch-info"><span class="swatch-name">Electric Lime</span><span class="swatch-hex">#CCFF00</span></div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-color" style="background: var(--accent-hot);"></div>
+                <div class="swatch-info"><span class="swatch-name">Neon Pink</span><span class="swatch-hex">#FF3366</span></div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-color" style="background: var(--bg-workspace);"></div>
+                <div class="swatch-info"><span class="swatch-name">Void Black</span><span class="swatch-hex">#09090B</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-card">
+            <h3>TYPOGRAPHY</h3>
+            <div class="typography-spec-list">
+              <div class="typo-spec-item">
+                <div class="typo-lbl">FONT_SANS</div>
+                <div class="typo-render t-h1">Space Grotesk</div>
+              </div>
+              <div class="typo-spec-item">
+                <div class="typo-lbl">FONT_MONO</div>
+                <div class="typo-render t-body" style="font-family:var(--font-mono);">JetBrains Mono</div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-card">
+            <h3>COMPONENTS</h3>
+            <div class="ds-button-playground">
+              <button class="btn-cta">Standard Execution</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

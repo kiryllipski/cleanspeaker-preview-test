@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sonic Clean — Interactive Prototype</title>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+/* Sonic Clean — premium speaker cleaner */
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #050608;
+  --bg-1: #0a0c11;
+  --surface: #0f1218;
+  --surface-2: #151923;
+  --line: rgba(255, 255, 255, 0.06);
+  --line-strong: rgba(255, 255, 255, 0.12);
+  --text: #f4f7fb;
+  --text-muted: #8a92a3;
+  --text-dim: #565b6b;
+  --cyan: #00e5ff;
+  --cyan-2: #4cc9f0;
+  --cyan-3: #7df9ff;
+  --cyan-deep: #0083a6;
+  --cyan-glow: rgba(0, 229, 255, 0.55);
+  --blue: #2f80ed;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #ff5757;
+  --display: 'Onest', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --body: 'Manrope', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ===== ANDROID FRAME ===== */
+.android-frame {
+  width: 412px;
+  height: 892px;
+  border-radius: 56px;
+  background: #000;
+  position: relative;
+  padding: 14px;
+  box-shadow:
+    0 0 0 2px #1d2129,
+    0 0 0 3px #0a0c10,
+    0 50px 100px -20px rgba(0, 229, 255, 0.15),
+    0 30px 60px -30px rgba(0, 0, 0, 0.7);
+  flex-shrink: 0;
+}
+
+.android-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 44px;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg);
+  isolation: isolate;
+}
+
+.android-statusbar {
+  height: 44px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  position: relative;
+  z-index: 10;
+}
+
+.android-statusbar .right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.android-nav {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.android-nav .pill {
+  width: 120px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.6);
+}
+
+/* ===== TYPOGRAPHY ===== */
+.t-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  font-weight: 500;
+}
+.t-h1 {
+  font-family: var(--display);
+  font-size: 32px;
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.t-h2 {
+  font-family: var(--display);
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.t-h3 {
+  font-family: var(--display);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.t-body {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.t-caption {
+  font-family: var(--body);
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.t-num {
+  font-family: var(--display);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.t-mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== GLASS / SURFACE ===== */
+.glass {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01) 60%),
+    rgba(15, 18, 24, 0.85);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  position: relative;
+}
+
+.glass-strong {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02) 60%),
+    rgba(20, 25, 33, 0.95);
+  border: 1px solid var(--line-strong);
+  border-radius: 24px;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 60px;
+  border-radius: 100px;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #001318;
+  background:
+    radial-gradient(120% 200% at 50% -50%, #aff7ff 0%, #00e5ff 35%, #00b5d4 80%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.2) inset,
+    0 -10px 30px -10px rgba(255,255,255,0.4) inset,
+    0 10px 40px -10px rgba(0, 229, 255, 0.6),
+    0 30px 60px -20px rgba(0, 229, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 100px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent 40%);
+  pointer-events: none;
+  mask: linear-gradient(black, black);
+}
+
+.btn-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 56px;
+  border-radius: 100px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,0.02);
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-circle {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ===== CHIPS ===== */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 100px;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.chip-muted {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--line-strong);
+  color: var(--text-muted);
+}
+
+/* ===== ANIMATED BG GLOW ===== */
+.bg-glow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.bg-glow::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  width: 130%;
+  height: 80%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, var(--cyan-glow) 0%, transparent 60%);
+  filter: blur(60px);
+  opacity: 0.55;
+  animation: pulseGlow 4.5s ease-in-out infinite;
+}
+.bg-glow::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: 50%;
+  width: 100%;
+  height: 60%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.25), transparent 60%);
+  filter: blur(40px);
+  animation: pulseGlow 6s ease-in-out infinite reverse;
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.75; }
+}
+
+.dot-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ===== WAVEFORM ===== */
+.wave-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 40px;
+}
+.wave-row > i {
+  display: block;
+  width: 3px;
+  background: var(--cyan);
+  border-radius: 4px;
+  box-shadow: 0 0 8px var(--cyan-glow);
+  animation: waveBar 1.4s ease-in-out infinite;
+}
+@keyframes waveBar {
+  0%, 100% { height: 20%; opacity: 0.5; }
+  50% { height: 100%; opacity: 1; }
+}
+
+/* ===== CIRCULAR DIAL ===== */
+.dial-ring {
+  position: relative;
+  width: 280px;
+  height: 280px;
+}
+
+/* ===== ALL-SCREENS PAGE ===== */
+.gallery {
+  display: flex;
+  gap: 32px;
+  padding: 80px 60px;
+  overflow-x: auto;
+  align-items: flex-start;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+.screen-card {
+  flex-shrink: 0;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.screen-card .frame {
+  width: 380px;
+  height: 824px;
+  border-radius: 36px;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 30px 80px -20px rgba(0, 229, 255, 0.18),
+    0 60px 100px -30px rgba(0, 0, 0, 0.6);
+}
+
+.screen-card .meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.screen-card .meta .num {
+  color: var(--cyan);
+  font-weight: 600;
+}
+.screen-card .meta .title {
+  color: var(--text);
+  font-weight: 500;
+  text-transform: none;
+  font-size: 13px;
+  letter-spacing: 0;
+  font-family: var(--display);
+}
+
+/* Page hero for gallery */
+.gallery-hero {
+  padding: 80px 60px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+.gallery-hero h1 {
+  font-family: var(--display);
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  max-width: 700px;
+}
+.gallery-hero .sub {
+  color: var(--text-muted);
+  font-size: 15px;
+  max-width: 360px;
+  text-align: right;
+  line-height: 1.5;
+}
+
+/* utility */
+.row { display: flex; }
+.col { display: flex; flex-direction: column; }
+.center { align-items: center; justify-content: center; }
+.between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.gap-5 { gap: 20px; }
+.gap-6 { gap: 24px; }
+.mt-auto { margin-top: auto; }
+
+/* ===== PROTOTYPE SHELL ===== */
+.proto-stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background:
+    radial-gradient(ellipse at top, rgba(0,229,255,0.06), transparent 50%),
+    var(--bg);
+  position: relative;
+}
+
+.proto-rail {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  pointer-events: none;
+}
+.proto-rail > * { pointer-events: auto; }
+
+.proto-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+.proto-brand .dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan-glow);
+  animation: pulseGlow 1.6s ease-in-out infinite;
+}
+
+.proto-stepbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(15, 18, 24, 0.85);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  backdrop-filter: blur(20px);
+}
+.proto-stepbar .seg {
+  width: 24px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.1);
+  transition: all 0.3s;
+}
+.proto-stepbar .seg.active { background: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow); }
+.proto-stepbar .seg.done { background: rgba(0, 229, 255, 0.4); }
+.proto-stepbar .label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+
+.proto-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(15, 18, 24, 0.85);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  backdrop-filter: blur(20px);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.proto-controls button {
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.proto-controls button:hover { color: var(--cyan); }
+
+/* page transitions */
+.screen-enter {
+  animation: screenEnter 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes screenEnter {
+  from { opacity: 0; transform: translateY(8px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* sliders */
+.slider-track {
+  position: relative;
+  height: 8px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.slider-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, var(--cyan-deep), var(--cyan));
+  box-shadow: 0 0 12px var(--cyan-glow);
+  border-radius: 100px;
+}
+
+/* checkmark animation */
+@keyframes checkPop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* sound wave ring pulse */
+@keyframes ringPulse {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.scroll-x { overflow-x: auto; overflow-y: hidden; }
+.scroll-x::-webkit-scrollbar { height: 8px; }
+.scroll-x::-webkit-scrollbar-track { background: var(--bg-1); }
+.scroll-x::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 8px; }
+    body { background: #050608; overflow-x: hidden; }
+    .proto-stage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 40px 40px;
+      background:
+        radial-gradient(ellipse at top, rgba(0,229,255,0.06), transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(0,229,255,0.04), transparent 60%),
+        #050608;
+      position: relative;
+    }
+    .proto-stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-presets="env,react">
+// Shared components for Sonic Clean
+const { useState, useEffect, useRef, useMemo } = React;
+
+// Status bar (Android)
+function StatusBar({ tint = '#fff' }) {
+  return (
+    <div className="android-statusbar" style={{ color: tint }}>
+      <span style={{ fontWeight: 700, letterSpacing: '-0.01em' }}>12:30</span>
+      <div className="right" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
+          <path d="M9 9.5L1 1.5L9 1L17 1.5L9 9.5Z" stroke={tint} strokeWidth="1.4" strokeLinejoin="round"/>
+        </svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+          <path d="M1 5C3 3 5.5 2 8 2C10.5 2 13 3 15 5" stroke={tint} strokeWidth="1.4" strokeLinecap="round"/>
+          <path d="M3.5 7.5C4.8 6.5 6.3 6 8 6C9.7 6 11.2 6.5 12.5 7.5" stroke={tint} strokeWidth="1.4" strokeLinecap="round"/>
+          <circle cx="8" cy="10" r="1.2" fill={tint}/>
+        </svg>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, fontWeight: 600 }}>87</span>
+          <svg width="22" height="11" viewBox="0 0 22 11" fill="none">
+            <rect x="0.5" y="0.5" width="19" height="10" rx="2.5" stroke={tint} strokeOpacity="0.6"/>
+            <rect x="2" y="2" width="13" height="7" rx="1" fill={tint}/>
+            <rect x="20" y="3.5" width="1.5" height="4" rx="0.5" fill={tint} fillOpacity="0.6"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NavPill({ tint = 'rgba(255,255,255,0.6)' }) {
+  return (
+    <div className="android-nav">
+      <div className="pill" style={{ background: tint }} />
+    </div>
+  );
+}
+
+// Android frame shell
+function Frame({ children, screenBg = 'var(--bg)', tint = '#fff', navTint }) {
+  return (
+    <div className="android-frame">
+      <div className="android-screen" style={{ background: screenBg }}>
+        <StatusBar tint={tint} />
+        <div style={{ position: 'absolute', inset: '44px 0 28px', overflow: 'hidden', zIndex: 1 }}>
+          {children}
+        </div>
+        <NavPill tint={navTint || 'rgba(255,255,255,0.6)'} />
+      </div>
+    </div>
+  );
+}
+
+// Frameless screen for the gallery
+function ScreenCard({ index, title, children, screenBg = 'var(--bg)', tint = '#fff' }) {
+  return (
+    <div className="screen-card">
+      <div className="meta">
+        <span className="num">{String(index).padStart(2, '0')}</span>
+        <span className="title">{title}</span>
+      </div>
+      <div className="frame" style={{ background: screenBg }}>
+        <StatusBar tint={tint} />
+        <div style={{ position: 'absolute', inset: '44px 0 28px', overflow: 'hidden', zIndex: 1 }}>
+          {children}
+        </div>
+        <NavPill tint={'rgba(255,255,255,0.6)'} />
+      </div>
+    </div>
+  );
+}
+
+// Animated wave ring — concentric circles with pulsing
+function WaveRing({ size = 240, color = 'var(--cyan)', state = 'idle' }) {
+  return (
+    <div style={{ position: 'relative', width: size, height: size }}>
+      {/* outer glow */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: `radial-gradient(circle at center, ${color === 'var(--cyan)' ? 'rgba(0,229,255,0.25)' : 'rgba(0,229,255,0.2)'} 0%, transparent 60%)`,
+        filter: 'blur(20px)',
+        animation: 'pulseGlow 2.5s ease-in-out infinite'
+      }} />
+      {/* expanding rings */}
+      {[0, 0.5, 1, 1.5].map((delay, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          inset: '20%',
+          borderRadius: '50%',
+          border: `1px solid ${color}`,
+          opacity: 0,
+          animation: state === 'idle' ? 'none' : `ringPulse 2.4s ease-out infinite ${delay}s`
+        }} />
+      ))}
+      <svg viewBox="0 0 240 240" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <defs>
+          <radialGradient id="wr-grad" cx="50%" cy="50%">
+            <stop offset="0%" stopColor={color} stopOpacity="1"/>
+            <stop offset="60%" stopColor={color} stopOpacity="0.4"/>
+            <stop offset="100%" stopColor={color} stopOpacity="0"/>
+          </radialGradient>
+          <linearGradient id="wr-line" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.9"/>
+            <stop offset="100%" stopColor={color} stopOpacity="0.3"/>
+          </linearGradient>
+        </defs>
+        {/* concentric thin rings */}
+        {[40, 60, 80, 100, 118].map((r, i) => (
+          <circle key={r} cx="120" cy="120" r={r}
+            stroke="url(#wr-line)"
+            strokeWidth={i === 4 ? 1.5 : 1}
+            fill="none"
+            opacity={0.15 + i * 0.12}
+          />
+        ))}
+        {/* center solid */}
+        <circle cx="120" cy="120" r="30" fill="url(#wr-grad)" />
+        <circle cx="120" cy="120" r="14" fill={color} opacity="0.9" />
+        <circle cx="120" cy="120" r="6" fill="#fff" />
+      </svg>
+      {/* dots around outer */}
+      <svg viewBox="0 0 240 240" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        {Array.from({ length: 36 }).map((_, i) => {
+          const a = (i / 36) * Math.PI * 2;
+          const r = 115;
+          const x = 120 + Math.cos(a) * r;
+          const y = 120 + Math.sin(a) * r;
+          return <circle key={i} cx={x} cy={y} r={i % 3 === 0 ? 1.5 : 0.8} fill={color} opacity={0.3 + (i % 3) * 0.2} />;
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// Real waveform — sinusoidal pattern, vertical bars
+function WaveformBars({ count = 60, color = 'var(--cyan)', height = 80, animated = true, baseAmp = 0.4, randomSeed = 1 }) {
+  const bars = useMemo(() => {
+    return Array.from({ length: count }).map((_, i) => {
+      const t = i / count;
+      // mix of two sines for organic feel
+      const v = Math.abs(Math.sin(t * Math.PI * 4 + randomSeed) * 0.6 + Math.sin(t * Math.PI * 9 + randomSeed * 2) * 0.4);
+      return Math.max(0.08, baseAmp + v * 0.6);
+    });
+  }, [count, baseAmp, randomSeed]);
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 3, height, justifyContent: 'center' }}>
+      {bars.map((v, i) => (
+        <i key={i} style={{
+          display: 'block',
+          width: 3,
+          height: `${v * 100}%`,
+          background: color,
+          borderRadius: 4,
+          boxShadow: `0 0 8px ${color === 'var(--cyan)' ? 'rgba(0,229,255,0.55)' : color}`,
+          animation: animated ? `waveBar ${1 + (i % 5) * 0.2}s ease-in-out infinite ${(i % 7) * 0.08}s` : 'none',
+          opacity: 0.85
+        }} />
+      ))}
+    </div>
+  );
+}
+
+// Frequency circular dial
+function FrequencyDial({ size = 280, value = 680, min = 100, max = 2000, label = 'Frequency', state = 'idle', progress = 0 }) {
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size / 2 - 28;
+  const circumference = 2 * Math.PI * radius;
+  const angle = ((value - min) / (max - min)) * 360 - 90;
+  const indicatorX = cx + Math.cos(angle * Math.PI / 180) * radius;
+  const indicatorY = cy + Math.sin(angle * Math.PI / 180) * radius;
+  const offset = circumference - (progress * circumference);
+  return (
+    <div style={{ position: 'relative', width: size, height: size }}>
+      <div style={{
+        position: 'absolute', inset: -20,
+        background: 'radial-gradient(circle, rgba(0,229,255,0.3) 0%, transparent 60%)',
+        filter: 'blur(20px)'
+      }} />
+      <svg viewBox={`0 0 ${size} ${size}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <defs>
+          <linearGradient id="fd-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#7df9ff"/>
+            <stop offset="100%" stopColor="#0083a6"/>
+          </linearGradient>
+        </defs>
+        {/* tick marks around */}
+        {Array.from({ length: 60 }).map((_, i) => {
+          const a = (i / 60) * Math.PI * 2 - Math.PI / 2;
+          const r1 = radius + 6;
+          const r2 = radius + (i % 5 === 0 ? 16 : 10);
+          const x1 = cx + Math.cos(a) * r1;
+          const y1 = cy + Math.sin(a) * r1;
+          const x2 = cx + Math.cos(a) * r2;
+          const y2 = cy + Math.sin(a) * r2;
+          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={i % 5 === 0 ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)'} strokeWidth={1} />;
+        })}
+        {/* track */}
+        <circle cx={cx} cy={cy} r={radius} stroke="rgba(255,255,255,0.06)" strokeWidth={2} fill="none" />
+        {/* progress arc */}
+        <circle cx={cx} cy={cy} r={radius}
+          stroke="url(#fd-grad)"
+          strokeWidth={3}
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          transform={`rotate(-90 ${cx} ${cy})`}
+          style={{ filter: 'drop-shadow(0 0 8px rgba(0, 229, 255, 0.7))', transition: 'stroke-dashoffset 0.4s ease' }}
+        />
+        {/* indicator dot */}
+        <circle cx={indicatorX} cy={indicatorY} r={6} fill="#fff" />
+        <circle cx={indicatorX} cy={indicatorY} r={10} fill="rgba(0,229,255,0.4)" />
+      </svg>
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 4
+      }}>
+        <div className="t-eyebrow" style={{ fontSize: 10 }}>{label}</div>
+        <div style={{ fontFamily: 'Onest', fontSize: 56, fontWeight: 600, letterSpacing: '-0.04em', lineHeight: 1 }}>
+          {value}
+        </div>
+        <div className="t-caption" style={{ fontFamily: 'JetBrains Mono', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Hz</div>
+      </div>
+    </div>
+  );
+}
+
+// Phone illustration (line art SVG) — the phone with sound waves coming out of speaker
+function PhoneSoundIllustration({ size = 220, intensity = 1 }) {
+  return (
+    <svg width={size} height={size * 1.4} viewBox="0 0 220 308" fill="none">
+      <defs>
+        <linearGradient id="phone-body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1a2230"/>
+          <stop offset="100%" stopColor="#0a0e15"/>
+        </linearGradient>
+        <radialGradient id="speaker-glow" cx="50%" cy="100%" r="80%">
+          <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.8"/>
+          <stop offset="40%" stopColor="#00e5ff" stopOpacity="0.3"/>
+          <stop offset="100%" stopColor="#00e5ff" stopOpacity="0"/>
+        </radialGradient>
+        <linearGradient id="wave-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#7df9ff" stopOpacity="1"/>
+          <stop offset="100%" stopColor="#00e5ff" stopOpacity="0.2"/>
+        </linearGradient>
+      </defs>
+      {/* phone body */}
+      <rect x="50" y="20" width="120" height="200" rx="20" fill="url(#phone-body)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
+      <rect x="60" y="30" width="100" height="170" rx="12" fill="#000" />
+      {/* notch */}
+      <rect x="95" y="34" width="30" height="4" rx="2" fill="#0a0e15" />
+      {/* speaker grille at bottom */}
+      <rect x="80" y="210" width="60" height="3" rx="1.5" fill="#1a2230" />
+      <rect x="80" y="216" width="60" height="3" rx="1.5" fill="#00e5ff" opacity="0.7"/>
+      {/* sound waves below */}
+      <ellipse cx="110" cy="220" rx="80" ry="60" fill="url(#speaker-glow)" opacity={0.8 * intensity}/>
+      {/* wave arcs */}
+      {[1, 2, 3].map(i => (
+        <path key={i}
+          d={`M${50 - i*15},${230 + i*5} Q110,${280 + i*8} ${170 + i*15},${230 + i*5}`}
+          stroke="url(#wave-grad)"
+          strokeWidth={2}
+          fill="none"
+          opacity={1 - i * 0.25}
+        />
+      ))}
+      {/* particles */}
+      {Array.from({ length: 24 }).map((_, i) => {
+        const a = ((i / 24) * Math.PI) + Math.PI;
+        const r = 60 + (i % 4) * 12;
+        const x = 110 + Math.cos(a) * r;
+        const y = 235 + Math.sin(a) * r * 0.6;
+        return <circle key={i} cx={x} cy={y} r={i % 3 === 0 ? 2 : 1} fill="#7df9ff" opacity={0.4 + (i % 3) * 0.2}/>;
+      })}
+    </svg>
+  );
+}
+
+// Sound wave horizontal animated line (sinusoidal)
+function SineWaveLine({ width = 320, height = 80, color = 'var(--cyan)', amplitude = 0.6, frequency = 4, phase = 0 }) {
+  const points = useMemo(() => {
+    const pts = [];
+    for (let x = 0; x <= width; x += 2) {
+      const t = x / width;
+      const y = height / 2 + Math.sin(t * Math.PI * frequency * 2 + phase) * (height / 2 - 6) * amplitude * Math.exp(-Math.abs(t - 0.5) * 1.5);
+      pts.push(`${x},${y}`);
+    }
+    return pts.join(' ');
+  }, [width, height, amplitude, frequency, phase]);
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+      <defs>
+        <linearGradient id={`sine-grad-${phase}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor={color} stopOpacity="0.1"/>
+          <stop offset="50%" stopColor={color} stopOpacity="1"/>
+          <stop offset="100%" stopColor={color} stopOpacity="0.1"/>
+        </linearGradient>
+      </defs>
+      <polyline points={points} fill="none" stroke={`url(#sine-grad-${phase})`} strokeWidth="2" strokeLinecap="round" style={{ filter: `drop-shadow(0 0 6px ${color === 'var(--cyan)' ? 'rgba(0,229,255,0.7)' : color})` }}/>
+    </svg>
+  );
+}
+
+// Tab bar (bottom)
+function TabBar({ active = 'home' }) {
+  const tabs = [
+    { id: 'home', label: 'Home', icon: (c) => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M3 11L12 3L21 11V20C21 20.55 20.55 21 20 21H15V14H9V21H4C3.45 21 3 20.55 3 20V11Z" stroke={c} strokeWidth="1.6" strokeLinejoin="round"/>
+      </svg>
+    )},
+    { id: 'test', label: 'Test', icon: (c) => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M4 12H6M9 6V18M14 9V15M19 11V13" stroke={c} strokeWidth="1.8" strokeLinecap="round"/>
+      </svg>
+    )},
+    { id: 'history', label: 'History', icon: (c) => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke={c} strokeWidth="1.6"/>
+        <path d="M12 7V12L15 14" stroke={c} strokeWidth="1.6" strokeLinecap="round"/>
+      </svg>
+    )},
+    { id: 'settings', label: 'Settings', icon: (c) => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.6"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke={c} strokeWidth="1.6"/>
+      </svg>
+    )}
+  ];
+  return (
+    <div style={{
+      position: 'absolute',
+      bottom: 0, left: 0, right: 0,
+      height: 80,
+      paddingBottom: 4,
+      background: 'linear-gradient(180deg, transparent, rgba(5,6,8,0.95) 30%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      borderTop: '1px solid var(--line)',
+      zIndex: 5
+    }}>
+      {tabs.map(t => {
+        const isActive = t.id === active;
+        const color = isActive ? 'var(--cyan)' : 'var(--text-dim)';
+        return (
+          <div key={t.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, position: 'relative' }}>
+            {isActive && <div style={{ position: 'absolute', top: -8, width: 32, height: 3, borderRadius: 3, background: 'var(--cyan)', boxShadow: '0 0 10px var(--cyan-glow)' }}/>}
+            {t.icon(color)}
+            <span style={{ fontSize: 10, color, fontFamily: 'var(--mono)', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 500 }}>{t.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// Icon library — both <Icon.X c=... s=.../> JSX usage and Icon.X({c,s}) call usage work.
+const Icon = {
+  Droplet: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M12 3C12 3 5 11 5 15.5C5 19.6 8.13 22 12 22C15.87 22 19 19.6 19 15.5C19 11 12 3 12 3Z" stroke={c} strokeWidth="1.6" strokeLinejoin="round"/>
+      <path d="M8.5 16C8.5 17.7 9.8 19 11.5 19" stroke={c} strokeWidth="1.6" strokeLinecap="round" opacity="0.6"/>
+    </svg>
+  ),
+  Dust: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <circle cx="6" cy="8" r="1.5" fill={c}/>
+      <circle cx="12" cy="6" r="2" fill={c}/>
+      <circle cx="18" cy="9" r="1.5" fill={c}/>
+      <circle cx="9" cy="13" r="1.2" fill={c}/>
+      <circle cx="15" cy="14" r="1.6" fill={c}/>
+      <circle cx="7" cy="18" r="1.4" fill={c}/>
+      <circle cx="13" cy="19" r="1" fill={c}/>
+      <circle cx="18" cy="17" r="1.3" fill={c}/>
+    </svg>
+  ),
+  Speaker: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M11 5L6 9H3V15H6L11 19V5Z" stroke={c} strokeWidth="1.6" strokeLinejoin="round"/>
+      <path d="M15.5 9C16.4 10 17 11.4 17 12C17 12.6 16.4 14 15.5 15" stroke={c} strokeWidth="1.6" strokeLinecap="round"/>
+      <path d="M18.5 7C20 8.5 21 10.5 21 12C21 13.5 20 15.5 18.5 17" stroke={c} strokeWidth="1.6" strokeLinecap="round" opacity="0.6"/>
+    </svg>
+  ),
+  Headphones: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M3 14V11C3 6 7 3 12 3C17 3 21 6 21 11V14" stroke={c} strokeWidth="1.6" strokeLinecap="round"/>
+      <rect x="3" y="13" width="4" height="7" rx="2" stroke={c} strokeWidth="1.6"/>
+      <rect x="17" y="13" width="4" height="7" rx="2" stroke={c} strokeWidth="1.6"/>
+    </svg>
+  ),
+  Sparkle: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L13.5 9L20 10L13.5 11L12 18L10.5 11L4 10L10.5 9L12 2Z" fill={c}/>
+      <path d="M19 14L19.7 17L22 17.5L19.7 18L19 21L18.3 18L16 17.5L18.3 17L19 14Z" fill={c} opacity="0.7"/>
+    </svg>
+  ),
+  Diamond: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M6 3H18L22 9L12 22L2 9L6 3Z" stroke={c} strokeWidth="1.6" strokeLinejoin="round"/>
+      <path d="M2 9H22M9 3L12 22M15 3L12 22" stroke={c} strokeWidth="1.6" strokeLinejoin="round" opacity="0.7"/>
+    </svg>
+  ),
+  Check: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M5 12L10 17L19 8" stroke={c} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  ArrowRight: ({c = '#fff', s = 22} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  ArrowLeft: ({c = '#fff', s = 22} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M19 12H5M5 12L11 6M5 12L11 18" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Star: ({c = '#fbbf24', s = 32, filled = true} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill={filled ? c : 'none'}>
+      <path d="M12 2L14.85 8.85L22 9.55L16.5 14.35L18.15 21.5L12 17.85L5.85 21.5L7.5 14.35L2 9.55L9.15 8.85L12 2Z" stroke={c} strokeWidth="1.4" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Close: ({c = '#fff', s = 20} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M6 6L18 18M18 6L6 18" stroke={c} strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  ),
+  Play: ({c = '#fff', s = 22} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill={c}>
+      <path d="M8 5V19L19 12L8 5Z"/>
+    </svg>
+  ),
+  Pause: ({c = '#fff', s = 22} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill={c}>
+      <rect x="6" y="5" width="4" height="14" rx="1"/>
+      <rect x="14" y="5" width="4" height="14" rx="1"/>
+    </svg>
+  ),
+  Wave: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M2 12C4 6 6 18 8 12C10 6 12 18 14 12C16 6 18 18 20 12C21 9 22 12 22 12" stroke={c} strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+  ),
+  Shield: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L4 5V12C4 17 8 21 12 22C16 21 20 17 20 12V5L12 2Z" stroke={c} strokeWidth="1.6" strokeLinejoin="round"/>
+      <path d="M9 12L11 14L15 10" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Timer: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="13" r="8" stroke={c} strokeWidth="1.6"/>
+      <path d="M12 9V13L14.5 14.5" stroke={c} strokeWidth="1.6" strokeLinecap="round"/>
+      <path d="M9 2H15" stroke={c} strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  ),
+  Bolt: ({c = '#fff', s = 24} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M13 2L4 14H11L10 22L20 9H13L13 2Z" stroke={c} strokeWidth="1.4" strokeLinejoin="round" fill={c} fillOpacity="0.15"/>
+    </svg>
+  ),
+  Volume: ({c = '#fff', s = 22} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M11 5L6 9H3V15H6L11 19V5Z" stroke={c} strokeWidth="1.6" strokeLinejoin="round" fill={c} fillOpacity="0.2"/>
+      <path d="M15 9V15M18 7V17M21 10V14" stroke={c} strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  ),
+  Down: ({c = '#fff', s = 22} = {}) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M12 5V19M12 19L18 13M12 19L6 13" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+};
+
+Object.assign(window, {
+  StatusBar, NavPill, Frame, ScreenCard,
+  WaveRing, WaveformBars, FrequencyDial, PhoneSoundIllustration, SineWaveLine,
+  TabBar, Icon
+});
+// All 12 Sonic Clean screens — content only (no phone frame).
+// React hooks and primitives are already in scope from components.jsx (inlined above).
+
+// ============ 01 SPLASH ============
+function ScreenSplash({ onNext }) {
+  return (
+    <div style={{ height: '100%', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '32px 28px 36px', overflow: 'hidden' }} className="screen-enter">
+      <div className="bg-glow" />
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--cyan)', boxShadow: '0 0 12px var(--cyan-glow)' }} />
+          <div style={{ fontFamily: 'Onest', fontWeight: 600, fontSize: 16, letterSpacing: '-0.01em' }}>Sonic Clean</div>
+        </div>
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+        <WaveRing size={280} state="active" />
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span className="t-eyebrow">Acoustic Care</span>
+          <h1 style={{ fontFamily: 'Onest', fontSize: 38, fontWeight: 500, lineHeight: 1.02, letterSpacing: '-0.025em' }}>
+            Clear sound,<br/>
+            in <span style={{ fontStyle: 'italic', fontWeight: 400, color: 'var(--cyan)' }}>seconds</span>.
+          </h1>
+          <p className="t-body" style={{ fontSize: 15, maxWidth: 320 }}>
+            A precision sound-wave routine that pushes out water, dust and debris your speaker has been holding onto.
+          </p>
+        </div>
+        <button className="btn-primary" onClick={onNext}>
+          Begin diagnosis
+          <Icon.ArrowRight c="#001318"/>
+        </button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, color: 'var(--text-dim)', fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+          <Icon.Shield c="var(--text-dim)" s={14}/> Safe for any Android device
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============ 02 PROBLEM DISCOVERY ============
+function ScreenProblem({ onNext, onBack, selected, setSelected }) {
+  const options = [
+    { id: 'water', icon: Icon.Droplet, label: 'Water inside', sub: 'Phone got wet or splashed', color: '#4cc9f0' },
+    { id: 'dust',  icon: Icon.Dust,    label: 'Dust & debris', sub: 'Pocket lint or sand', color: '#7df9ff' },
+    { id: 'muffled', icon: Icon.Speaker, label: 'Sound is muffled', sub: 'Quieter or distorted', color: '#00e5ff' },
+    { id: 'check', icon: Icon.Sparkle, label: 'Just a check-up', sub: 'No issue, routine care', color: '#a3e9ff' },
+  ];
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 28px' }} className="screen-enter">
+      <Header step={1} total={3} onBack={onBack}/>
+      <div style={{ marginTop: 28, marginBottom: 24 }}>
+        <span className="t-eyebrow">Step 01 · Symptom</span>
+        <h2 style={{ fontFamily: 'Onest', fontSize: 28, fontWeight: 500, lineHeight: 1.08, letterSpacing: '-0.02em', marginTop: 8 }}>
+          What's happening with your speaker?
+        </h2>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
+        {options.map(opt => {
+          const isOn = selected === opt.id;
+          return (
+            <button key={opt.id}
+              onClick={() => setSelected(opt.id)}
+              style={{
+                appearance: 'none',
+                border: isOn ? '1px solid var(--cyan)' : '1px solid var(--line-strong)',
+                background: isOn
+                  ? 'linear-gradient(180deg, rgba(0,229,255,0.08), rgba(0,229,255,0.02))'
+                  : 'rgba(15,18,24,0.6)',
+                borderRadius: 18,
+                padding: '18px 18px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 16,
+                textAlign: 'left',
+                cursor: 'pointer',
+                color: 'var(--text)',
+                boxShadow: isOn ? '0 0 0 4px rgba(0,229,255,0.08), inset 0 1px 0 rgba(255,255,255,0.04)' : 'inset 0 1px 0 rgba(255,255,255,0.03)',
+                transition: 'all 0.2s ease'
+              }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: 14,
+                background: isOn ? `radial-gradient(circle at 30% 30%, ${opt.color}, var(--cyan-deep))` : 'rgba(255,255,255,0.04)',
+                border: '1px solid var(--line-strong)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: isOn ? '0 0 20px rgba(0,229,255,0.4)' : 'none',
+                flexShrink: 0
+              }}>
+                {opt.icon({c: isOn ? '#001318' : 'var(--text)', s: 22})}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
+                <div style={{ fontFamily: 'Onest', fontSize: 16, fontWeight: 600 }}>{opt.label}</div>
+                <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>{opt.sub}</div>
+              </div>
+              <div style={{
+                width: 24, height: 24, borderRadius: '50%',
+                border: '1.5px solid ' + (isOn ? 'var(--cyan)' : 'var(--line-strong)'),
+                background: isOn ? 'var(--cyan)' : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                {isOn && <Icon.Check c="#001318" s={14}/>}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      <button className="btn-primary" onClick={onNext} disabled={!selected}
+        style={{ opacity: selected ? 1 : 0.35, marginTop: 20, transition: 'opacity 0.2s' }}>
+        Continue <Icon.ArrowRight c="#001318"/>
+      </button>
+    </div>
+  );
+}
+
+// ============ 03 LAST CLEANED ============
+function ScreenLastClean({ onNext, onBack, selected, setSelected }) {
+  const options = [
+    { id: 'never', label: 'Never', sub: "I didn't know that was a thing" },
+    { id: 'months', label: 'A few months ago', sub: 'Or longer' },
+    { id: 'weeks',  label: 'Last few weeks', sub: 'Recently enough' },
+    { id: 'days',   label: 'Just days ago', sub: 'Doing maintenance' },
+  ];
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 28px' }} className="screen-enter">
+      <Header step={2} total={3} onBack={onBack}/>
+      <div style={{ marginTop: 28, marginBottom: 8 }}>
+        <span className="t-eyebrow">Step 02 · Timeline</span>
+        <h2 style={{ fontFamily: 'Onest', fontSize: 28, fontWeight: 500, lineHeight: 1.08, letterSpacing: '-0.02em', marginTop: 8 }}>
+          When did you last clean it?
+        </h2>
+        <p className="t-body" style={{ fontSize: 14, marginTop: 8 }}>This helps us calibrate sweep intensity for your device.</p>
+      </div>
+
+      <div style={{ marginTop: 18, marginBottom: 18, padding: 18, borderRadius: 18, border: '1px solid var(--line-strong)', background: 'rgba(15,18,24,0.6)', display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon.Bolt c="var(--cyan)" s={20}/>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: 'Onest', fontSize: 14, fontWeight: 600 }}>Most users wait too long</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Speakers collect dust within 2–3 weeks of daily use.</div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+        {options.map(opt => {
+          const isOn = selected === opt.id;
+          return (
+            <button key={opt.id} onClick={() => setSelected(opt.id)}
+              style={{
+                appearance: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--text)',
+                border: isOn ? '1px solid var(--cyan)' : '1px solid var(--line-strong)',
+                background: isOn ? 'linear-gradient(180deg, rgba(0,229,255,0.08), rgba(0,229,255,0.02))' : 'rgba(15,18,24,0.6)',
+                borderRadius: 16, padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+              }}>
+              <div>
+                <div style={{ fontFamily: 'Onest', fontSize: 16, fontWeight: 600 }}>{opt.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{opt.sub}</div>
+              </div>
+              <div style={{
+                width: 22, height: 22, borderRadius: '50%',
+                border: '1.5px solid ' + (isOn ? 'var(--cyan)' : 'var(--line-strong)'),
+                background: isOn ? 'var(--cyan)' : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                {isOn && <Icon.Check c="#001318" s={12}/>}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      <button className="btn-primary" onClick={onNext} disabled={!selected}
+        style={{ opacity: selected ? 1 : 0.35, marginTop: 20, transition: 'opacity 0.2s' }}>
+        Continue <Icon.ArrowRight c="#001318"/>
+      </button>
+    </div>
+  );
+}
+
+// ============ 04 DIAGNOSTIC (analyzing) ============
+function ScreenDiagnostic({ onNext, onBack }) {
+  const [progress, setProgress] = useState(0);
+  const [stage, setStage] = useState(0);
+  const stages = [
+    { hz: 220, label: 'Listening to ambient response' },
+    { hz: 880, label: 'Sweeping midrange' },
+    { hz: 1840, label: 'Measuring high-frequency loss' },
+  ];
+  useEffect(() => {
+    let t = 0;
+    const id = setInterval(() => {
+      t += 1;
+      setProgress(p => {
+        const n = Math.min(1, p + 0.012);
+        if (n >= 0.33 && stage === 0) setStage(1);
+        if (n >= 0.66 && stage === 1) setStage(2);
+        return n;
+      });
+    }, 60);
+    return () => clearInterval(id);
+  }, [stage]);
+
+  useEffect(() => {
+    if (progress >= 1) {
+      const id = setTimeout(onNext, 600);
+      return () => clearTimeout(id);
+    }
+  }, [progress]);
+
+  const s = stages[stage];
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 36px', overflow: 'hidden' }} className="screen-enter">
+      <Header step={3} total={3} onBack={onBack}/>
+
+      <div className="bg-glow" style={{ opacity: 0.6 }}/>
+
+      <div style={{ marginTop: 22, position: 'relative', zIndex: 1 }}>
+        <span className="t-eyebrow">Diagnostic in progress</span>
+        <h2 style={{ fontFamily: 'Onest', fontSize: 26, fontWeight: 500, lineHeight: 1.08, letterSpacing: '-0.02em', marginTop: 6 }}>
+          Analyzing your speaker
+        </h2>
+      </div>
+
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+        <FrequencyDial size={280} value={s.hz} progress={progress} label="Now scanning"/>
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 18px', borderRadius: 16, background: 'rgba(15,18,24,0.7)', border: '1px solid var(--line-strong)' }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--cyan)', boxShadow: '0 0 8px var(--cyan)', animation: 'pulseGlow 1.2s infinite' }}/>
+          <div style={{ fontSize: 13, fontFamily: 'JetBrains Mono', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>{s.label}…</div>
+          <div style={{ marginLeft: 'auto', fontFamily: 'JetBrains Mono', fontSize: 12, color: 'var(--cyan)' }}>{Math.round(progress * 100)}%</div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+          {[0,1,2].map(i => (
+            <div key={i} style={{
+              height: 32, borderRadius: 10,
+              padding: '6px 10px',
+              border: i <= stage ? '1px solid rgba(0,229,255,0.4)' : '1px solid var(--line-strong)',
+              background: i <= stage ? 'rgba(0,229,255,0.08)' : 'rgba(255,255,255,0.02)',
+              display: 'flex', alignItems: 'center', gap: 8
+            }}>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: i <= stage ? 'var(--cyan)' : 'var(--text-dim)', letterSpacing: '0.08em' }}>
+                {`STAGE ${i+1}`}
+              </span>
+              {i < stage && <Icon.Check c="var(--cyan)" s={12}/>}
+              {i === stage && <div className="wave-row" style={{ height: 14, marginLeft: 'auto' }}>
+                {[0,1,2,3].map(j => <i key={j} style={{ width: 2, animationDelay: `${j*0.1}s` }}/>) }
+              </div>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============ 05 RESCUE PLAN ============
+function ScreenPlan({ onNext, onBack, problem }) {
+  const planMap = {
+    water: { score: 38, label: 'Critical', items: [
+      { icon: Icon.Droplet, t: 'Water Eject', s: '165 Hz pulse to dislodge moisture', time: '30s' },
+      { icon: Icon.Wave,    t: '3-Stage Sweep', s: 'Low, mid, high frequency clean', time: '60s' },
+      { icon: Icon.Speaker, t: 'Sound Test',  s: 'Compare before/after clarity', time: '15s' },
+    ]},
+    dust: { score: 52, label: 'Moderate', items: [
+      { icon: Icon.Dust, t: 'Dust Clean', s: 'Resonance pulse to expel debris', time: '45s' },
+      { icon: Icon.Wave, t: '3-Stage Sweep', s: 'Full frequency clean', time: '60s' },
+      { icon: Icon.Speaker, t: 'Sound Test', s: 'Verify clarity restored', time: '15s' },
+    ]},
+    muffled: { score: 44, label: 'Significant', items: [
+      { icon: Icon.Speaker, t: 'Muffled Fix', s: 'Targeted high-frequency restore', time: '40s' },
+      { icon: Icon.Wave, t: '3-Stage Sweep', s: 'Full frequency clean', time: '60s' },
+      { icon: Icon.Diamond, t: 'Deep Clean Pro', s: 'Manual Hz precision pass', time: '90s' },
+    ]},
+    check: { score: 71, label: 'Healthy', items: [
+      { icon: Icon.Sparkle, t: 'Light Maintenance', s: 'Quick preventive sweep', time: '20s' },
+      { icon: Icon.Speaker, t: 'Sound Test', s: 'Baseline measurement', time: '15s' },
+    ]},
+  };
+  const plan = planMap[problem] || planMap.water;
+  const scoreColor = plan.score < 50 ? 'var(--red)' : plan.score < 70 ? 'var(--amber)' : 'var(--green)';
+
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 28px', overflow: 'auto' }} className="screen-enter">
+      <Header step={null} total={null} onBack={onBack} title="Your plan"/>
+      <div style={{ marginTop: 18 }}>
+        <span className="t-eyebrow">Diagnostic complete</span>
+        <h2 style={{ fontFamily: 'Onest', fontSize: 26, fontWeight: 500, lineHeight: 1.08, letterSpacing: '-0.02em', marginTop: 6 }}>
+          We built a rescue plan for your speaker.
+        </h2>
+      </div>
+
+      {/* Score card */}
+      <div className="glass-strong" style={{ marginTop: 20, padding: 20, display: 'flex', alignItems: 'center', gap: 18, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, borderRadius: '50%', background: `radial-gradient(circle, ${scoreColor}40, transparent 70%)`, filter: 'blur(20px)', pointerEvents: 'none' }}/>
+        <div style={{ position: 'relative', width: 84, height: 84 }}>
+          <svg viewBox="0 0 84 84" style={{ width: '100%', height: '100%' }}>
+            <circle cx="42" cy="42" r="36" stroke="rgba(255,255,255,0.08)" strokeWidth="6" fill="none"/>
+            <circle cx="42" cy="42" r="36" stroke={scoreColor} strokeWidth="6" fill="none"
+              strokeDasharray={2*Math.PI*36}
+              strokeDashoffset={2*Math.PI*36 * (1 - plan.score/100)}
+              transform="rotate(-90 42 42)"
+              strokeLinecap="round"
+              style={{ filter: `drop-shadow(0 0 6px ${scoreColor})` }}
+            />
+          </svg>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ fontFamily: 'Onest', fontSize: 26, fontWeight: 600, letterSpacing: '-0.04em' }}>{plan.score}</div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 8, color: 'var(--text-muted)', letterSpacing: '0.1em' }}>SCORE</div>
+          </div>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: scoreColor }}>{plan.label}</div>
+          <div style={{ fontFamily: 'Onest', fontSize: 18, fontWeight: 600, marginTop: 2 }}>Speaker health</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>Based on your diagnosis & sweep test</div>
+        </div>
+      </div>
+
+      {/* Plan steps */}
+      <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <div className="t-eyebrow" style={{ marginBottom: 10 }}>Recommended sequence</div>
+        {plan.items.map((it, i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            padding: '14px 0',
+            borderBottom: i < plan.items.length - 1 ? '1px solid var(--line)' : 'none'
+          }}>
+            <div style={{
+              width: 14, height: 14, borderRadius: '50%',
+              border: '2px solid var(--cyan)',
+              background: 'rgba(0,229,255,0.15)',
+              position: 'relative'
+            }}>
+              <span style={{ position: 'absolute', inset: -22, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'JetBrains Mono', fontSize: 9, color: 'var(--cyan)', letterSpacing: '0.1em' }}>
+                {String(i+1).padStart(2,'0')}
+              </span>
+            </div>
+            <div style={{ marginLeft: 12, flex: 1 }}>
+              <div style={{ fontFamily: 'Onest', fontSize: 15, fontWeight: 600 }}>{it.t}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{it.s}</div>
+            </div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>{it.time}</div>
+          </div>
+        ))}
+      </div>
+
+      <button className="btn-primary" onClick={onNext} style={{ marginTop: 'auto' }}>
+        Continue <Icon.ArrowRight c="#001318"/>
+      </button>
+    </div>
+  );
+}
+
+// ============ 06 RATING MOMENT ============
+function ScreenRating({ onNext, onBack }) {
+  const [stars, setStars] = useState(0);
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 28px', position: 'relative', overflow: 'hidden' }} className="screen-enter">
+      <Header step={null} total={null} onBack={onBack} muted />
+      <div className="bg-glow" style={{ opacity: 0.4 }}/>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', position: 'relative', zIndex: 1, gap: 28 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            width: 64, height: 64, borderRadius: 20,
+            background: 'radial-gradient(circle at 30% 30%, var(--cyan-hi), var(--cyan-deep))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 0 30px var(--cyan-glow)'
+          }}>
+            <Icon.Sparkle c="#001318" s={28}/>
+          </div>
+          <span className="t-eyebrow">Quick favor</span>
+        </div>
+        <div>
+          <h2 style={{ fontFamily: 'Onest', fontSize: 28, fontWeight: 500, lineHeight: 1.1, letterSpacing: '-0.02em', maxWidth: 320 }}>
+            Help others like you find clear sound.
+          </h2>
+          <p className="t-body" style={{ fontSize: 14, marginTop: 12, maxWidth: 300 }}>
+            Your rating helps Sonic Clean reach more people with this exact problem.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[1,2,3,4,5].map(i => (
+            <button key={i}
+              onClick={() => setStars(i)}
+              style={{
+                appearance: 'none', background: 'transparent', border: 0, cursor: 'pointer', padding: 6,
+                transition: 'transform 0.15s, filter 0.15s',
+                transform: i <= stars ? 'scale(1.08)' : 'scale(1)',
+                filter: i <= stars ? 'drop-shadow(0 0 12px rgba(251, 191, 36, 0.6))' : 'none'
+              }}>
+              {Icon.Star({c: i <= stars ? '#fbbf24' : 'rgba(255,255,255,0.18)', s: 42, filled: i <= stars})}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ minHeight: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {stars >= 4 && (
+            <div style={{
+              padding: '8px 14px', borderRadius: 100,
+              background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)',
+              fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--green)', letterSpacing: '0.06em', textTransform: 'uppercase'
+            }}>
+              <Icon.Check c="var(--green)" s={12}/> Thank you!
+            </div>
+          )}
+          {stars > 0 && stars < 4 && (
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>We'll do better — tell us what's missing on the next screen.</div>
+          )}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <button className="btn-primary" onClick={onNext} disabled={stars === 0} style={{ opacity: stars === 0 ? 0.35 : 1, transition: 'opacity 0.2s' }}>
+          Continue <Icon.ArrowRight c="#001318"/>
+        </button>
+        <button onClick={onNext} style={{ background: 'transparent', border: 0, color: 'var(--text-dim)', fontFamily: 'Manrope', fontSize: 13, padding: 12, cursor: 'pointer' }}>
+          Maybe later
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ============ 07 PAYWALL ============
+function ScreenPaywall({ onNext, onBack }) {
+  const [plan, setPlan] = useState('year');
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }} className="screen-enter">
+      <div className="bg-glow" />
+      <div style={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
+        <button onClick={onBack} style={{
+          appearance: 'none', border: 0, cursor: 'pointer',
+          width: 32, height: 32, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.06)', border: '1px solid var(--line-strong)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <Icon.Close c="var(--text-muted)" s={14}/>
+        </button>
+      </div>
+
+      <div style={{ padding: '36px 24px 0', position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 18 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 100, background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.3)' }}>
+          <Icon.Bolt c="var(--cyan)" s={12}/>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'var(--cyan)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>One-time offer · 24h</span>
+        </div>
+        <h1 style={{ fontFamily: 'Onest', fontSize: 32, fontWeight: 500, lineHeight: 1.05, letterSpacing: '-0.025em' }}>
+          Unlock the full <span style={{ fontStyle: 'italic', color: 'var(--cyan)' }}>rescue kit</span>
+        </h1>
+      </div>
+
+      {/* feature list */}
+      <div style={{ padding: '24px 24px 0', display: 'flex', flexDirection: 'column', gap: 10, position: 'relative', zIndex: 1 }}>
+        {[
+          { i: Icon.Wave, t: '3-stage frequency sweep', s: 'Low / mid / high precision pass' },
+          { i: Icon.Diamond, t: 'Deep Clean Pro', s: 'Targeted manual-Hz cleaning' },
+          { i: Icon.Timer, t: 'Unlimited rescue cycles', s: 'No daily caps, ever' },
+          { i: Icon.Shield, t: 'No ads', s: 'Quiet, focused interface' },
+        ].map((f, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {f.i({c: 'var(--cyan)', s: 16})}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: 'Onest', fontSize: 14, fontWeight: 600 }}>{f.t}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{f.s}</div>
+            </div>
+            <Icon.Check c="var(--cyan)" s={18}/>
+          </div>
+        ))}
+      </div>
+
+      {/* plan picker */}
+      <div style={{ padding: '24px 24px 0', display: 'flex', flexDirection: 'column', gap: 10, position: 'relative', zIndex: 1 }}>
+        <button onClick={() => setPlan('year')}
+          style={{
+            appearance: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--text)',
+            border: plan === 'year' ? '1.5px solid var(--cyan)' : '1px solid var(--line-strong)',
+            background: plan === 'year' ? 'linear-gradient(180deg, rgba(0,229,255,0.1), rgba(0,229,255,0.02))' : 'rgba(15,18,24,0.6)',
+            borderRadius: 18, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14,
+            position: 'relative',
+            boxShadow: plan === 'year' ? '0 0 0 4px rgba(0,229,255,0.08)' : 'none'
+          }}>
+          <div style={{ position: 'absolute', top: -8, right: 16, padding: '3px 10px', borderRadius: 100, background: 'var(--cyan)', fontFamily: 'JetBrains Mono', fontSize: 9, color: '#001318', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>Save 78%</div>
+          <div style={{
+            width: 22, height: 22, borderRadius: '50%',
+            border: '1.5px solid ' + (plan === 'year' ? 'var(--cyan)' : 'var(--line-strong)'),
+            background: plan === 'year' ? 'var(--cyan)' : 'transparent',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>
+            {plan === 'year' && <Icon.Check c="#001318" s={12}/>}
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: 'Onest', fontSize: 16, fontWeight: 600 }}>Yearly</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>3-day free trial, then billed yearly</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontFamily: 'Onest', fontSize: 16, fontWeight: 600 }}>$ 24.99 /yr</div>
+            <div style={{ fontSize: 11, color: 'var(--text-dim)', textDecoration: 'line-through' }}>$ 119.88</div>
+          </div>
+        </button>
+
+        <button onClick={() => setPlan('week')}
+          style={{
+            appearance: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--text)',
+            border: plan === 'week' ? '1.5px solid var(--cyan)' : '1px solid var(--line-strong)',
+            background: plan === 'week' ? 'linear-gradient(180deg, rgba(0,229,255,0.1), rgba(0,229,255,0.02))' : 'rgba(15,18,24,0.6)',
+            borderRadius: 18, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14
+          }}>
+          <div style={{
+            width: 22, height: 22, borderRadius: '50%',
+            border: '1.5px solid ' + (plan === 'week' ? 'var(--cyan)' : 'var(--line-strong)'),
+            background: plan === 'week' ? 'var(--cyan)' : 'transparent',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>
+            {plan === 'week' && <Icon.Check c="#001318" s={12}/>}
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: 'Onest', fontSize: 16, fontWeight: 600 }}>Weekly</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>No trial, cancel anytime</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontFamily: 'Onest', fontSize: 16, fontWeight: 600 }}>$ 6.99 /wk</div>
+          </div>
+        </button>
+      </div>
+
+      <div style={{ padding: '20px 24px 12px', display: 'flex', flexDirection: 'column', gap: 8, position: 'relative', zIndex: 1, marginTop: 'auto' }}>
+        <button className="btn-primary" onClick={onNext}>
+          {plan === 'year' ? 'Start 3-day free trial' : 'Continue weekly'} <Icon.ArrowRight c="#001318"/>
+        </button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-dim)', fontFamily: 'JetBrains Mono', letterSpacing: '0.04em', padding: '0 8px' }}>
+          <span style={{ cursor: 'pointer' }}>Restore</span>
+          <span>Auto-renews · Cancel anytime</span>
+          <span style={{ cursor: 'pointer' }}>Terms</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============ 08 HOME ============
+function ScreenHome({ onNavigate }) {
+  const tiles = [
+    { id: 'water',  icon: Icon.Droplet,   label: 'Water Eject',     sub: '165 Hz pulse',    color: 'cyan',  premium: false },
+    { id: 'dust',   icon: Icon.Dust,      label: 'Dust Clean',      sub: 'Resonance',       color: 'mint',  premium: false },
+    { id: 'muff',   icon: Icon.Speaker,   label: 'Muffled Fix',     sub: 'High-freq pass',  color: 'cyan',  premium: false },
+    { id: 'deep',   icon: Icon.Diamond,   label: 'Deep Clean Pro',  sub: '3-stage sweep',   color: 'cyan',  premium: true },
+  ];
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 90px', position: 'relative' }} className="screen-enter">
+      {/* top */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--cyan)' }}>Sonic Clean · Pro</div>
+          <div style={{ fontFamily: 'Onest', fontSize: 26, fontWeight: 500, marginTop: 4, letterSpacing: '-0.02em' }}>
+            Hello, listener.
+          </div>
+        </div>
+        <button style={{
+          width: 40, height: 40, borderRadius: 12,
+          background: 'rgba(255,255,255,0.04)', border: '1px solid var(--line-strong)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 8V13L15 16M12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22Z" stroke="var(--text-muted)" strokeWidth="1.6" strokeLinecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      {/* Hero status card */}
+      <div className="glass-strong" style={{ marginTop: 22, padding: 22, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', right: -30, top: -30, width: 180, height: 180, opacity: 0.4 }}>
+          <WaveRing size={180} color="var(--cyan)" state="active"/>
+        </div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Speaker health</div>
+        <div style={{ marginTop: 8, display: 'flex', alignItems: 'baseline', gap: 8 }}>
+          <span style={{ fontFamily: 'Onest', fontSize: 60, fontWeight: 500, letterSpacing: '-0.04em', lineHeight: 1, color: 'var(--green)' }}>89</span>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 12, color: 'var(--text-muted)' }}>/ 100</span>
+          <span style={{ marginLeft: 8, padding: '4px 8px', borderRadius: 100, background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.3)', fontFamily: 'JetBrains Mono', fontSize: 10, color: 'var(--green)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>+27 today</span>
+        </div>
+        <div style={{ marginTop: 10, fontSize: 13, color: 'var(--text-muted)' }}>
+          Last cleaned <span style={{ color: 'var(--text)' }}>32 min ago</span> · 3-stage sweep
+        </div>
+        <button onClick={() => onNavigate('preclean')} style={{
+          marginTop: 14, padding: '10px 16px', borderRadius: 100,
+          border: '1px solid rgba(0,229,255,0.4)', background: 'rgba(0,229,255,0.08)',
+          color: 'var(--cyan)', fontFamily: 'Onest', fontSize: 13, fontWeight: 600,
+          display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer'
+        }}>
+          Start a new cycle <Icon.ArrowRight c="var(--cyan)" s={14}/>
+        </button>
+      </div>
+
+      {/* Tiles */}
+      <div style={{ marginTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <div className="t-eyebrow">Tools</div>
+        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'var(--text-dim)' }}>4 available</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        {tiles.map(t => (
+          <button key={t.id} onClick={() => onNavigate('preclean', t.id)} style={{
+            appearance: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--text)',
+            border: '1px solid var(--line-strong)', background: 'rgba(15,18,24,0.6)',
+            borderRadius: 18, padding: 16, display: 'flex', flexDirection: 'column', gap: 30, position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 12,
+              background: 'radial-gradient(circle at 30% 30%, var(--cyan-hi), var(--cyan-deep))',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 0 16px rgba(0,229,255,0.3)'
+            }}>
+              {t.icon({c: '#001318', s: 18})}
+            </div>
+            <div>
+              <div style={{ fontFamily: 'Onest', fontSize: 15, fontWeight: 600 }}>{t.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2, fontFamily: 'JetBrains Mono', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{t.sub}</div>
+            </div>
+            {t.premium && (
+              <div style={{ position: 'absolute', top: 12, right: 12, padding: '2px 8px', borderRadius: 100, background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.4)', fontFamily: 'JetBrains Mono', fontSize: 9, color: 'var(--amber)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Pro</div>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* History row */}
+      <div style={{ marginTop: 22, marginBottom: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="t-eyebrow">Recent activity</div>
+        <span style={{ fontSize: 11, color: 'var(--cyan)', fontFamily: 'Onest', fontWeight: 600 }}>View all</span>
+      </div>
+      <div style={{ borderRadius: 16, border: '1px solid var(--line-strong)', background: 'rgba(15,18,24,0.6)', overflow: 'hidden' }}>
+        {[
+          { t: 'Water Eject', d: 'Today, 14:08', v: '+12', h: 165 },
+          { t: '3-Stage Sweep', d: 'Yesterday, 09:21', v: '+5', h: 880 },
+        ].map((r, i, a) => (
+          <div key={i} style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12, borderBottom: i < a.length-1 ? '1px solid var(--line)' : 'none' }}>
+            <div className="wave-row" style={{ height: 24 }}>
+              {[0,1,2,3,4].map(j => <i key={j} style={{ width: 2, animationDelay: `${j*0.1}s` }}/>) }
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: 'Onest', fontSize: 13, fontWeight: 600 }}>{r.t}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{r.d} · {r.h} Hz</div>
+            </div>
+            <div style={{ padding: '3px 8px', borderRadius: 100, background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.25)', fontFamily: 'JetBrains Mono', fontSize: 10, color: 'var(--green)' }}>{r.v}</div>
+          </div>
+        ))}
+      </div>
+
+      <TabBar active="home"/>
+    </div>
+  );
+}
+
+// ============ 09 PRE-CLEAN CHECKLIST ============
+function ScreenPreClean({ onNext, onBack }) {
+  const [checked, setChecked] = useState({ vol: true, dir: true, hp: true });
+  const items = [
+    { id: 'vol', icon: Icon.Volume, t: 'Volume at maximum', s: 'Sound waves work harder when loud' },
+    { id: 'dir', icon: Icon.Down,    t: 'Hold phone speaker-down', s: 'Lets gravity assist the eject' },
+    { id: 'hp',  icon: Icon.Headphones, t: 'Disconnect headphones', s: 'Detach earbuds & Bluetooth audio' },
+  ];
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 28px' }} className="screen-enter">
+      <Header onBack={onBack} title="Before we clean"/>
+      <div style={{ marginTop: 12 }}>
+        <span className="t-eyebrow">Setup · 3 steps</span>
+        <h2 style={{ fontFamily: 'Onest', fontSize: 24, fontWeight: 500, lineHeight: 1.1, letterSpacing: '-0.02em', marginTop: 6 }}>
+          Three checks for best results
+        </h2>
+      </div>
+
+      <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
+        {items.map(it => {
+          const on = checked[it.id];
+          return (
+            <button key={it.id} onClick={() => setChecked(c => ({ ...c, [it.id]: !c[it.id] }))}
+              style={{
+                appearance: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--text)',
+                border: on ? '1px solid rgba(74,222,128,0.4)' : '1px solid var(--line-strong)',
+                background: on ? 'linear-gradient(180deg, rgba(74,222,128,0.06), transparent 60%)' : 'rgba(15,18,24,0.6)',
+                borderRadius: 16, padding: 18,
+                display: 'flex', alignItems: 'center', gap: 14, transition: 'all 0.2s ease'
+              }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: 12,
+                background: on ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.03)',
+                border: on ? '1px solid rgba(74,222,128,0.3)' : '1px solid var(--line-strong)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                {it.icon({c: on ? 'var(--green)' : 'var(--text-muted)', s: 20})}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: 'Onest', fontSize: 15, fontWeight: 600 }}>{it.t}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{it.s}</div>
+              </div>
+              <div style={{
+                width: 24, height: 24, borderRadius: 6,
+                border: on ? '1px solid var(--green)' : '1.5px solid var(--line-strong)',
+                background: on ? 'var(--green)' : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                {on && <Icon.Check c="#001318" s={14}/>}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* tip card */}
+      <div style={{ marginTop: 16, padding: 16, borderRadius: 16, border: '1px solid var(--line-strong)', background: 'rgba(15,18,24,0.6)', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+        <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(0,229,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Icon.Bolt c="var(--cyan)" s={14}/>
+        </div>
+        <div>
+          <div style={{ fontFamily: 'Onest', fontSize: 13, fontWeight: 600 }}>Tip</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>Keep speaker pointed down through the full cycle. You can stop anytime.</div>
+        </div>
+      </div>
+
+      <button className="btn-primary" onClick={onNext} disabled={!Object.values(checked).every(Boolean)}
+        style={{ opacity: Object.values(checked).every(Boolean) ? 1 : 0.35, marginTop: 16 }}>
+        Start sweep · 60s <Icon.ArrowRight c="#001318"/>
+      </button>
+    </div>
+  );
+}
+
+// ============ 10 CLEANING IN PROGRESS ============
+function ScreenCleaning({ onNext, onBack }) {
+  const [progress, setProgress] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const stages = [
+    { hz: 165,  label: 'Low — water eject' },
+    { hz: 680,  label: 'Mid — debris dislodge' },
+    { hz: 1840, label: 'High — clarity restore' },
+  ];
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      setProgress(p => Math.min(1, p + 0.006));
+    }, 60);
+    return () => clearInterval(id);
+  }, [paused]);
+
+  useEffect(() => {
+    if (progress >= 1) {
+      const id = setTimeout(onNext, 400);
+      return () => clearTimeout(id);
+    }
+  }, [progress]);
+
+  const stageIdx = progress < 0.34 ? 0 : progress < 0.67 ? 1 : 2;
+  const s = stages[stageIdx];
+  const stageProgress = (progress - stageIdx * 0.333) / 0.333;
+  const secondsLeft = Math.ceil((1 - progress) * 60);
+
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 28px', position: 'relative', overflow: 'hidden' }} className="screen-enter">
+      <div className="bg-glow" style={{ opacity: 0.5 + stageProgress * 0.4 }}/>
+      <Header onBack={onBack} title={`Cleaning · ${stageIdx + 1} of 3`} muted/>
+
+      <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 22 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--cyan)', boxShadow: '0 0 8px var(--cyan)', animation: 'pulseGlow 1s infinite' }}/>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--cyan)', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Live · sweep</span>
+        </div>
+        <FrequencyDial value={s.hz} progress={progress} label="Frequency"/>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: 'Onest', fontSize: 18, fontWeight: 600 }}>{s.label}</div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>You can stop at any time</div>
+        </div>
+
+        {/* sine wave */}
+        <SineWaveLine width={300} height={56} amplitude={0.7} frequency={4 + stageIdx * 2} phase={progress * 30}/>
+      </div>
+
+      {/* stage indicators */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6, marginBottom: 16, position: 'relative', zIndex: 1 }}>
+        {[0,1,2].map(i => (
+          <div key={i}>
+            <div style={{ height: 4, borderRadius: 4, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                width: i < stageIdx ? '100%' : i === stageIdx ? `${stageProgress*100}%` : '0%',
+                background: 'linear-gradient(90deg, var(--cyan-deep), var(--cyan))',
+                boxShadow: '0 0 8px var(--cyan)',
+                transition: 'width 0.2s'
+              }}/>
+            </div>
+            <div style={{ marginTop: 6, fontFamily: 'JetBrains Mono', fontSize: 10, color: i <= stageIdx ? 'var(--cyan)' : 'var(--text-dim)', letterSpacing: '0.1em' }}>{`STAGE 0${i+1}`}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* time + controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative', zIndex: 1 }}>
+        <div style={{
+          flex: 1, padding: '14px 18px',
+          border: '1px solid var(--line-strong)', background: 'rgba(15,18,24,0.7)',
+          borderRadius: 100, display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+        }}>
+          <div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.12em', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Remaining</div>
+            <div style={{ fontFamily: 'Onest', fontSize: 18, fontWeight: 600 }}>0:{String(secondsLeft).padStart(2,'0')}</div>
+          </div>
+          <Icon.Timer c="var(--text-muted)" s={20}/>
+        </div>
+        <button onClick={() => setPaused(p => !p)}
+          style={{
+            width: 56, height: 56, borderRadius: '50%',
+            border: '1px solid var(--line-strong)', background: 'rgba(15,18,24,0.7)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+          }}>
+          {paused ? <Icon.Play c="var(--cyan)" s={20}/> : <Icon.Pause c="var(--cyan)" s={20}/>}
+        </button>
+        <button onClick={onBack}
+          style={{
+            width: 56, height: 56, borderRadius: '50%',
+            border: '1px solid rgba(255,87,87,0.3)', background: 'rgba(255,87,87,0.08)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+          }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--red)"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ============ 11 RESULT / SOUND TEST ============
+function ScreenResult({ onNext, onBack }) {
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 28px', overflow: 'auto' }} className="screen-enter">
+      <Header onBack={onBack} title="Result"/>
+
+      <div style={{ marginTop: 18, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{
+          width: 56, height: 56, borderRadius: 18,
+          background: 'radial-gradient(circle at 30% 30%, #7fffb0, #2da567)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 0 24px rgba(74,222,128,0.5)',
+          animation: 'checkPop 0.6s ease-out'
+        }}>
+          <Icon.Check c="#003915" s={28}/>
+        </div>
+        <div>
+          <div className="t-eyebrow" style={{ color: 'var(--green)' }}>Complete</div>
+          <h2 style={{ fontFamily: 'Onest', fontSize: 24, fontWeight: 500, letterSpacing: '-0.02em', lineHeight: 1.1, marginTop: 2 }}>
+            Sound is clearer and louder.
+          </h2>
+        </div>
+      </div>
+
+      {/* big delta */}
+      <div className="glass-strong" style={{ marginTop: 22, padding: 22, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at top right, rgba(74,222,128,0.18), transparent 60%)', pointerEvents: 'none' }}/>
+        <div className="t-eyebrow" style={{ position: 'relative' }}>Clarity gain</div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 6, position: 'relative' }}>
+          <span style={{ fontFamily: 'Onest', fontSize: 64, fontWeight: 500, letterSpacing: '-0.04em', lineHeight: 1, color: 'var(--green)' }}>+28</span>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, color: 'var(--text-muted)' }}>points · 61 → 89</span>
+        </div>
+        <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, position: 'relative' }}>
+          <div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Before</div>
+            <div style={{ marginTop: 6, display: 'flex', alignItems: 'flex-end', gap: 2, height: 38 }}>
+              {[0.3, 0.5, 0.4, 0.6, 0.35, 0.5, 0.3, 0.4, 0.5, 0.3, 0.4, 0.3].map((h,i) => (
+                <div key={i} style={{ width: 4, height: `${h*100}%`, background: 'rgba(255,87,87,0.7)', borderRadius: 2, boxShadow: '0 0 6px rgba(255,87,87,0.4)' }}/>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'var(--green)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>After</div>
+            <div style={{ marginTop: 6, display: 'flex', alignItems: 'flex-end', gap: 2, height: 38 }}>
+              {[0.7, 0.9, 0.75, 0.95, 0.8, 0.9, 0.85, 1, 0.95, 0.8, 0.9, 0.85].map((h,i) => (
+                <div key={i} style={{ width: 4, height: `${h*100}%`, background: 'var(--green)', borderRadius: 2, boxShadow: '0 0 6px rgba(74,222,128,0.6)' }}/>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* metrics row */}
+      <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+        {[
+          { l: 'Volume', v: '+18%', c: 'var(--green)' },
+          { l: 'High freq', v: '+24%', c: 'var(--green)' },
+          { l: 'Water out', v: '0.18 ml', c: 'var(--cyan)' },
+        ].map((m,i) => (
+          <div key={i} style={{ padding: 14, borderRadius: 14, border: '1px solid var(--line-strong)', background: 'rgba(15,18,24,0.6)' }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{m.l}</div>
+            <div style={{ marginTop: 4, fontFamily: 'Onest', fontSize: 18, fontWeight: 600, color: m.c }}>{m.v}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* sound test play */}
+      <div style={{ marginTop: 14, padding: 18, borderRadius: 18, border: '1px solid var(--line-strong)', background: 'rgba(15,18,24,0.6)', display: 'flex', alignItems: 'center', gap: 14 }}>
+        <button style={{
+          width: 52, height: 52, borderRadius: '50%',
+          border: 0, cursor: 'pointer',
+          background: 'radial-gradient(circle at 30% 30%, var(--cyan-hi), var(--cyan-deep))',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 0 18px var(--cyan-glow)'
+        }}>
+          <Icon.Play c="#001318" s={20}/>
+        </button>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: 'Onest', fontSize: 14, fontWeight: 600 }}>Play sound test</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>Listen at full volume to verify result</div>
+        </div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--text-muted)' }}>0:15</div>
+      </div>
+
+      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 8, paddingTop: 16 }}>
+        <button className="btn-primary" onClick={onNext}>
+          Done <Icon.Check c="#001318" s={18}/>
+        </button>
+        <button className="btn-ghost" onClick={onBack}>
+          Run again
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ============ 12 DEEP CLEAN PRO (manual Hz) ============
+function ScreenDeepClean({ onBack, onNext }) {
+  const [hz, setHz] = useState(680);
+  const [running, setRunning] = useState(false);
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '20px 24px 28px', position: 'relative', overflow: 'hidden' }} className="screen-enter">
+      <div className="bg-glow" style={{ opacity: 0.3 }}/>
+      <Header onBack={onBack} title="Deep Clean Pro" muted/>
+
+      <div style={{ marginTop: 6, position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ padding: '3px 8px', borderRadius: 100, background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.3)', fontFamily: 'JetBrains Mono', fontSize: 9, color: 'var(--amber)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Pro</span>
+        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Manual frequency control</span>
+      </div>
+
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+        <FrequencyDial value={hz} progress={(hz - 100) / 1900} label={running ? 'Sweeping' : 'Set frequency'}/>
+      </div>
+
+      {/* manual slider */}
+      <div style={{ position: 'relative', zIndex: 1, marginBottom: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'JetBrains Mono', fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+          <span>100 Hz</span>
+          <span>1000 Hz</span>
+          <span>2000 Hz</span>
+        </div>
+        <input type="range" min="100" max="2000" step="10" value={hz} onChange={e => setHz(+e.target.value)}
+          style={{ width: '100%', accentColor: '#00e5ff' }}/>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14 }}>
+          {[165, 440, 880, 1840].map(p => (
+            <button key={p} onClick={() => setHz(p)}
+              style={{
+                appearance: 'none', cursor: 'pointer',
+                padding: '6px 10px', borderRadius: 100,
+                border: hz === p ? '1px solid var(--cyan)' : '1px solid var(--line-strong)',
+                background: hz === p ? 'rgba(0,229,255,0.1)' : 'rgba(255,255,255,0.02)',
+                color: hz === p ? 'var(--cyan)' : 'var(--text-muted)',
+                fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.04em'
+              }}>
+              {p} Hz
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <button className="btn-primary" onClick={() => { setRunning(true); setTimeout(onNext, 800); }}>
+        {running ? 'Running…' : 'Start manual sweep'} {!running && <Icon.ArrowRight c="#001318"/>}
+      </button>
+    </div>
+  );
+}
+
+// ============ HEADER ============
+function Header({ step, total, onBack, title, muted = false }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <button onClick={onBack} style={{
+        width: 40, height: 40, borderRadius: 12,
+        background: 'rgba(255,255,255,0.04)', border: '1px solid var(--line-strong)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+      }}>
+        <Icon.ArrowLeft c="var(--text-muted)" s={18}/>
+      </button>
+      {step && total && (
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          {Array.from({ length: total }).map((_, i) => (
+            <div key={i} style={{
+              width: i + 1 === step ? 24 : 6,
+              height: 4,
+              borderRadius: 4,
+              background: i + 1 <= step ? 'var(--cyan)' : 'rgba(255,255,255,0.1)',
+              boxShadow: i + 1 === step ? '0 0 8px var(--cyan)' : 'none',
+              transition: 'all 0.3s'
+            }}/>
+          ))}
+        </div>
+      )}
+      {title && !muted && (
+        <div style={{ fontFamily: 'Onest', fontSize: 14, fontWeight: 600 }}>{title}</div>
+      )}
+      {title && muted && (
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{title}</div>
+      )}
+      <div style={{ width: 40 }}/>
+    </div>
+  );
+}
+
+// Register
+Object.assign(window, {
+  ScreenSplash, ScreenProblem, ScreenLastClean, ScreenDiagnostic, ScreenPlan,
+  ScreenRating, ScreenPaywall, ScreenHome, ScreenPreClean, ScreenCleaning,
+  ScreenResult, ScreenDeepClean
+});
+
+// ========== APP ==========
+const FLOW = [
+  { id: 'splash',     label: 'Splash' },
+  { id: 'problem',    label: 'Problem' },
+  { id: 'last',       label: 'Last clean' },
+  { id: 'diagnostic', label: 'Diagnostic' },
+  { id: 'plan',       label: 'Plan' },
+  { id: 'rating',     label: 'Rating' },
+  { id: 'paywall',    label: 'Paywall' },
+  { id: 'home',       label: 'Home' },
+  { id: 'preclean',   label: 'Pre-clean' },
+  { id: 'cleaning',   label: 'Cleaning' },
+  { id: 'result',     label: 'Result' },
+  { id: 'deepclean',  label: 'Deep Clean Pro' },
+];
+
+function App() {
+  const [idx, setIdx] = React.useState(0);
+  const [problem, setProblem] = React.useState(null);
+  const [lastClean, setLastClean] = React.useState(null);
+
+  const next = () => setIdx(i => Math.min(FLOW.length - 1, i + 1));
+  const back = () => setIdx(i => Math.max(0, i - 1));
+  const goto = id => setIdx(FLOW.findIndex(f => f.id === id));
+
+  const current = FLOW[idx];
+
+  const screens = {
+    splash:     <ScreenSplash onNext={next}/>,
+    problem:    <ScreenProblem onNext={next} onBack={back} selected={problem} setSelected={setProblem}/>,
+    last:       <ScreenLastClean onNext={next} onBack={back} selected={lastClean} setSelected={setLastClean}/>,
+    diagnostic: <ScreenDiagnostic onNext={next} onBack={back}/>,
+    plan:       <ScreenPlan onNext={next} onBack={back} problem={problem || 'water'}/>,
+    rating:     <ScreenRating onNext={next} onBack={back}/>,
+    paywall:    <ScreenPaywall onNext={next} onBack={back}/>,
+    home:       <ScreenHome onNavigate={(s, tool) => goto(s)}/>,
+    preclean:   <ScreenPreClean onNext={() => goto('cleaning')} onBack={() => goto('home')}/>,
+    cleaning:   <ScreenCleaning onNext={() => goto('result')} onBack={() => goto('home')}/>,
+    result:     <ScreenResult onNext={() => goto('home')} onBack={() => goto('cleaning')}/>,
+    deepclean:  <ScreenDeepClean onBack={() => goto('home')} onNext={() => goto('cleaning')}/>,
+  };
+
+  return (
+    <>
+      <div className="proto-rail">
+        <div className="proto-brand">
+          <span className="dot"/>
+          Sonic Clean · Prototype
+        </div>
+        <div className="proto-stepbar">
+          <span className="label">{String(idx+1).padStart(2,'0')} · {current.label}</span>
+          {FLOW.map((f, i) => (
+            <div key={f.id} className={`seg ${i === idx ? 'active' : i < idx ? 'done' : ''}`}/>
+          ))}
+        </div>
+        <div className="proto-controls">
+          <button onClick={back} disabled={idx === 0} style={{ opacity: idx === 0 ? 0.3 : 1 }}>← Prev</button>
+          <span style={{ opacity: 0.5 }}>|</span>
+          <button onClick={next} disabled={idx === FLOW.length - 1} style={{ opacity: idx === FLOW.length - 1 ? 0.3 : 1 }}>Next →</button>
+        </div>
+      </div>
+
+      <div className="proto-stage">
+        <Frame>
+          {screens[current.id]}
+        </Frame>
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CleanSpeaker — Interactive Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <div class="brand-name">CleanSpeaker</div>
+        <div class="brand-sub">Premium Android · Prototype</div>
+      </div>
+    </div>
+    <div class="nav-title">Onboarding</div>
+    <div id="nav"></div>
+    <div class="nav-title" style="margin-top:18px">Views</div>
+    <a class="nav-item" href="All Screens.html" style="text-decoration:none">Open Screens Gallery →</a>
+    <div class="footer">Tap a CTA in the phone to walk through the flow. Click any sidebar item to jump.</div>
+  </aside>
+  <main class="stage">
+    <div class="phone" data-screen-label="CleanSpeaker">
+      <div class="screen" id="screen"></div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/screens.js"></script>
+<script>
+  const { screens } = window.CleanSpeaker;
+  const navHtml = Object.entries(screens).map(([n,s])=>
+    `<div class="nav-item" data-go="${n}"><span class="nav-num">${String(n).padStart(2,"0")}</span>${s.title}</div>`
+  ).join("");
+  document.getElementById("nav").innerHTML = navHtml;
+
+  let current = parseInt(localStorage.getItem("cs.screen")||"1",10);
+  function go(n){
+    n = parseInt(n,10); if(!screens[n]) return;
+    current = n; localStorage.setItem("cs.screen", n);
+    document.getElementById("screen").innerHTML = screens[n].html();
+    document.querySelectorAll(".sidebar .nav-item").forEach(el=>{
+      el.classList.toggle("active", el.dataset.go === String(n));
+    });
+    document.querySelectorAll("[data-go]").forEach(el=>{
+      el.addEventListener("click",(e)=>{e.preventDefault(); go(el.dataset.go);});
+    });
+  }
+  go(current);
+</script>
+</body>
+</html>

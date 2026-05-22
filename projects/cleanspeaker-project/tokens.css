@@ -1,0 +1,159 @@
+/* CleanSpeaker — design tokens */
+:root {
+  /* Background depth */
+  --bg-0: #04070D;        /* deepest */
+  --bg-1: #070B14;
+  --bg-2: #0B111C;
+  --bg-3: #111826;        /* lifted panel */
+  --bg-glass: rgba(255,255,255,0.035);
+  --bg-glass-strong: rgba(255,255,255,0.06);
+
+  /* Strokes */
+  --hairline: rgba(255,255,255,0.06);
+  --hairline-2: rgba(255,255,255,0.10);
+  --hairline-3: rgba(255,255,255,0.16);
+
+  /* Text */
+  --fg-0: #F4F8FF;        /* primary */
+  --fg-1: #B8C3D6;        /* secondary */
+  --fg-2: #6B788F;        /* tertiary */
+  --fg-3: #3F4A5E;        /* quaternary / muted */
+
+  /* Accents — single hue family, electric cyan */
+  --cy-0: #BEF1FF;        /* lift */
+  --cy-1: #5BD5FF;        /* primary accent */
+  --cy-2: #25B6F5;        /* core */
+  --cy-3: #0E7CC4;        /* deep */
+  --cy-glow: rgba(91,213,255,0.55);
+  --cy-glow-soft: rgba(91,213,255,0.18);
+
+  /* Status */
+  --ok: #6CE5A7;
+  --warn: #F7C26B;
+  --danger: #FF7878;
+
+  /* Radii */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Fonts */
+  --f-ui: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --f-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg-0); color: var(--fg-0); font-family: var(--f-ui); -webkit-font-smoothing: antialiased; }
+
+/* ── Shared atoms ─────────────────────────────────── */
+.cs-screen {
+  width: 412px;
+  height: 828px;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(37,182,245,0.18), transparent 60%),
+    radial-gradient(80% 40% at 50% 110%, rgba(14,124,196,0.12), transparent 70%),
+    linear-gradient(180deg, #060A12 0%, #04070D 60%, #03050A 100%);
+  position: relative;
+  overflow: hidden;
+  color: var(--fg-0);
+  font-family: var(--f-ui);
+}
+.cs-screen.flat { background: linear-gradient(180deg, #060A12 0%, #04070D 100%); }
+
+/* Glass panels */
+.glass {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.glass-inset {
+  background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(0,0,0,0.25));
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+}
+
+/* Buttons */
+.btn-primary {
+  width: 100%;
+  height: 60px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(190,241,255,0.35);
+  background: linear-gradient(180deg, #6FDDFF 0%, #25B6F5 60%, #0E8FD0 100%);
+  color: #021018;
+  font-family: var(--f-ui);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow:
+    0 0 0 1px rgba(91,213,255,0.25),
+    0 10px 40px -8px rgba(37,182,245,0.65),
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -8px 24px rgba(0,40,72,0.35);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease;
+}
+.btn-primary:active { transform: scale(0.985); }
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%);
+  pointer-events: none;
+}
+.btn-ghost {
+  width: 100%;
+  height: 56px;
+  border-radius: var(--r-pill);
+  background: var(--bg-glass);
+  border: 1px solid var(--hairline-2);
+  color: var(--fg-0);
+  font-family: var(--f-ui);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Tabular nums */
+.mono { font-family: var(--f-mono); font-feature-settings: 'tnum'; }
+
+/* Tiny scrollbar nuke */
+.cs-screen ::-webkit-scrollbar { display: none; }
+
+/* Hide marker text — common helpers */
+.hz {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Glow pulse */
+@keyframes csPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+@keyframes csSpin { to { transform: rotate(360deg); } }
+@keyframes csWave {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes csRipple {
+  0% { transform: scale(0.4); opacity: 0.6; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes csBlink { 50% { opacity: 0.35; } }
+@keyframes csShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Soft glow ring used a lot */
+.glow-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--cy-glow-soft) 0%, transparent 60%);
+  filter: blur(8px);
+}

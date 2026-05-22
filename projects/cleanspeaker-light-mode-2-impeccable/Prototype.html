@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CleanSpeaker — Prototype</title>
+<link rel="stylesheet" href="tokens.css" />
+<style>
+  body {
+    background:
+      radial-gradient(60% 40% at 50% 0%, #DDEAF8 0%, transparent 60%),
+      #EAEEF4;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 32px 16px 80px;
+  }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; max-width: 1080px;
+    padding: 0 8px 24px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 600; letter-spacing: -0.01em;
+  }
+  .brand-dot {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, #2A95FF, #0066D6);
+    box-shadow: 0 6px 16px rgba(10,132,255,0.32);
+  }
+  .brand-name { font-size: 16px; }
+  .brand-sub  { font-size: 11px; color: var(--fg-2); margin-top: -2px;
+                letter-spacing: 0.18em; text-transform: uppercase; }
+
+  .nav-tabs {
+    display: flex; gap: 4px; padding: 4px;
+    background: var(--bg-1); border: 1px solid var(--hairline);
+    border-radius: 999px;
+  }
+  .nav-tab {
+    all: unset; cursor: pointer;
+    padding: 8px 16px; border-radius: 999px;
+    font-size: 13px; font-weight: 500; color: var(--fg-1);
+  }
+  .nav-tab.active { background: var(--fg-0); color: #fff; }
+
+  .stage {
+    position: relative;
+    width: 412px; height: 828px;
+    border-radius: 36px;
+    overflow: hidden;
+    box-shadow:
+      0 60px 140px -40px rgba(10,30,80,0.32),
+      0 30px 70px -30px rgba(10,30,80,0.20),
+      0 1px 2px rgba(10,30,80,0.04);
+  }
+
+  .stage::before {
+    /* subtle reflective edge */
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 36px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6),
+                inset 0 -1px 0 rgba(15,23,42,0.08);
+    pointer-events: none; z-index: 10;
+  }
+
+  /* scene mount-in animation */
+  .scene {
+    position: absolute; inset: 0;
+    animation: scene-in 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes scene-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .controls {
+    margin-top: 24px;
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 720px;
+  }
+  .ctrl-btn {
+    all: unset; cursor: pointer;
+    padding: 10px 18px; border-radius: 999px;
+    background: var(--bg-1); border: 1px solid var(--hairline);
+    font-size: 13px; font-weight: 500; color: var(--fg-0);
+    transition: background 180ms var(--ease);
+  }
+  .ctrl-btn:hover { background: var(--bg-2); }
+  .ctrl-meta {
+    font-size: 12px; color: var(--fg-2);
+    font-family: var(--f-mono);
+  }
+
+  .scene-jumper {
+    margin-top: 16px;
+    display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+    max-width: 920px;
+  }
+  .jump-chip {
+    all: unset; cursor: pointer;
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 11.5px; font-weight: 500;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid var(--hairline);
+    color: var(--fg-1);
+    backdrop-filter: blur(8px);
+  }
+  .jump-chip.active { background: var(--fg-0); color: #fff; border-color: var(--fg-0); }
+
+  .hint {
+    margin-top: 14px;
+    font-size: 11px; color: var(--fg-2);
+    letter-spacing: 0.06em;
+    text-align: center;
+  }
+  .hint kbd {
+    display: inline-block; padding: 2px 6px; border-radius: 6px;
+    border: 1px solid var(--hairline-2); background: var(--bg-1);
+    font-family: var(--f-mono); font-size: 10px;
+    margin: 0 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <div>
+      <div class="brand-name">CleanSpeaker</div>
+      <div class="brand-sub">Prototype · v1</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <a class="nav-tab" href="All Screens.html">All Screens</a>
+    <a class="nav-tab" href="Design System.html">Design System</a>
+    <a class="nav-tab active" href="Prototype.html">Prototype</a>
+  </div>
+</div>
+
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+
+<script type="text/babel" src="primitives.jsx"></script>
+<script type="text/babel" src="screens-onboarding.jsx"></script>
+<script type="text/babel" src="screens-app.jsx"></script>
+<script type="text/babel" src="screens-extra.jsx"></script>
+
+<script type="text/babel" data-presets="env,react">
+const { useState, useEffect, useCallback } = React;
+
+const SCENES = [
+  { id: 'welcome',       label: 'Welcome',       group: 'Onboarding', C: ScrWelcome },
+  { id: 'permission',    label: 'Permission',    group: 'Onboarding', C: ScrPermission },
+  { id: 'q1',            label: 'Q1 · Problem',  group: 'Onboarding', C: ScrQ1 },
+  { id: 'q2',            label: 'Q2 · When',     group: 'Onboarding', C: ScrQ2 },
+  { id: 'q3',            label: 'Q3 · Device',   group: 'Onboarding', C: ScrQ3 },
+  { id: 'analyzing',     label: 'Analyzing',     group: 'Onboarding', C: ScrAnalyzing },
+  { id: 'plan',          label: 'Plan',          group: 'Onboarding', C: ScrPlan },
+  { id: 'rating',        label: 'Rating',        group: 'Onboarding', C: ScrRating },
+  { id: 'paywall',       label: 'Paywall',       group: 'Onboarding', C: ScrPaywall },
+  { id: 'downsell',      label: 'Downsell',      group: 'Onboarding', C: ScrDownsell },
+
+  { id: 'home',          label: 'Home · Free',   group: 'Core',       C: ScrHomeFree },
+  { id: 'homepremium',   label: 'Home · Pro',    group: 'Core',       C: ScrHomePremium },
+  { id: 'setup',         label: 'Setup',         group: 'Core',       C: ScrSetup },
+  { id: 'clean',         label: 'Clean Active',  group: 'Core',       C: ScrClean },
+  { id: 'cleancomplete', label: 'Clean Complete',group: 'Core',       C: ScrCleanComplete },
+  { id: 'soundtest',     label: 'Sound Test',    group: 'Core',       C: ScrSoundTest },
+  { id: 'resultbetter',  label: 'Result · Better', group: 'Core',     C: ScrResultBetter },
+  { id: 'resultmuffled', label: 'Result · Muffled', group: 'Core',    C: ScrResultMuffled },
+
+  { id: 'manualhz',      label: 'Manual Hz',     group: 'Premium',    C: ScrManualHz },
+  { id: 'wavemodes',     label: 'Wave Modes',    group: 'Premium',    C: ScrWaveModes },
+  { id: 'vibration',     label: 'Vibration',     group: 'Premium',    C: ScrVibration },
+  { id: 'headsetclean',  label: 'Headset Clean', group: 'Premium',    C: ScrHeadsetClean },
+  { id: 'settings',      label: 'Settings',      group: 'Premium',    C: ScrSettings },
+];
+
+function App() {
+  const [current, setCurrent] = useState('welcome');
+  const [state, setState] = useState({
+    problem: null,
+    when: null,
+    device: null,
+    premium: false,
+  });
+
+  const nav = useCallback((id, payload) => {
+    if (id === 'home' && state.premium) id = 'homepremium';
+    setCurrent(id);
+    if (payload) setState(s => ({ ...s, ...payload }));
+  }, [state.premium]);
+
+  const set = useCallback((k, v) => setState(s => ({ ...s, [k]: v })), []);
+
+  const idx = SCENES.findIndex(s => s.id === current);
+  const next = () => setCurrent(SCENES[Math.min(SCENES.length - 1, idx + 1)].id);
+  const prev = () => setCurrent(SCENES[Math.max(0, idx - 1)].id);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') next();
+      else if (e.key === 'ArrowLeft') prev();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [idx]);
+
+  const CurrentScene = SCENES[idx].C;
+
+  return (
+    <>
+      <div className="stage">
+        <div key={current} className="scene">
+          <CurrentScene nav={nav} state={state} set={set} active={true} />
+        </div>
+      </div>
+
+      <div className="controls">
+        <button className="ctrl-btn" onClick={prev}>← Previous</button>
+        <span className="ctrl-meta">{String(idx + 1).padStart(2, '0')} · {SCENES[idx].label}</span>
+        <button className="ctrl-btn" onClick={next}>Next →</button>
+      </div>
+
+      <div className="scene-jumper">
+        {SCENES.map(s => (
+          <button key={s.id}
+            className={'jump-chip' + (s.id === current ? ' active' : '')}
+            onClick={() => setCurrent(s.id)}>{s.label}</button>
+        ))}
+      </div>
+
+      <div className="hint">
+        Use <kbd>←</kbd> / <kbd>→</kbd> arrow keys to navigate · click chips to jump
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>

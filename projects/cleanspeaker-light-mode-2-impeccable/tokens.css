@@ -1,0 +1,325 @@
+/* ============================================================
+   CleanSpeaker — Design Tokens
+   Light · ice-blue · single-accent · moodboard-locked
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ── Surfaces (4 levels) ─────────────────────────────── */
+  --bg-0: #F4F7FB;          /* canvas */
+  --bg-1: #FFFFFF;          /* primary card */
+  --bg-2: #EEF3F9;          /* subtle fill */
+  --bg-3: #E3EBF4;          /* deeper fill */
+  --bg-ice: #F0F6FC;        /* tint for accent surfaces */
+
+  /* ── Text (4 levels) ─────────────────────────────────── */
+  --fg-0: #0B1220;          /* primary */
+  --fg-1: #475569;          /* secondary */
+  --fg-2: #8190A6;          /* tertiary */
+  --fg-3: #B7C0CE;          /* placeholder */
+  --fg-inv: #FFFFFF;        /* on-accent */
+
+  /* ── Hairlines ───────────────────────────────────────── */
+  --hairline:   rgba(15,23,42,0.06);
+  --hairline-2: rgba(15,23,42,0.10);
+  --hairline-3: rgba(15,23,42,0.16);
+
+  /* ── Accent (single, four tones) ─────────────────────── */
+  --cy-0: #E6F1FF;          /* badge tint */
+  --cy-1: #0A84FF;          /* main accent */
+  --cy-2: #0066D6;          /* hover */
+  --cy-3: #004FAB;          /* pressed */
+  --cy-glow: #38BDF8;       /* energy cyan (waves/glow) */
+
+  /* ── Status ──────────────────────────────────────────── */
+  --ok:    #10B981;
+  --warn:  #F59E0B;
+  --bad:   #EF4444;
+
+  /* ── Radii ───────────────────────────────────────────── */
+  --r-sm:   10px;
+  --r-md:   14px;
+  --r-lg:   20px;
+  --r-xl:   26px;
+  --r-pill: 999px;
+
+  /* ── Spacing ─────────────────────────────────────────── */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+
+  /* ── Typography ──────────────────────────────────────── */
+  --f-ui:   'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── Shadow ──────────────────────────────────────────── */
+  --shadow-sm:  0 1px 2px rgba(15,23,42,0.04);
+  --shadow-md:  0 6px 18px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+  --shadow-lg:  0 18px 40px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.04);
+  --shadow-cta: 0 14px 28px rgba(10,132,255,0.32), 0 4px 10px rgba(10,132,255,0.18);
+
+  /* ── Motion ──────────────────────────────────────────── */
+  --ease:    cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --d-fast:  120ms;
+  --d-med:   260ms;
+  --d-slow:  420ms;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0;
+  background: var(--bg-0);
+  color: var(--fg-0);
+  font-family: var(--f-ui);
+  font-feature-settings: 'ss01','cv11';
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+button { font-family: inherit; cursor: pointer; }
+input, button { font: inherit; color: inherit; }
+
+/* ============================================================
+   Screen wrapper (412×828 Android, no phone frame)
+   ============================================================ */
+.cs-screen {
+  width: 412px;
+  height: 828px;
+  background: var(--bg-1);
+  color: var(--fg-0);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--f-ui);
+  display: flex;
+  flex-direction: column;
+}
+
+.cs-screen-glow {
+  background:
+    radial-gradient(120% 70% at 50% 0%, #DBE8FA 0%, #F0F6FC 38%, #FFFFFF 80%);
+}
+
+.cs-screen-glow-deep {
+  background:
+    radial-gradient(120% 80% at 50% 30%, #C2DEFC 0%, #DDEAF8 35%, #EEF3F9 70%, #FFFFFF 100%);
+}
+
+/* ============================================================
+   Typography helpers
+   ============================================================ */
+.t-display {
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+.t-h1 {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+.t-h2 {
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+.t-title {
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+.t-body {
+  font-size: 15px;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  font-weight: 400;
+  color: var(--fg-1);
+}
+.t-sub {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--fg-2);
+  letter-spacing: -0.005em;
+}
+.t-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--fg-2);
+  font-weight: 500;
+}
+.t-mono {
+  font-family: var(--f-mono);
+  font-feature-settings: 'tnum';
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+  border: 0;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform var(--d-fast) var(--ease), box-shadow var(--d-fast) var(--ease), background var(--d-fast) var(--ease);
+  user-select: none;
+}
+.btn:active { transform: scale(0.985); }
+
+.btn-primary {
+  height: 56px;
+  padding: 0 28px;
+  color: #fff;
+  font-size: 16px;
+  background: linear-gradient(180deg, #2A95FF 0%, #0A84FF 60%, #0066D6 100%);
+  box-shadow: var(--shadow-cta);
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -40%;
+  width: 30%; height: 100%;
+  background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+  transform: translateX(-40%) skewX(-18deg);
+  pointer-events: none;
+}
+.btn-primary:hover::after,
+.scene .btn-primary::after {
+  animation: btn-sheen 1.4s cubic-bezier(0.4, 0, 0.2, 1) 320ms 1;
+}
+@keyframes btn-sheen {
+  from { transform: translateX(-40%) skewX(-18deg); }
+  to   { transform: translateX(560%) skewX(-18deg); }
+}
+.btn[disabled],
+.btn-primary[disabled] {
+  background: var(--bg-2);
+  color: var(--fg-3);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btn-primary[disabled]::after { display: none; }
+
+.btn-accent {
+  height: 56px;
+  padding: 0 28px;
+  color: #fff;
+  font-size: 16px;
+  background: var(--cy-1);
+}
+.btn-accent:hover { background: var(--cy-2); }
+
+.btn-ghost {
+  height: 52px;
+  padding: 0 24px;
+  color: var(--fg-1);
+  font-size: 15px;
+  background: transparent;
+}
+.btn-ghost:hover { color: var(--fg-0); }
+
+.btn-soft {
+  height: 52px;
+  padding: 0 24px;
+  background: var(--bg-2);
+  color: var(--fg-0);
+  font-size: 15px;
+}
+
+.btn-block { width: 100%; }
+
+.icon-btn {
+  width: 38px; height: 38px;
+  border-radius: 999px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-0);
+  cursor: pointer;
+  transition: background var(--d-fast) var(--ease);
+}
+.icon-btn:hover { background: var(--bg-3); }
+
+/* ============================================================
+   Cards
+   ============================================================ */
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+}
+.card-quiet {
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+}
+
+/* ============================================================
+   Utility
+   ============================================================ */
+.row { display: flex; align-items: center; }
+.col { display: flex; flex-direction: column; }
+.gap-1 { gap: 4px; } .gap-2 { gap: 8px; } .gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; } .gap-5 { gap: 20px; } .gap-6 { gap: 24px; }
+.between { justify-content: space-between; }
+.center { align-items: center; justify-content: center; }
+.flex-1 { flex: 1; }
+.text-c { text-align: center; }
+
+/* ============================================================
+   Animations (reusable)
+   ============================================================ */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+@keyframes ring-rotate {
+  to { transform: rotate(360deg); }
+}
+@keyframes ripple {
+  0%   { transform: scale(0.4); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.anim-fade-up { animation: fade-up var(--d-med) var(--ease) both; }
+.anim-fade-in { animation: fade-in var(--d-med) var(--ease) both; }
+.delay-1 { animation-delay: 60ms; }
+.delay-2 { animation-delay: 120ms; }
+.delay-3 { animation-delay: 180ms; }
+.delay-4 { animation-delay: 240ms; }
+.delay-5 { animation-delay: 300ms; }
+.delay-6 { animation-delay: 360ms; }

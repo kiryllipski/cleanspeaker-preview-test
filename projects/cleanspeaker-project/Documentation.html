@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>CleanSpeaker — Implementation Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="tokens.css"/>
+  <style>
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 700px at 30% 5%, rgba(37,182,245,0.08), transparent 60%),
+        radial-gradient(900px 500px at 90% 80%, rgba(14,124,196,0.06), transparent 60%),
+        #04070D;
+      color: var(--fg-0);
+      font-family: var(--f-ui);
+      line-height: 1.55;
+    }
+    .shell {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 64px 56px 120px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 56px;
+    }
+
+    /* ── Sidebar nav ─────────────────────── */
+    .toc {
+      position: sticky;
+      top: 32px;
+      align-self: start;
+      padding-top: 4px;
+    }
+    .toc-eyebrow {
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--fg-2); margin: 0 0 18px; font-weight: 600;
+    }
+    .toc a {
+      display: block; padding: 8px 12px; margin: 2px 0;
+      border-radius: 10px;
+      color: var(--fg-1); text-decoration: none;
+      font-size: 13px;
+      border-left: 2px solid transparent;
+      transition: all 0.18s ease;
+    }
+    .toc a:hover { color: var(--fg-0); background: rgba(255,255,255,0.025); }
+    .toc a.current { color: var(--cy-1); border-left-color: var(--cy-1); background: rgba(91,213,255,0.05); }
+    .toc-section {
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--fg-3); margin: 22px 12px 6px; font-weight: 600;
+    }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 12px; border-radius: 10px;
+      background: rgba(91,213,255,0.06);
+      border: 1px solid rgba(91,213,255,0.18);
+      color: var(--cy-1);
+      font-size: 11px; text-decoration: none;
+      letter-spacing: 0.05em;
+      margin-bottom: 26px;
+    }
+
+    /* ── Body content ───────────────────── */
+    main { min-width: 0; }
+    .hero {
+      padding: 0 0 60px;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 60px;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 12px; border-radius: 999px;
+      background: rgba(91,213,255,0.08);
+      border: 1px solid rgba(91,213,255,0.25);
+      font-size: 10px; font-weight: 600; color: var(--cy-1);
+      letter-spacing: 0.22em; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .eyebrow::before {
+      content: ''; width: 6px; height: 6px; border-radius: 999px;
+      background: var(--cy-1); box-shadow: 0 0 8px var(--cy-1);
+    }
+    h1 {
+      font-size: 48px; font-weight: 600; margin: 0 0 14px;
+      letter-spacing: -0.025em; line-height: 1.05;
+    }
+    .lead {
+      font-size: 17px; color: var(--fg-1); max-width: 640px;
+      margin: 0; line-height: 1.55;
+    }
+    .meta {
+      display: flex; gap: 28px; margin-top: 28px;
+      font-size: 12px; color: var(--fg-2);
+    }
+    .meta span b { color: var(--fg-0); font-weight: 500; }
+
+    section { margin-bottom: 80px; scroll-margin-top: 32px; }
+    h2 {
+      font-size: 26px; font-weight: 600; margin: 0 0 8px;
+      letter-spacing: -0.015em;
+    }
+    h2 + .section-sub {
+      font-size: 13px; color: var(--fg-2); margin: 0 0 28px;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      font-family: var(--f-mono); font-weight: 500;
+    }
+    h3 {
+      font-size: 17px; font-weight: 600; margin: 34px 0 12px;
+      letter-spacing: -0.005em;
+      color: var(--fg-0);
+    }
+    h4 {
+      font-size: 14px; font-weight: 600; margin: 20px 0 8px;
+      color: var(--cy-1);
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    p { color: var(--fg-1); margin: 12px 0; font-size: 15px; }
+    p.muted { color: var(--fg-2); font-size: 13px; }
+    ul { color: var(--fg-1); font-size: 15px; padding-left: 20px; }
+    li { margin: 6px 0; }
+    li::marker { color: var(--cy-2); }
+
+    code, .kbd {
+      font-family: var(--f-mono);
+      font-size: 0.92em;
+      background: rgba(91,213,255,0.08);
+      color: var(--cy-0);
+      border: 1px solid rgba(91,213,255,0.18);
+      padding: 1px 6px;
+      border-radius: 5px;
+      letter-spacing: 0.02em;
+    }
+
+    pre {
+      background: rgba(0,0,0,0.45);
+      border: 1px solid var(--hairline-2);
+      border-radius: 14px;
+      padding: 18px 22px;
+      overflow-x: auto;
+      margin: 18px 0;
+      font-family: var(--f-mono);
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--fg-1);
+    }
+    pre .c { color: var(--fg-3); }       /* comment */
+    pre .k { color: #C58CFF; }            /* keyword */
+    pre .s { color: var(--ok); }          /* string */
+    pre .f { color: var(--cy-1); }        /* function/name */
+    pre .n { color: var(--warn); }        /* number */
+    pre .v { color: var(--fg-0); }        /* default */
+
+    /* Tables */
+    table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      margin: 16px 0;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid var(--hairline-2);
+      border-radius: 14px;
+      overflow: hidden;
+      font-size: 13.5px;
+    }
+    thead th {
+      text-align: left; padding: 14px 18px;
+      background: rgba(255,255,255,0.025);
+      color: var(--fg-2);
+      font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; font-weight: 600;
+      border-bottom: 1px solid var(--hairline-2);
+    }
+    tbody td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--hairline);
+      color: var(--fg-1);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody td:first-child {
+      font-family: var(--f-mono); color: var(--fg-0);
+      font-size: 12.5px; white-space: nowrap;
+    }
+    .pill {
+      display: inline-flex; padding: 2px 8px;
+      border-radius: 999px; font-size: 10px;
+      font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pill.req { background: rgba(255,120,120,0.12); color: var(--danger); border: 1px solid rgba(255,120,120,0.3); }
+    .pill.opt { background: rgba(108,229,167,0.10); color: var(--ok); border: 1px solid rgba(108,229,167,0.25); }
+    .pill.pro { background: rgba(91,213,255,0.12); color: var(--cy-0); border: 1px solid rgba(91,213,255,0.3); }
+    .pill.def { background: rgba(255,255,255,0.06); color: var(--fg-1); border: 1px solid var(--hairline-2); }
+
+    /* Callout cards */
+    .callout {
+      padding: 22px 24px;
+      border-radius: 18px;
+      border: 1px solid var(--hairline-2);
+      background: rgba(255,255,255,0.02);
+      margin: 22px 0;
+    }
+    .callout.cyan {
+      border-color: rgba(91,213,255,0.22);
+      background: rgba(91,213,255,0.04);
+    }
+    .callout.warn {
+      border-color: rgba(247,194,107,0.25);
+      background: rgba(247,194,107,0.05);
+    }
+    .callout h4 { margin-top: 0; color: var(--cy-1); }
+    .callout.warn h4 { color: var(--warn); }
+
+    /* Frequency diagram */
+    .freq-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      margin: 20px 0;
+    }
+    .freq-card {
+      padding: 22px;
+      border-radius: 16px;
+      border: 1px solid var(--hairline-2);
+      background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(0,0,0,0.25));
+    }
+    .freq-card .stage {
+      font-size: 10px; color: var(--cy-1); letter-spacing: 0.2em;
+      text-transform: uppercase; font-family: var(--f-mono);
+    }
+    .freq-card .hz-val {
+      font-family: var(--f-mono); font-size: 34px;
+      font-weight: 600; margin: 6px 0 2px; letter-spacing: -0.02em;
+      background: linear-gradient(180deg, #BEF1FF, #25B6F5);
+      -webkit-background-clip: text; background-clip: text;
+      color: transparent;
+    }
+    .freq-card .hz-val sub { font-size: 13px; color: var(--fg-2); -webkit-text-fill-color: var(--fg-2); }
+    .freq-card .label { font-weight: 600; margin: 4px 0; }
+    .freq-card .desc { color: var(--fg-2); font-size: 12.5px; line-height: 1.5; }
+
+    /* Haptic table specific */
+    .hap-icon {
+      display: inline-block; width: 8px; height: 8px;
+      border-radius: 999px;
+      background: var(--cy-1); box-shadow: 0 0 8px var(--cy-1);
+      margin-right: 8px; vertical-align: middle;
+    }
+
+    /* Gating grid */
+    .gate-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin: 16px 0;
+    }
+    .gate-card {
+      padding: 22px;
+      border-radius: 18px;
+      border: 1px solid var(--hairline-2);
+      background: rgba(255,255,255,0.02);
+    }
+    .gate-card.pro {
+      background: linear-gradient(170deg, rgba(91,213,255,0.10), rgba(91,213,255,0.02));
+      border-color: rgba(91,213,255,0.3);
+    }
+    .gate-card h4 {
+      display: flex; align-items: center; gap: 10px;
+      margin: 0 0 14px;
+      font-size: 13px;
+    }
+    .gate-card.pro h4 { color: var(--cy-0); }
+    .gate-card ul { margin: 0; padding-left: 16px; font-size: 13.5px; }
+    .gate-card ul li { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <!-- ─────────── Sidebar TOC ─────────── -->
+    <aside class="toc">
+      <a class="nav-back" href="All Screens.html">← All screens</a>
+      <p class="toc-eyebrow">Contents</p>
+      <a href="#overview">Overview</a>
+      <a href="#stack">Recommended stack</a>
+
+      <p class="toc-section">Engine</p>
+      <a href="#audio">Audio engine</a>
+      <a href="#math">Frequency sweep math</a>
+      <a href="#cleaning">Cleaning algorithms</a>
+      <a href="#pulse">Pulse Clean (haptic)</a>
+
+      <p class="toc-section">UX</p>
+      <a href="#haptics">Haptic feedback map</a>
+      <a href="#permissions">Permissions</a>
+      <a href="#gating">Premium gating</a>
+
+      <p class="toc-section">Delivery</p>
+      <a href="#states">App states &amp; flows</a>
+      <a href="#analytics">Analytics events</a>
+      <a href="#qa">QA checklist</a>
+    </aside>
+
+    <!-- ─────────── Main content ─────────── -->
+    <main>
+      <div class="hero">
+        <div class="eyebrow">Implementation guide · v1.0</div>
+        <h1>CleanSpeaker — engineer handoff</h1>
+        <p class="lead">Everything an Android engineer needs to ship the prototype as a production app: audio engine, haptic feedback map, cleaning algorithms, permissions, and premium gating.</p>
+        <div class="meta">
+          <span>Platform <b>Android 9+ (API 28)</b></span>
+          <span>Target <b>Android 14 (API 34)</b></span>
+          <span>Stack <b>Kotlin + Compose</b></span>
+          <span>Audio <b>Oboe / AAudio</b></span>
+        </div>
+      </div>
+
+      <!-- ── Overview ── -->
+      <section id="overview">
+        <h2>Overview</h2>
+        <p class="section-sub">What we&rsquo;re building</p>
+
+        <p>CleanSpeaker is a single‑purpose Android utility that uses precisely tuned sound and haptic patterns to physically eject water, loosen dust, and unclog phone speakers. It monetises on the first session: a 5‑step diagnostic onboarding builds trust, surfaces a quantified rescue plan, and routes to a special‑offer paywall with a downsell fallback.</p>
+
+        <div class="callout cyan">
+          <h4>Source of truth</h4>
+          <p style="margin: 0;">The 23 screens in <code>All Screens.html</code> are the visual spec. Pixel values, gradients, and motion are all derived from <code>tokens.css</code> and component code in <code>primitives.jsx</code> — do not re‑invent. Component dimensions and animation timings in the prototype are intentional.</p>
+        </div>
+
+        <h3>Goals (in priority order)</h3>
+        <ul>
+          <li><b>First‑session conversion.</b> Trial‑start rate from cold install. Track the funnel end‑to‑end.</li>
+          <li><b>Perceived efficacy.</b> The cleaning cycle must <i>feel</i> like it&rsquo;s doing something — audio, haptics, and animation are co‑designed.</li>
+          <li><b>Trustworthy diagnostic.</b> No fake numbers. The score is derived from a real sound‑test result, even if simple.</li>
+          <li><b>Premium tool aesthetic.</b> Dark, calm, electric‑cyan. Not a cheap cleaner app.</li>
+        </ul>
+      </section>
+
+      <!-- ── Stack ── -->
+      <section id="stack">
+        <h2>Recommended stack</h2>
+        <p class="section-sub">Libraries &amp; rationale</p>
+
+        <table>
+          <thead><tr><th>Layer</th><th>Choice</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>UI</td>
+              <td>Jetpack Compose 1.6+, Material 3</td>
+              <td>Animation API matches prototype&rsquo;s easing. Use <code>rememberInfiniteTransition</code> for waveform, dial spin, ripples.</td>
+            </tr>
+            <tr>
+              <td>Audio I/O</td>
+              <td>Oboe (C++) via JNI, or AAudio</td>
+              <td>Sub‑20 ms latency. <code>AudioTrack</code> is acceptable but adds 40–80 ms — noticeable in Pulse Clean.</td>
+            </tr>
+            <tr>
+              <td>DSP</td>
+              <td>Hand‑rolled sine/sweep generator</td>
+              <td>No third‑party DSP needed; see <a href="#math">Frequency sweep math</a>.</td>
+            </tr>
+            <tr>
+              <td>Haptics</td>
+              <td><code>VibratorManager</code> (API 31+) +<br/><code>VibrationEffect.Composition</code></td>
+              <td>Fall back to <code>Vibrator</code> + <code>VibrationEffect.createWaveform</code> on API 28–30.</td>
+            </tr>
+            <tr>
+              <td>Payments</td>
+              <td>Google Play Billing v7</td>
+              <td>Server‑side receipt validation. Restore via <code>queryPurchasesAsync</code>.</td>
+            </tr>
+            <tr>
+              <td>Analytics</td>
+              <td>Amplitude or Mixpanel</td>
+              <td>See <a href="#analytics">events list</a>. Adjust / AppsFlyer for attribution if running paid UA.</td>
+            </tr>
+            <tr>
+              <td>State</td>
+              <td>Compose StateFlow + ViewModel per screen group</td>
+              <td>Onboarding state survives process death (<code>SavedStateHandle</code>).</td>
+            </tr>
+            <tr>
+              <td>Persistence</td>
+              <td>DataStore (Proto)</td>
+              <td>Subscription status, cycle history, user preferences. No PII to disk.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Audio engine ── -->
+      <section id="audio">
+        <h2>Audio engine</h2>
+        <p class="section-sub">Output path, channels, levels</p>
+
+        <p>All cleaning cycles play through the loudspeaker — never the earpiece. Force routing on cycle start, and refuse to start if headphones or BT audio are connected.</p>
+
+        <pre><span class="c">// AudioManager force speaker output (API 31+)</span>
+<span class="k">val</span> audio = getSystemService(<span class="f">AudioManager</span>::<span class="k">class</span>.java)
+<span class="k">val</span> speaker = audio.availableCommunicationDevices
+    .first { it.type == <span class="f">AudioDeviceInfo</span>.TYPE_BUILTIN_SPEAKER }
+audio.setCommunicationDevice(speaker)
+audio.mode = <span class="f">AudioManager</span>.MODE_NORMAL
+
+<span class="c">// Refuse to start if rerouted</span>
+<span class="k">if</span> (audio.isBluetoothA2dpOn || audio.isWiredHeadsetOn) {
+    showScreen(<span class="f">AudioWarning</span>)
+    <span class="k">return</span>
+}</pre>
+
+        <h3>Output spec</h3>
+        <ul>
+          <li><b>Sample rate</b> — 48 kHz (native on most Android speakers; resample once if device prefers 44.1 kHz).</li>
+          <li><b>Bit depth</b> — 16‑bit PCM, mono.</li>
+          <li><b>Buffer</b> — 480 frames (≈ 10 ms) for Oboe low‑latency callback.</li>
+          <li><b>Level</b> — Generate at −3 dBFS peak. The system volume is what the user controls — never auto‑set it.</li>
+          <li><b>Anti‑pop</b> — 50 ms linear ramp on stage start, 80 ms ramp on stage end. Without ramps, abrupt sine onset produces audible click that breaks the premium feel.</li>
+        </ul>
+
+        <div class="callout warn">
+          <h4>Hearing safety</h4>
+          <p style="margin: 0;">Cap the generator at −3 dBFS and refuse to start if system media volume is &gt; 90%. Show the <code>AudioWarning</code> screen with copy: &ldquo;Lower the volume before cleaning — this is loud.&rdquo;</p>
+        </div>
+      </section>
+
+      <!-- ── Math ── -->
+      <section id="math">
+        <h2>Frequency sweep math</h2>
+        <p class="section-sub">Sine generation &amp; phase continuity</p>
+
+        <p>Each cleaning stage is a continuous sine sweep around a target frequency with a slow ±8 % modulation envelope to keep the speaker membrane moving through varied resonance points (real-world water and dust ejection in industry literature uses similar approaches).</p>
+
+        <pre><span class="c">// Continuous-phase sine. Phase MUST persist across buffers,</span>
+<span class="c">// otherwise you get audible clicks every 10 ms.</span>
+<span class="k">class</span> <span class="f">SineGen</span>(<span class="k">val</span> sr: <span class="v">Int</span> = <span class="n">48000</span>) {
+    <span class="k">private var</span> phase = <span class="n">0.0</span>
+    <span class="k">private var</span> t = <span class="n">0.0</span>
+
+    <span class="k">fun</span> <span class="f">fillBuffer</span>(out: <span class="f">ShortArray</span>, hz: <span class="v">Double</span>, ampDb: <span class="v">Double</span>) {
+        <span class="k">val</span> amp = <span class="f">Math</span>.pow(<span class="n">10.0</span>, ampDb / <span class="n">20.0</span>) * <span class="f">Short</span>.MAX_VALUE
+        <span class="k">for</span> (i <span class="k">in</span> out.indices) {
+            <span class="c">// ±8% modulation — sweeps through speaker resonance</span>
+            <span class="k">val</span> mod = <span class="n">1.0</span> + <span class="n">0.08</span> * <span class="f">Math</span>.sin(<span class="n">2.0</span> * <span class="f">Math</span>.PI * t * <span class="n">0.7</span>)
+            <span class="k">val</span> fInst = hz * mod
+            phase += <span class="n">2.0</span> * <span class="f">Math</span>.PI * fInst / sr
+            <span class="k">if</span> (phase &gt; <span class="n">2.0</span> * <span class="f">Math</span>.PI) phase -= <span class="n">2.0</span> * <span class="f">Math</span>.PI
+            out[i] = (<span class="f">Math</span>.sin(phase) * amp).toInt().toShort()
+            t += <span class="n">1.0</span> / sr
+        }
+    }
+}</pre>
+
+        <h3>Per‑stage parameters</h3>
+        <div class="freq-grid">
+          <div class="freq-card">
+            <div class="stage">Stage 01 · Loosen</div>
+            <div class="hz-val">165<sub> Hz</sub></div>
+            <div class="label">Low‑frequency cone push</div>
+            <div class="desc">Large‑amplitude membrane displacement. Pushes trapped water outward via inertia. Duration <code>12 s</code>.</div>
+          </div>
+          <div class="freq-card">
+            <div class="stage">Stage 02 · Dislodge</div>
+            <div class="hz-val">300<sub> Hz</sub></div>
+            <div class="label">Mid sweep with modulation</div>
+            <div class="desc">Hits common dust resonances. ±8 % modulation prevents standing patterns. Duration <code>18 s</code>.</div>
+          </div>
+          <div class="freq-card">
+            <div class="stage">Stage 03 · Polish</div>
+            <div class="hz-val">500<sub> Hz</sub></div>
+            <div class="label">High‑freq finish</div>
+            <div class="desc">Restores clarity by exercising mid range. Brief — fatigue past 12 s. Duration <code>10 s</code>.</div>
+          </div>
+        </div>
+
+        <h3>Quick‑rescue presets</h3>
+        <table>
+          <thead><tr><th>Action</th><th>Frequency</th><th>Duration</th><th>Envelope</th></tr></thead>
+          <tbody>
+            <tr><td>Water Eject</td><td>165 Hz</td><td>12 s</td><td>Constant + ±8 % wobble</td></tr>
+            <tr><td>Dust Clean</td><td>300 Hz</td><td>18 s</td><td>Slow sweep 280→320 Hz</td></tr>
+            <tr><td>Muffled Fix</td><td>500 Hz</td><td>10 s</td><td>Constant</td></tr>
+            <tr><td>Manual Hz (Pro)</td><td>20–20 000 Hz</td><td>User</td><td>User</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Cleaning algorithms ── -->
+      <section id="cleaning">
+        <h2>Cleaning algorithms</h2>
+        <p class="section-sub">Cycle state machine</p>
+
+        <p>The Deep Clean cycle is a deterministic 3‑stage state machine. Use a coroutine‑backed <code>Flow&lt;CycleState&gt;</code> so the UI (dial, waveform, progress) and the audio thread observe the same source of truth.</p>
+
+        <pre><span class="k">sealed class</span> <span class="f">CycleState</span> {
+    <span class="k">data class</span> <span class="f">Stage</span>(<span class="k">val</span> n: <span class="v">Int</span>, <span class="k">val</span> hz: <span class="v">Double</span>,
+                     <span class="k">val</span> remaining: <span class="v">Duration</span>) : <span class="f">CycleState</span>()
+    <span class="k">object</span> <span class="f">Paused</span> : <span class="f">CycleState</span>()
+    <span class="k">data class</span> <span class="f">Done</span>(<span class="k">val</span> healthDelta: <span class="v">Int</span>) : <span class="f">CycleState</span>()
+    <span class="k">object</span> <span class="f">Aborted</span> : <span class="f">CycleState</span>()
+}
+
+<span class="k">fun</span> <span class="f">runDeepClean</span>(): <span class="f">Flow</span>&lt;<span class="f">CycleState</span>&gt; = <span class="f">flow</span> {
+    <span class="k">val</span> stages = <span class="f">listOf</span>(
+        <span class="f">StageDef</span>(<span class="n">165.0</span>, <span class="n">12</span>.seconds),
+        <span class="f">StageDef</span>(<span class="n">300.0</span>, <span class="n">18</span>.seconds),
+        <span class="f">StageDef</span>(<span class="n">500.0</span>, <span class="n">10</span>.seconds),
+    )
+    <span class="k">for</span> ((i, s) <span class="k">in</span> stages.withIndex()) {
+        audio.setTargetHz(s.hz)
+        <span class="k">val</span> start = clock.now()
+        <span class="k">while</span> (clock.now() - start &lt; s.duration) {
+            emit(<span class="f">CycleState</span>.Stage(i+<span class="n">1</span>, s.hz, s.duration - (clock.now()-start)))
+            <span class="f">delay</span>(<span class="n">50</span>) <span class="c">// 20 fps UI tick</span>
+        }
+    }
+    emit(<span class="f">CycleState</span>.Done(healthDelta = computeDelta()))
+}</pre>
+
+        <h3>Abort handling</h3>
+        <p>The big &ldquo;Stop&rdquo; button mid‑cycle <i>must</i> show <code>ScrAbortModal</code> (screen 22), not abort silently. Single‑tap pause is fine; full stop needs confirmation because users will accidentally tap during the Hz dial interaction.</p>
+
+        <h3>Result scoring</h3>
+        <p>The score in <code>ScrResult</code> is derived from the post‑cycle Sound Test — not a fixed number. Compute as a weighted average of three measurements:</p>
+        <ul>
+          <li><b>Loudness</b> — peak SPL recorded via the mic during a 20–20 000 Hz sweep (40 %).</li>
+          <li><b>Clarity</b> — RMS energy in 1–4 kHz band / total RMS (40 %).</li>
+          <li><b>Balance</b> — abs(L − R) dB, inverted and clipped (20 %).</li>
+        </ul>
+      </section>
+
+      <!-- ── Pulse Clean ── -->
+      <section id="pulse">
+        <h2>Pulse Clean (haptic mode)</h2>
+        <p class="section-sub">Vibration as cleaning vector</p>
+
+        <p><b>Pulse Clean</b> (screen 18) is the haptic counterpart to sound cleaning. It uses the device&rsquo;s linear‑resonant‑actuator (LRA) to physically shake the chassis and dislodge debris stuck under the speaker grille. It can layer with a 165 Hz tone for combined sound + mechanical attack.</p>
+
+        <h3>Pattern catalog</h3>
+        <table>
+          <thead><tr><th>Pattern</th><th>Shape</th><th>Use case</th><th>Composition (API 31+)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Steady</td>
+              <td>Continuous mid‑intensity</td>
+              <td>General loosening</td>
+              <td>Looped <code>PRIMITIVE_LOW_TICK</code> @ 30 ms</td>
+            </tr>
+            <tr>
+              <td>Wave</td>
+              <td>0.3 → 1.0 → 0.3 sine envelope, 1 Hz</td>
+              <td>Water displacement</td>
+              <td><code>PRIMITIVE_SLOW_RISE</code> + <code>SLOW_FALL</code> chain</td>
+            </tr>
+            <tr>
+              <td>Burst</td>
+              <td>0.95 spikes, 80 ms on / 120 ms off</td>
+              <td>Heavy dust</td>
+              <td><code>PRIMITIVE_TICK</code> × n at scale 1.0</td>
+            </tr>
+            <tr>
+              <td>Knock</td>
+              <td>3 × heavy clicks, 250 ms gap</td>
+              <td>Final shake‑out</td>
+              <td><code>PRIMITIVE_THUD</code> × 3</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <pre><span class="k">val</span> wave = <span class="f">VibrationEffect</span>.startComposition()
+    .addPrimitive(<span class="f">VibrationEffect</span>.Composition.PRIMITIVE_SLOW_RISE, <span class="n">1.0f</span>, <span class="n">0</span>)
+    .addPrimitive(<span class="f">VibrationEffect</span>.Composition.PRIMITIVE_SLOW_FALL, <span class="n">1.0f</span>, <span class="n">0</span>)
+    .compose()
+vibrator.vibrate(wave, <span class="f">VibrationAttributes</span>.createForUsage(USAGE_TOUCH))</pre>
+
+        <h3>Safety</h3>
+        <ul>
+          <li>Hard‑cap pattern duration at <b>30 s</b> per session (battery + chassis heat).</li>
+          <li>Disable while device temperature is &gt; 38 °C (read via <code>PowerManager.getCurrentThermalStatus</code>).</li>
+          <li>Pause vibration during phone call / alarm (listen to <code>AudioFocus</code>).</li>
+          <li>Pulse Clean is a <b>Pro</b> feature — show <code>ScrLocked</code> on tap for free users.</li>
+        </ul>
+      </section>
+
+      <!-- ── Haptic feedback map ── -->
+      <section id="haptics">
+        <h2>Haptic feedback map</h2>
+        <p class="section-sub">Every interactive element</p>
+
+        <p>Haptic feedback is what makes the prototype feel like a real instrument. Fire on touch‑down, not touch‑up — the latency penalty otherwise erases the premium feel. All effects use <code>VibrationEffect.Composition</code> primitives; fall back to <code>EFFECT_TICK</code> on older devices.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Element</th>
+              <th>Screen(s)</th>
+              <th>Trigger</th>
+              <th>Haptic</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Primary CTA<br/>(&ldquo;Get started&rdquo;, &ldquo;Continue&rdquo;)</td>
+              <td>All onboarding</td>
+              <td>Press down</td>
+              <td><code>PRIMITIVE_CLICK</code> @ 0.7</td>
+              <td>The signature touch. Calibrate to feel solid but not heavy.</td>
+            </tr>
+            <tr>
+              <td>Option card<br/>(Q1/Q2 problem &amp; timing)</td>
+              <td>03, 04</td>
+              <td>Tap</td>
+              <td><code>PRIMITIVE_LOW_TICK</code> @ 0.6</td>
+              <td>Lighter than CTA. Confirms selection.</td>
+            </tr>
+            <tr>
+              <td>Star rating taps</td>
+              <td>08</td>
+              <td>Each star press</td>
+              <td><code>PRIMITIVE_TICK</code> @ 0.5, ramped<br/>0.3→1.0 across 5 stars</td>
+              <td>Escalating intensity creates emotional payoff at 5.</td>
+            </tr>
+            <tr>
+              <td>Plan selector tile</td>
+              <td>09, 10 (paywall)</td>
+              <td>Tap</td>
+              <td><code>PRIMITIVE_CLICK</code> @ 0.8</td>
+              <td>Heavier — this is a commitment moment.</td>
+            </tr>
+            <tr>
+              <td>Quick‑action card<br/>(Water / Dust / Muffled / Pulse)</td>
+              <td>13 (home)</td>
+              <td>Tap</td>
+              <td><code>PRIMITIVE_THUD</code> @ 0.7</td>
+              <td>Big and decisive — initiates an action.</td>
+            </tr>
+            <tr>
+              <td>Tab bar</td>
+              <td>12, 13 (home, empty)</td>
+              <td>Tab switch</td>
+              <td><code>PRIMITIVE_LOW_TICK</code> @ 0.4</td>
+              <td>Subtle navigation feedback.</td>
+            </tr>
+            <tr>
+              <td>Cycle Start button</td>
+              <td>14 (action screen)</td>
+              <td>Press</td>
+              <td><code>PRIMITIVE_CLICK</code> + <code>SLOW_RISE</code></td>
+              <td>Two‑step: confirm click + rising hum as audio begins.</td>
+            </tr>
+            <tr>
+              <td>Stage transition</td>
+              <td>15 (cycle)</td>
+              <td>Each new stage (1→2, 2→3)</td>
+              <td><code>PRIMITIVE_TICK</code> × 2 @ 0.5</td>
+              <td>Auto‑fired, not user‑triggered. Reinforces progress.</td>
+            </tr>
+            <tr>
+              <td>Pause / Resume</td>
+              <td>15 (cycle)</td>
+              <td>Tap</td>
+              <td><code>PRIMITIVE_LOW_TICK</code> @ 0.5</td>
+              <td>Soft so it doesn&rsquo;t feel like an abort.</td>
+            </tr>
+            <tr>
+              <td>Stop (abort)</td>
+              <td>15</td>
+              <td>Tap → opens <code>ScrAbortModal</code></td>
+              <td><code>PRIMITIVE_LOW_TICK</code> @ 0.5</td>
+              <td>Subdued. The confirm action carries the real haptic.</td>
+            </tr>
+            <tr>
+              <td>Confirm &ldquo;Stop anyway&rdquo;</td>
+              <td>22 (abort modal)</td>
+              <td>Tap</td>
+              <td><code>PRIMITIVE_THUD</code> @ 0.9</td>
+              <td>Heavy. Communicates &ldquo;something was stopped.&rdquo;</td>
+            </tr>
+            <tr>
+              <td>Result reveal</td>
+              <td>16 (result)</td>
+              <td>On screen mount</td>
+              <td><code>PRIMITIVE_SPIN</code> + <code>QUICK_RISE</code></td>
+              <td>Celebratory. Coincides with check‑mark seal animation.</td>
+            </tr>
+            <tr>
+              <td>Sound‑test cone</td>
+              <td>17</td>
+              <td>Tap L / R</td>
+              <td><code>PRIMITIVE_TICK</code> @ 0.7</td>
+              <td>Begins sweep on that channel.</td>
+            </tr>
+            <tr>
+              <td>Manual Hz dial</td>
+              <td>19</td>
+              <td>Each value change (debounced 30 ms)</td>
+              <td><code>PRIMITIVE_LOW_TICK</code> @ 0.3</td>
+              <td>Subtle &ldquo;detent&rdquo; feel as you sweep.</td>
+            </tr>
+            <tr>
+              <td>Hz preset chip</td>
+              <td>19</td>
+              <td>Tap A4 / Bass / Mid / Hi</td>
+              <td><code>PRIMITIVE_CLICK</code> @ 0.5</td>
+              <td>Snaps to value.</td>
+            </tr>
+            <tr>
+              <td>Pulse pattern selector</td>
+              <td>18 (pulse clean)</td>
+              <td>Tap Steady/Wave/Burst/Knock</td>
+              <td>The pattern itself, 200 ms preview</td>
+              <td>The haptic <i>is</i> the preview — best possible feedback.</td>
+            </tr>
+            <tr>
+              <td>Pulse intensity slider</td>
+              <td>18</td>
+              <td>Drag</td>
+              <td>Live preview pulse @ current intensity</td>
+              <td>Throttle to 4 fps so it doesn&rsquo;t lock the motor.</td>
+            </tr>
+            <tr>
+              <td>Toggle (settings)</td>
+              <td>20</td>
+              <td>Flip</td>
+              <td><code>PRIMITIVE_LOW_TICK</code> @ 0.4 (off)<br/><code>PRIMITIVE_TICK</code> @ 0.6 (on)</td>
+              <td>Asymmetric feel reinforces state direction.</td>
+            </tr>
+            <tr>
+              <td>Locked feature tap</td>
+              <td>13, opens 21</td>
+              <td>Tap on Pro card while free</td>
+              <td><code>PRIMITIVE_LOW_TICK</code> × 2 @ 0.4</td>
+              <td>Soft &ldquo;door rattle&rdquo; — feels locked, not broken.</td>
+            </tr>
+            <tr>
+              <td>Permission allow</td>
+              <td>01, 11</td>
+              <td>Tap &ldquo;Allow&rdquo;</td>
+              <td><code>PRIMITIVE_CLICK</code> @ 0.7</td>
+              <td>Same as primary CTA — this <i>is</i> the CTA here.</td>
+            </tr>
+            <tr>
+              <td>Error / warning state</td>
+              <td>23 (offline), audio warn</td>
+              <td>Screen mount</td>
+              <td><code>PRIMITIVE_LOW_TICK</code> × 3 @ 0.5</td>
+              <td>Triple‑tap pattern signals &ldquo;attention.&rdquo;</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <h4>Universal rules</h4>
+          <ul style="margin: 8px 0 0;">
+            <li>Always check <code>vibrator.areAllPrimitivesSupported(...)</code> first; fall back to <code>EFFECT_TICK</code> / <code>EFFECT_CLICK</code> if unsupported.</li>
+            <li>Respect system &ldquo;Touch feedback&rdquo; setting — read <code>Settings.System.HAPTIC_FEEDBACK_ENABLED</code> before firing.</li>
+            <li>Suppress all non‑essential haptics when battery saver is on.</li>
+            <li>Honour the &ldquo;Haptic feedback&rdquo; toggle in <code>ScrSettings</code> (screen 20).</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ── Permissions ── -->
+      <section id="permissions">
+        <h2>Permissions</h2>
+        <p class="section-sub">What &amp; when to request</p>
+
+        <table>
+          <thead><tr><th>Permission</th><th>When requested</th><th>Screen</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>MODIFY_AUDIO_SETTINGS</code></td>
+              <td>App start, after Welcome</td>
+              <td>01 — Permission request</td>
+              <td><span class="pill req">Required</span></td>
+            </tr>
+            <tr>
+              <td><code>RECORD_AUDIO</code></td>
+              <td>Before first Sound Test (screen 17)</td>
+              <td>System prompt</td>
+              <td><span class="pill req">Required</span> for result scoring</td>
+            </tr>
+            <tr>
+              <td><code>VIBRATE</code></td>
+              <td>Manifest‑only (no runtime prompt)</td>
+              <td>—</td>
+              <td><span class="pill def">Granted at install</span></td>
+            </tr>
+            <tr>
+              <td><code>POST_NOTIFICATIONS</code><br/>(API 33+)</td>
+              <td>After first successful cycle</td>
+              <td>11 — Push prompt</td>
+              <td><span class="pill opt">Optional</span></td>
+            </tr>
+            <tr>
+              <td>Billing<br/>(no runtime perm)</td>
+              <td>On paywall open</td>
+              <td>09, 10</td>
+              <td><span class="pill def">Service</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="muted">Never request notification permission at app start. Surface it only after the user has experienced one successful cycle — conversion is 3–4× higher when the ask follows a value moment.</p>
+      </section>
+
+      <!-- ── Premium gating ── -->
+      <section id="gating">
+        <h2>Premium gating</h2>
+        <p class="section-sub">Free vs Pro</p>
+
+        <div class="gate-grid">
+          <div class="gate-card">
+            <h4><span class="pill def">Free</span></h4>
+            <ul>
+              <li>1 cleaning cycle per 24 hours</li>
+              <li>Water Eject only (no Dust, Muffled, Pulse)</li>
+              <li>Basic Sound Test (no frequency curve detail)</li>
+              <li>Default 3‑stage cycle (no Manual Hz)</li>
+              <li>Limited result history (last 1)</li>
+              <li>Banner ad before Result screen</li>
+            </ul>
+          </div>
+          <div class="gate-card pro">
+            <h4><span class="pill pro">Pro</span></h4>
+            <ul>
+              <li>Unlimited cleaning cycles</li>
+              <li>All 4 quick actions + Pulse Clean haptic mode</li>
+              <li>Full Sound Test with L / R balance &amp; frequency curve</li>
+              <li>Manual Hz tool (20 Hz – 20 kHz)</li>
+              <li>Unlimited history + auto‑clean reminders</li>
+              <li>No ads</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Gating implementation</h3>
+        <pre><span class="k">enum class</span> <span class="f">Entitlement</span> { <span class="v">FREE</span>, <span class="v">PRO_TRIAL</span>, <span class="v">PRO</span> }
+
+<span class="k">fun</span> <span class="f">canAccess</span>(feature: <span class="f">Feature</span>): <span class="v">Boolean</span> = <span class="k">when</span> (feature) {
+    <span class="f">Feature</span>.WATER_EJECT -&gt; <span class="k">true</span>
+    <span class="f">Feature</span>.DUST_CLEAN,
+    <span class="f">Feature</span>.MUFFLED_FIX,
+    <span class="f">Feature</span>.DEEP_CLEAN,
+    <span class="f">Feature</span>.PULSE_CLEAN,
+    <span class="f">Feature</span>.MANUAL_HZ        -&gt; entitlement != <span class="f">Entitlement</span>.FREE
+    <span class="f">Feature</span>.UNLIMITED_CYCLES -&gt; entitlement != <span class="f">Entitlement</span>.FREE
+                            || cyclesToday() &lt; <span class="n">1</span>
+}</pre>
+
+        <h3>Paywall logic</h3>
+        <ul>
+          <li><b>Main paywall</b> (screen 09) shows after onboarding flow finishes. 3 plans, Annual pre‑selected, 7‑day trial. Countdown timer is real — persist start time in DataStore, recompute on each launch.</li>
+          <li><b>Close‑intent</b> → <b>downsell paywall</b> (screen 10). Triggered by back press / X button. Shows a single $4.99/wk plan vs $9.99 baseline, 5‑min countdown. Fire only once per session — if user dismisses both, gate the locked features for the rest of the session.</li>
+          <li><b>Mid‑app upsell</b> — tapping a Pro feature as free user opens <code>ScrLocked</code> (screen 21). &ldquo;Start free trial&rdquo; routes to <i>main</i> paywall, &ldquo;Maybe later&rdquo; closes the modal.</li>
+          <li><b>Restore purchases</b> available from Settings (screen 20). Implement via <code>BillingClient.queryPurchasesAsync</code>.</li>
+        </ul>
+
+        <div class="callout warn">
+          <h4>Subscription compliance</h4>
+          <ul style="margin: 8px 0 0;">
+            <li>Both paywalls must show price, billing period, and renewal terms <i>before</i> the CTA — currently rendered as &ldquo;Auto‑renews &middot; cancel anytime&rdquo; small text under the button.</li>
+            <li>Trial price &amp; conversion price must be equally legible (Google Play 2024 policy).</li>
+            <li>&ldquo;Restore purchases&rdquo; must be accessible without account creation.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ── App states & flows ── -->
+      <section id="states">
+        <h2>App states &amp; flows</h2>
+        <p class="section-sub">23 screens, navigation graph</p>
+
+        <pre><span class="c">// Top-level navigation graph</span>
+<span class="f">NavHost</span>(startDestination = <span class="k">when</span> {
+    !hasPermission        -&gt; <span class="s">"permission"</span>
+    isFirstRun            -&gt; <span class="s">"welcome"</span>
+    !hasCompletedAnyCycle -&gt; <span class="s">"empty_home"</span>
+    <span class="k">else</span>                  -&gt; <span class="s">"home"</span>
+}) {
+    composable(<span class="s">"permission"</span>)  { <span class="f">ScrPermission</span>() }
+    composable(<span class="s">"welcome"</span>)     { <span class="f">ScrWelcome</span>() }
+    navigation(<span class="s">"onboarding"</span>) { <span class="c">/* Q1 → Q2 → Q3 → analyzing → plan → rating → paywall */</span> }
+    composable(<span class="s">"home"</span>)        { <span class="f">ScrHome</span>() }
+    composable(<span class="s">"action/{id}"</span>) { <span class="f">ScrAction</span>(it) }
+    composable(<span class="s">"cycle"</span>)       { <span class="f">ScrCycle</span>() }
+    composable(<span class="s">"result"</span>)      { <span class="f">ScrResult</span>() }
+    composable(<span class="s">"test"</span>)        { <span class="f">ScrTest</span>() }
+    composable(<span class="s">"manual"</span>)      { <span class="f">ScrManual</span>() }
+    composable(<span class="s">"pulse"</span>)       { <span class="f">ScrPulse</span>() }
+    composable(<span class="s">"settings"</span>)    { <span class="f">ScrSettings</span>() }
+    dialog(<span class="s">"locked"</span>)         { <span class="f">ScrLocked</span>() }
+    dialog(<span class="s">"abort"</span>)          { <span class="f">ScrAbortModal</span>() }
+    composable(<span class="s">"offline"</span>)     { <span class="f">ScrOffline</span>() }
+    composable(<span class="s">"push"</span>)        { <span class="f">ScrPush</span>() }
+    composable(<span class="s">"audio_warn"</span>)  { <span class="f">ScrAudioWarning</span>() }
+}</pre>
+
+        <h3>State persistence</h3>
+        <ul>
+          <li><b>Onboarding answers</b> — kept in <code>SavedStateHandle</code> only; not persisted past install. If user kills the app mid‑onboarding, restart.</li>
+          <li><b>Cycle history</b> — DataStore, capped at last 50 entries. Each entry: timestamp, action, duration, score delta.</li>
+          <li><b>Entitlement</b> — DataStore + every‑launch Play Billing verification. Treat cached state as soft; do not gate based on it alone for &gt; 24 h.</li>
+          <li><b>Settings toggles</b> — DataStore. Read on every relevant action (haptic enable, notifications).</li>
+        </ul>
+      </section>
+
+      <!-- ── Analytics ── -->
+      <section id="analytics">
+        <h2>Analytics events</h2>
+        <p class="section-sub">Funnel instrumentation</p>
+
+        <table>
+          <thead><tr><th>Event</th><th>Properties</th><th>When</th></tr></thead>
+          <tbody>
+            <tr><td>app_open</td><td>is_first, entitlement</td><td>Cold start</td></tr>
+            <tr><td>onboard_step</td><td>step, answer</td><td>Each Q1/Q2/Q3 answer</td></tr>
+            <tr><td>plan_viewed</td><td>health_score, severity</td><td>ScrPlan mount</td></tr>
+            <tr><td>rating_given</td><td>stars</td><td>Star tap</td></tr>
+            <tr><td>paywall_shown</td><td>variant (main / downsell)</td><td>Paywall mount</td></tr>
+            <tr><td>paywall_plan_selected</td><td>plan, price, period</td><td>Tile tap</td></tr>
+            <tr><td>trial_started</td><td>plan, price, period</td><td>Billing success</td></tr>
+            <tr><td>paywall_dismissed</td><td>variant, time_on_screen</td><td>Close / back</td></tr>
+            <tr><td>cycle_started</td><td>action, is_pro, source</td><td>Cycle screen open</td></tr>
+            <tr><td>cycle_completed</td><td>action, duration_s, score_delta</td><td>Cycle finished</td></tr>
+            <tr><td>cycle_aborted</td><td>action, stage, progress_pct</td><td>Confirm abort</td></tr>
+            <tr><td>locked_tap</td><td>feature</td><td>Open ScrLocked</td></tr>
+            <tr><td>permission_result</td><td>permission, granted</td><td>System callback</td></tr>
+            <tr><td>error</td><td>type, screen</td><td>Audio fail, billing fail</td></tr>
+          </tbody>
+        </table>
+
+        <p>Key conversion metric: <b>trial_start_rate</b> = <code>trial_started</code> / <code>app_open WHERE is_first = true</code>. Target ≥ 4 % on cold install before paid UA.</p>
+      </section>
+
+      <!-- ── QA ── -->
+      <section id="qa">
+        <h2>QA checklist</h2>
+        <p class="section-sub">Pre-release</p>
+
+        <ul>
+          <li><b>Audio routing.</b> Plug AirPods mid‑cycle — playback aborts, AudioWarning shown.</li>
+          <li><b>Phase continuity.</b> Listen to a full cycle on headphones at low volume; should be click‑free at every stage boundary.</li>
+          <li><b>Volume safety.</b> Set system media to 100% — app gates start with a warning.</li>
+          <li><b>Haptic fallback.</b> Test on a device without composition primitives (e.g. Android 11 emulator); all haptics fall back gracefully.</li>
+          <li><b>Pulse heat.</b> Run Pulse Clean back‑to‑back for 60 s — app self‑pauses on thermal alert.</li>
+          <li><b>Trial countdown.</b> Background app for 6 h, reopen — timer is correct, not reset.</li>
+          <li><b>Restore.</b> Uninstall, reinstall, restore — Pro features unlock without account.</li>
+          <li><b>Permission deny.</b> Decline audio at install — app stays in <code>ScrPermission</code> until granted.</li>
+          <li><b>Offline.</b> Toggle airplane mode on home — banner shows, cleaning still works (no network needed), paywall gracefully degrades.</li>
+          <li><b>Battery saver.</b> Enabled → non‑essential animations &amp; haptics suppressed.</li>
+          <li><b>TalkBack.</b> All buttons have content descriptions, dial values are spoken.</li>
+          <li><b>Tablet / fold.</b> Layouts gracefully clip at &gt; 600 dp — not stretched. Single‑pane only.</li>
+          <li><b>Dark mode only.</b> No light theme exists by design — confirm no light‑mode token leakage.</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Highlight current TOC item on scroll
+    const links = document.querySelectorAll('.toc a[href^="#"]');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const setCurrent = () => {
+      const y = window.scrollY + 100;
+      let active = sections[0];
+      for (const s of sections) if (s.offsetTop <= y) active = s;
+      links.forEach(a => a.classList.toggle('current', a.getAttribute('href') === '#' + active.id));
+    };
+    setCurrent();
+    document.addEventListener('scroll', setCurrent, { passive: true });
+  </script>
+</body>
+</html>

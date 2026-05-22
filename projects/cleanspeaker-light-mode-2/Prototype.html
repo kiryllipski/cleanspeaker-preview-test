@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CleanSpeaker · Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="tokens.css"/>
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<style>
+  .proto-shell {
+    width: 412px; height: 828px;
+    position: relative; overflow: hidden;
+    border-radius: 32px;
+    background: var(--bg-1);
+  }
+  .proto-scene-stack {
+    position: absolute; inset: 0;
+  }
+  .scene-anim {
+    position: absolute; inset: 0;
+    animation: sceneEnter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes sceneEnter {
+    from { opacity: 0; transform: translateY(14px) scale(0.995); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .proto-controls .scene-list {
+    display: flex; gap: 0;
+    background: transparent;
+    padding: 0;
+  }
+  .proto-top {
+    width: 412px;
+    max-width: 412px;
+    margin: 0 auto 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--fg-2);
+  }
+  .proto-flow-strip {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+    margin-top: 18px;
+    max-width: 720px;
+    flex-wrap: wrap;
+  }
+  .proto-flow-dot {
+    width: 28px; height: 4px; border-radius: 2px;
+    background: var(--bg-3); cursor: pointer;
+    transition: all 220ms var(--ease-out);
+  }
+  .proto-flow-dot.active { background: var(--cy-1); width: 44px; }
+  .proto-flow-dot.visited { background: var(--cy-soft); }
+  .proto-meta-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px;
+    background: var(--bg-1); border: 1px solid var(--hairline);
+    font-size: 12px; color: var(--fg-1);
+  }
+  .proto-meta-tag .mono { color: var(--fg-0); font-weight: 600; }
+  .proto-jump {
+    margin-top: 28px;
+    max-width: 720px;
+    background: var(--bg-1);
+    border: 1px solid var(--hairline);
+    border-radius: 18px;
+    padding: 18px;
+    width: 100%;
+  }
+  .jump-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px;
+    margin-top: 12px;
+  }
+  .jump-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: 10px;
+    cursor: pointer; transition: background 160ms;
+    border: none; background: transparent;
+    text-align: left; width: 100%;
+  }
+  .jump-row:hover { background: var(--bg-0); }
+  .jump-row.active { background: var(--cy-0); color: var(--cy-3); }
+  .jump-row .mono { font-size: 11px; color: var(--fg-2); }
+  .jump-row.active .mono { color: var(--cy-3); }
+  .jump-row .label { font-size: 13px; font-weight: 500; flex: 1; }
+  .header-title {
+    font-size: 32px; font-weight: 600; letter-spacing: -0.025em;
+    line-height: 1.06;
+  }
+  .header-sub { font-size: 14px; color: var(--fg-1); margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="primitives.jsx"></script>
+<script type="text/babel" src="screens-onboarding.jsx"></script>
+<script type="text/babel" src="screens-app.jsx"></script>
+<script type="text/babel" src="screens-extra.jsx"></script>
+<script type="text/babel" data-presets="react">
+
+const SCENES = [
+  { id: 'problem',        label: 'Problem',         C: ScrProblem,       phase: 'Onboarding' },
+  { id: 'trust',          label: 'Trust',           C: ScrTrust,         phase: 'Onboarding' },
+  { id: 'value',          label: 'Value',           C: ScrValue,         phase: 'Onboarding' },
+  { id: 'paywall',        label: 'Paywall',         C: ScrPaywall,       phase: 'Paywall' },
+  { id: 'home-free',      label: 'Home — Free',     C: ScrHomeFree,      phase: 'Home' },
+  { id: 'home-premium',   label: 'Home — Premium',  C: ScrHomePremium,   phase: 'Home' },
+  { id: 'premium-tools',  label: 'Premium Tools',   C: ScrPremiumTools,  phase: 'Home' },
+  { id: 'setup',          label: 'Setup',           C: ScrSetup,         phase: 'Rescue' },
+  { id: 'clean-active',   label: 'Clean — Active',  C: ScrCleanActive,   phase: 'Rescue' },
+  { id: 'clean-stopped',  label: 'Clean — Stopped', C: ScrCleanStopped,  phase: 'Rescue' },
+  { id: 'clean-complete', label: 'Clean — Done',    C: ScrCleanComplete, phase: 'Rescue' },
+  { id: 'sound-test',     label: 'Sound Test',      C: ScrSoundTest,     phase: 'Verify' },
+  { id: 'result-better',  label: 'Result — Better', C: ScrResultBetter,  phase: 'Result' },
+  { id: 'result-muffled', label: 'Result — Upsell', C: ScrResultMuffled, phase: 'Result' },
+  { id: 'manual-hz',      label: 'Manual Hz',       C: ScrManualHz,      phase: 'Premium' },
+  { id: 'vibration',      label: 'Vibration',       C: ScrVibration,     phase: 'Premium' },
+  { id: 'deep-clean',     label: 'Deep Clean',      C: ScrDeepClean,     phase: 'Premium' },
+];
+
+const FLOW = ['problem','trust','value','paywall','home-free','setup','clean-active','clean-complete','sound-test','result-better'];
+
+function App() {
+  const [sceneId, setSceneId] = React.useState('problem');
+  const [history, setHistory] = React.useState([]);
+  const [state, setState] = React.useState({ premium: false, fromIssue: 'water', feedback: null });
+
+  const idx = SCENES.findIndex(s => s.id === sceneId);
+  const scene = SCENES[idx];
+
+  const nav = (target, payload) => {
+    if (!SCENES.find(s => s.id === target)) return;
+    setHistory(h => [...h, sceneId]);
+    if (payload && typeof payload === 'object') setState(prev => ({ ...prev, ...payload }));
+    setSceneId(target);
+  };
+  const back = () => {
+    if (history.length === 0) return;
+    const prev = history[history.length - 1];
+    setHistory(h => h.slice(0, -1));
+    setSceneId(prev);
+  };
+  const set = (k, v) => setState(s => ({ ...s, [k]: v }));
+
+  React.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); if (idx < SCENES.length - 1) { setHistory(h => [...h, sceneId]); setSceneId(SCENES[idx + 1].id); } }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); if (history.length) back(); else if (idx > 0) setSceneId(SCENES[idx - 1].id); }
+      else if (e.key === 'Home') { setSceneId('problem'); setHistory([]); }
+      else if (e.key === 'r' || e.key === 'R') { setSceneId('problem'); setHistory([]); setState({ premium: false, fromIssue: 'water', feedback: null }); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [sceneId, idx, history.length]);
+
+  const C = scene.C;
+  const total = SCENES.length;
+  const num = String(idx + 1).padStart(2, '0');
+  const totalStr = String(total).padStart(2, '0');
+
+  return (
+    <div className="proto-page">
+      {/* Title */}
+      <div style={{ width: 412, maxWidth: 412, margin: '0 auto 24px', textAlign: 'center' }}>
+        <div className="eyebrow" style={{ color: 'var(--cy-3)', marginBottom: 10 }}>CleanSpeaker · Interactive</div>
+        <div className="header-title">{scene.label}</div>
+        <div className="header-sub">{scene.phase} · scene <span className="mono">{num}</span> of <span className="mono">{totalStr}</span></div>
+      </div>
+
+      {/* Stage */}
+      <div className="proto-stage">
+        <div className="proto-shell">
+          <div className="proto-scene-stack">
+            <div key={sceneId} className="scene-anim">
+              <C nav={nav} state={state} set={set}/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="proto-controls">
+        <button className="proto-nav-btn" onClick={() => { if (history.length) back(); else if (idx > 0) setSceneId(SCENES[idx-1].id); }} disabled={idx === 0 && history.length === 0} aria-label="Back">
+          <span style={{ color: 'var(--fg-0)' }}>{ICONS.back(16)}</span>
+        </button>
+        <span className="scene-label">{scene.label}</span>
+        <span className="counter">{num} / {totalStr}</span>
+        <button className="proto-nav-btn" onClick={() => { if (idx < SCENES.length - 1) { setHistory(h => [...h, sceneId]); setSceneId(SCENES[idx+1].id); } }} disabled={idx === SCENES.length - 1} aria-label="Next">
+          <span style={{ color: 'var(--fg-0)' }}>{ICONS.next(16)}</span>
+        </button>
+      </div>
+
+      {/* Hint */}
+      <div className="proto-hint">
+        <kbd>←</kbd> <kbd>→</kbd> walk · <kbd>R</kbd> reset · <kbd>Home</kbd> start
+      </div>
+
+      {/* Flow strip — visualizes default conversion path */}
+      <div className="proto-flow-strip">
+        {FLOW.map((id, i) => {
+          const isActive = id === sceneId;
+          const wasVisited = history.includes(id);
+          return (
+            <button key={id} className={`proto-flow-dot ${isActive ? 'active' : ''} ${wasVisited ? 'visited' : ''}`}
+              onClick={() => { setHistory(h => [...h, sceneId]); setSceneId(id); }}
+              title={SCENES.find(s => s.id === id)?.label}/>
+          );
+        })}
+      </div>
+
+      <div style={{ marginTop: 12, display: 'flex', gap: 8, alignItems: 'center' }}>
+        <span className="proto-meta-tag">Premium · <span className="mono">{state.premium ? 'ON' : 'OFF'}</span></span>
+        <span className="proto-meta-tag">Issue · <span className="mono">{state.fromIssue}</span></span>
+      </div>
+
+      {/* Jump panel */}
+      <div className="proto-jump">
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--fg-2)' }}>All scenes</div>
+          <div className="mono" style={{ fontSize: 11, color: 'var(--fg-2)' }}>{totalStr} screens</div>
+        </div>
+        {(() => {
+          const phases = [...new Set(SCENES.map(s => s.phase))];
+          return phases.map(ph => (
+            <div key={ph} style={{ marginTop: 16 }}>
+              <div style={{ fontSize: 11, color: 'var(--cy-3)', letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 6 }}>{ph}</div>
+              <div className="jump-grid">
+                {SCENES.filter(s => s.phase === ph).map((s, i) => {
+                  const i2 = SCENES.findIndex(x => x.id === s.id);
+                  return (
+                    <button key={s.id} className={`jump-row ${s.id === sceneId ? 'active' : ''}`} onClick={() => { setHistory(h => [...h, sceneId]); setSceneId(s.id); }}>
+                      <span className="mono">{String(i2 + 1).padStart(2, '0')}</span>
+                      <span className="label">{s.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ));
+        })()}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

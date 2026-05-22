@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CleanSpeaker — All Screens</title>
+<link rel="stylesheet" href="tokens.css" />
+<style>
+  body {
+    background: #EAEEF4;
+    min-height: 100vh;
+    padding: 32px 56px 80px;
+  }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 36px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+  .brand-dot {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, #2A95FF, #0066D6);
+    box-shadow: 0 6px 16px rgba(10,132,255,0.32);
+  }
+  .brand-name { font-size: 16px; }
+  .brand-sub  { font-size: 11px; color: var(--fg-2); margin-top: -2px;
+                letter-spacing: 0.18em; text-transform: uppercase; }
+  .nav-tabs { display: flex; gap: 4px; padding: 4px; background: var(--bg-1);
+              border: 1px solid var(--hairline); border-radius: 999px; }
+  .nav-tab { all: unset; cursor: pointer; padding: 8px 16px; border-radius: 999px;
+             font-size: 13px; font-weight: 500; color: var(--fg-1); }
+  .nav-tab.active { background: var(--fg-0); color: #fff; }
+
+  .group {
+    display: flex; gap: 36px; align-items: flex-start;
+    margin-bottom: 64px;
+  }
+
+  .group-meta {
+    width: 240px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 24px;
+  }
+  .group-eyebrow {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-2); font-weight: 500;
+  }
+  .group-title {
+    font-size: 28px; font-weight: 600; letter-spacing: -0.02em;
+    margin: 8px 0 12px;
+  }
+  .group-desc {
+    font-size: 13.5px; color: var(--fg-1); line-height: 1.5;
+    max-width: 220px;
+  }
+  .group-stats {
+    margin-top: 24px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .group-stat {
+    display: flex; justify-content: space-between;
+    font-size: 12.5px;
+    padding: 8px 0; border-top: 1px solid var(--hairline);
+  }
+  .group-stat:last-child { border-bottom: 1px solid var(--hairline); }
+  .group-stat-label { color: var(--fg-2); letter-spacing: 0.04em; }
+  .group-stat-val { font-family: var(--f-mono); font-weight: 600; }
+
+  .frames {
+    display: flex; gap: 32px;
+    flex: 1; overflow-x: auto; padding-bottom: 18px;
+  }
+  .frame {
+    flex-shrink: 0;
+    display: flex; flex-direction: column;
+    width: 412px;
+  }
+  .frame-shell {
+    width: 412px; height: 828px;
+    border-radius: 28px; overflow: hidden;
+    box-shadow:
+      0 40px 100px -40px rgba(10,30,80,0.28),
+      0 18px 40px -20px rgba(10,30,80,0.16),
+      0 1px 2px rgba(10,30,80,0.04);
+    position: relative;
+  }
+  .frame-shell::before {
+    content: ''; position: absolute; inset: 0;
+    border-radius: 28px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5),
+                inset 0 -1px 0 rgba(15,23,42,0.06);
+    pointer-events: none; z-index: 10;
+  }
+  .frame-caption {
+    margin-top: 16px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .frame-name {
+    font-size: 14px; font-weight: 600; letter-spacing: -0.01em;
+  }
+  .frame-num {
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--fg-2); letter-spacing: 0.04em;
+  }
+  .frame-tag {
+    display: inline-flex; padding: 4px 10px; border-radius: 999px;
+    background: var(--bg-1); border: 1px solid var(--hairline);
+    font-size: 10.5px; font-weight: 500; color: var(--fg-1);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .hero {
+    margin-bottom: 56px;
+    padding: 48px 56px;
+    border-radius: 32px;
+    background:
+      radial-gradient(60% 80% at 15% 50%, #DDEAF8 0%, transparent 60%),
+      var(--bg-1);
+    border: 1px solid var(--hairline);
+    display: flex; align-items: center; justify-content: space-between; gap: 40px;
+  }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--cy-2); font-weight: 600;
+  }
+  .hero-title {
+    font-size: 44px; font-weight: 600; letter-spacing: -0.025em;
+    margin: 16px 0 12px; line-height: 1.05;
+  }
+  .hero-sub {
+    font-size: 16px; color: var(--fg-1); line-height: 1.5;
+    max-width: 520px;
+  }
+  .hero-meta {
+    margin-top: 32px;
+    display: flex; gap: 40px;
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .hero-meta-val { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; font-family: var(--f-mono); }
+  .hero-meta-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-2); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <div>
+      <div class="brand-name">CleanSpeaker</div>
+      <div class="brand-sub">All Screens · v1</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <a class="nav-tab active" href="All Screens.html">All Screens</a>
+    <a class="nav-tab" href="Design System.html">Design System</a>
+    <a class="nav-tab" href="Prototype.html">Prototype</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">CleanSpeaker Rescue · Android</div>
+    <h1 class="hero-title">Bring your sound<br/>back to life.</h1>
+    <p class="hero-sub">
+      A guided speaker care app for water, dust and muffled sound, fixed in three steps.
+      Light, calm, conversion-focused. Built with a single accent, soft glass surfaces,
+      and motion that explains the action.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><div class="hero-meta-val">23</div><div class="hero-meta-label">Screens</div></div>
+      <div class="hero-meta-item"><div class="hero-meta-val">16</div><div class="hero-meta-label">Components</div></div>
+      <div class="hero-meta-item"><div class="hero-meta-val">412</div><div class="hero-meta-label">Width dp</div></div>
+      <div class="hero-meta-item"><div class="hero-meta-val">1</div><div class="hero-meta-label">Accent</div></div>
+    </div>
+  </div>
+  <div style="flex-shrink: 0; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center;">
+    <canvas id="hero-orb" width="280" height="280"></canvas>
+  </div>
+</div>
+
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+
+<script type="text/babel" src="primitives.jsx"></script>
+<script type="text/babel" src="screens-onboarding.jsx"></script>
+<script type="text/babel" src="screens-app.jsx"></script>
+<script type="text/babel" src="screens-extra.jsx"></script>
+
+<script type="text/babel" data-presets="env,react">
+
+const noNav = () => {};
+const noSet = () => {};
+
+const GROUPS = [
+  {
+    title: 'Onboarding',
+    eyebrow: '01 · Acquisition',
+    desc: 'Welcome through paywall. Calibrates user intent, builds trust, and converts to trial within nine taps.',
+    stats: [
+      ['Screens', '10'],
+      ['Avg taps to paywall', '6'],
+      ['Trial conversion target', '4.5%'],
+    ],
+    scenes: [
+      ['Welcome',     'Hero',      ScrWelcome,    {}],
+      ['Permission',  'Permission',ScrPermission, {}],
+      ['Q1 · Problem','Question',  ScrQ1,         { problem: 'water' }],
+      ['Q2 · When',   'Question',  ScrQ2,         { when: 'today' }],
+      ['Q3 · Device', 'Question',  ScrQ3,         { device: 'phone' }],
+      ['Analyzing',   'Loader',    ScrAnalyzing,  {}],
+      ['Plan',        'Result',    ScrPlan,       { problem: 'water', device: 'phone' }],
+      ['Rating',      'Social proof', ScrRating,  {}],
+      ['Paywall',     'Conversion',ScrPaywall,    {}],
+      ['Downsell',    'Save',      ScrDownsell,   {}],
+    ],
+  },
+  {
+    title: 'Core App',
+    eyebrow: '02 · Activation',
+    desc: 'Home, setup, the active cleaning session, sound test and both result paths. The product, end-to-end.',
+    stats: [
+      ['Screens', '8'],
+      ['Active flow', '~3 min'],
+      ['Feedback paths', '2'],
+    ],
+    scenes: [
+      ['Home · Free',     'Free home', ScrHomeFree,    {}],
+      ['Home · Pro',      'Premium',   ScrHomePremium, {}],
+      ['Setup',           'Checklist', ScrSetup,       {}],
+      ['Clean Active',    'Action',    ScrClean,       {}],
+      ['Clean Complete',  'Bridge',    ScrCleanComplete,{}],
+      ['Sound Test',      'Verify',    ScrSoundTest,   {}],
+      ['Result · Better', 'Positive',  ScrResultBetter,{}],
+      ['Result · Muffled','Upsell',    ScrResultMuffled,{}],
+    ],
+  },
+  {
+    title: 'Premium & System',
+    eyebrow: '03 · Retention',
+    desc: 'Pro-tier tools unlocked after subscription, plus settings and account management.',
+    stats: [
+      ['Screens', '5'],
+      ['Pro tools', '4'],
+      ['Settings sections', '3'],
+    ],
+    scenes: [
+      ['Manual Hz',     'Tool',     ScrManualHz,    {}],
+      ['Wave Modes',    'Tool',     ScrWaveModes,   {}],
+      ['Vibration',     'Tool',     ScrVibration,   {}],
+      ['Headset Clean', 'Tool',     ScrHeadsetClean,{}],
+      ['Settings',      'Account',  ScrSettings,    { premium: true }],
+    ],
+  },
+];
+
+function StaticFrame({ name, tag, C, state, num }) {
+  return (
+    <div className="frame">
+      <div className="frame-shell">
+        <C nav={noNav} state={state || {}} set={noSet} />
+      </div>
+      <div className="frame-caption">
+        <div>
+          <div className="frame-num">{num}</div>
+          <div className="frame-name">{name}</div>
+          <div className="frame-tag">{tag}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Gallery() {
+  let n = 0;
+  return (
+    <div>
+      {GROUPS.map((g, gi) => (
+        <div key={gi} className="group">
+          <div className="group-meta">
+            <div className="group-eyebrow">{g.eyebrow}</div>
+            <h2 className="group-title">{g.title}</h2>
+            <p className="group-desc">{g.desc}</p>
+            <div className="group-stats">
+              {g.stats.map(([k, v], i) => (
+                <div key={i} className="group-stat">
+                  <span className="group-stat-label">{k}</span>
+                  <span className="group-stat-val">{v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="frames">
+            {g.scenes.map(([name, tag, C, state], i) => {
+              n++;
+              const num = String(n).padStart(2, '0');
+              return <StaticFrame key={i} num={num} name={name} tag={tag} C={C} state={state} />;
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Gallery />);
+
+// Hero orb (vanilla, separate from React)
+(() => {
+  const cv = document.getElementById('hero-orb');
+  if (!cv) return;
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = 280 * dpr; cv.height = 280 * dpr;
+  cv.style.width = '280px'; cv.style.height = '280px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const size = 280;
+  let raf, start = performance.now();
+  const tick = (now) => {
+    const t = (now - start) / 1000;
+    const cx = size / 2, cy = size / 2;
+    ctx.clearRect(0, 0, size, size);
+    const halo = ctx.createRadialGradient(cx, cy, size * 0.1, cx, cy, size * 0.5);
+    halo.addColorStop(0, 'rgba(56,189,248,0.30)');
+    halo.addColorStop(0.5, 'rgba(10,132,255,0.10)');
+    halo.addColorStop(1, 'rgba(10,132,255,0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(cx, cy, size * 0.5, 0, Math.PI * 2); ctx.fill();
+
+    for (let i = 0; i < 3; i++) {
+      const phase = t * 0.5 + i * 0.8;
+      const r = size * 0.22 + i * 18 + Math.sin(phase) * 2;
+      ctx.strokeStyle = `rgba(10,132,255,${0.1 - i * 0.025})`;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+    }
+    const breath = 1 + Math.sin(t * 1.4) * 0.05;
+    const coreR = size * 0.16 * breath;
+    const core = ctx.createRadialGradient(cx - coreR * 0.3, cy - coreR * 0.4, 0, cx, cy, coreR);
+    core.addColorStop(0, '#FFFFFF');
+    core.addColorStop(0.4, 'rgba(56,189,248,0.85)');
+    core.addColorStop(1, 'rgba(10,132,255,0.45)');
+    ctx.fillStyle = core;
+    ctx.beginPath(); ctx.arc(cx, cy, coreR, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.beginPath();
+    ctx.arc(cx - coreR * 0.35, cy - coreR * 0.45, coreR * 0.22, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (let i = 0; i < 2; i++) {
+      const p = ((t * 0.6) + i * 0.5) % 1;
+      const rr = coreR + p * (size * 0.32);
+      ctx.strokeStyle = `rgba(56,189,248,${(1 - p) * 0.35})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.stroke();
+    }
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+})();
+</script>
+
+</body>
+</html>
