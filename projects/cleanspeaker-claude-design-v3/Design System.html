@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>CleanSpeaker — Design System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="tokens.css"/>
+  <style>
+    body {
+      margin: 0;
+      background: #EFF1F4;
+      font-family: var(--f-ui);
+      color: var(--fg-0);
+    }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px 40px 80px;
+    }
+    /* Header */
+    .ds-header {
+      margin-bottom: 56px;
+      max-width: 720px;
+    }
+    .ds-header h1 {
+      font-size: 44px; font-weight: 600; margin: 0 0 12px;
+      letter-spacing: -0.025em; line-height: 1.05;
+    }
+    .ds-header p {
+      font-size: 16px; color: var(--fg-1);
+      line-height: 1.6; margin: 0;
+    }
+    .nav-pills {
+      display: flex; gap: 8px; margin-top: 26px; flex-wrap: wrap;
+    }
+    .nav-pills a {
+      color: var(--fg-0); text-decoration: none;
+      padding: 8px 14px; border-radius: 999px;
+      border: 1px solid var(--hairline); background: var(--bg-1);
+      font-size: 13px; font-weight: 500;
+    }
+
+    /* Section */
+    section { margin-bottom: 70px; scroll-margin-top: 30px; }
+    section > h2 {
+      font-size: 24px; font-weight: 600; letter-spacing: -0.02em;
+      margin: 0 0 6px; padding-top: 12px;
+      border-top: 1px solid var(--hairline);
+    }
+    section > .sub {
+      font-size: 14px; color: var(--fg-2); margin: 0 0 28px;
+    }
+    .grid {
+      display: grid; gap: 16px;
+    }
+    .cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .cols-5 { grid-template-columns: repeat(5, 1fr); }
+    .cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+    /* Card */
+    .ds-card {
+      background: var(--bg-1);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .ds-card-tight { padding: 16px; }
+    .ds-card-label {
+      font-family: var(--f-mono); font-size: 11px;
+      letter-spacing: 0.1em; color: var(--fg-2);
+      margin-top: 14px; display: block;
+    }
+    .ds-card-name {
+      font-size: 13px; font-weight: 600; color: var(--fg-0);
+      margin-top: 4px;
+    }
+    .ds-card-meta {
+      font-size: 11px; color: var(--fg-2);
+      font-family: var(--f-mono); margin-top: 2px;
+    }
+
+    /* Swatch */
+    .swatch {
+      width: 100%; aspect-ratio: 1.4;
+      border-radius: 12px;
+      border: 1px solid var(--hairline);
+    }
+
+    /* Type sample */
+    .type-row {
+      display: flex; align-items: baseline; gap: 20px;
+      padding: 18px 0; border-bottom: 1px solid var(--hairline);
+    }
+    .type-row:last-child { border-bottom: none; }
+    .type-meta {
+      width: 160px; flex-shrink: 0;
+    }
+    .type-meta .name {
+      font-size: 13px; font-weight: 600; color: var(--fg-0);
+    }
+    .type-meta .specs {
+      font-family: var(--f-mono); font-size: 11px;
+      color: var(--fg-2); margin-top: 2px;
+    }
+    .type-sample {
+      color: var(--fg-0);
+      letter-spacing: -0.02em;
+    }
+
+    /* Token table */
+    .token-table {
+      width: 100%; border-collapse: collapse;
+    }
+    .token-table th, .token-table td {
+      text-align: left; padding: 12px 14px;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 13px;
+    }
+    .token-table th {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--fg-2);
+    }
+    .token-table td.token-name {
+      font-family: var(--f-mono); color: var(--fg-0);
+    }
+    .token-table td.token-val {
+      font-family: var(--f-mono); color: var(--fg-1);
+    }
+    .token-chip {
+      width: 28px; height: 28px; border-radius: 6px;
+      border: 1px solid var(--hairline);
+      display: inline-block; vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    /* Component shelves */
+    .shelf {
+      background: var(--bg-1);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .shelf-label {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.16em;
+      color: var(--fg-2); text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .shelf-content {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      align-items: center;
+    }
+
+    /* Icon grid item */
+    .icon-cell {
+      background: var(--bg-1); border: 1px solid var(--hairline);
+      border-radius: 14px; padding: 16px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+      color: var(--fg-0);
+    }
+    .icon-cell .nm {
+      font-family: var(--f-mono); font-size: 11px;
+      color: var(--fg-2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="ds-header">
+      <h1>Design system</h1>
+      <p>All tokens, type, components and assets used in CleanSpeaker. Copy values directly into Figma — color tokens, type scale, radii, components and icons match the production app 1-to-1.</p>
+      <div class="nav-pills">
+        <a href="#brand">Brand</a>
+        <a href="#color">Color</a>
+        <a href="#type">Type</a>
+        <a href="#space">Space &amp; radii</a>
+        <a href="#elev">Motion</a>
+        <a href="#icons">Icons</a>
+        <a href="#buttons">Buttons</a>
+        <a href="#fields">Inputs</a>
+        <a href="#cards">Cards &amp; rows</a>
+        <a href="#audio">Audio components</a>
+        <a href="#status">Status &amp; chrome</a>
+      </div>
+    </div>
+
+    <!-- ── BRAND ────────────────────────────────────────────────── -->
+    <section id="brand">
+      <h2>Brand</h2>
+      <p class="sub">Wordmark, voice, and posture.</p>
+      <div class="grid cols-2">
+        <div class="ds-card">
+          <div style="font-size: 42px; font-weight: 600; letter-spacing: -0.025em; color: var(--fg-0);">CleanSpeaker</div>
+          <div style="display: flex; gap: 10px; margin-top: 12px;">
+            <span style="font-family: var(--f-mono); font-size: 11px; color: var(--fg-2); padding: 4px 10px; background: var(--bg-2); border-radius: 999px;">Geist 600 · −0.025em</span>
+          </div>
+          <div class="ds-card-label">WORDMARK</div>
+        </div>
+        <div class="ds-card">
+          <div style="font-size: 14px; color: var(--fg-1); line-height: 1.5;">
+            <strong style="color: var(--fg-0);">Calm, instrument-precise.</strong> Short sentences. Numbers over adjectives. Verbs of restoration (restore, clear, eject) over hype.
+            <div style="margin-top: 8px; color: var(--ok);">✓ "Sound waves push out water and dust."</div>
+            <div style="color: var(--danger);">✗ "Amazing miracle speaker booster!!"</div>
+          </div>
+          <div class="ds-card-label">VOICE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── COLOR ────────────────────────────────────────────────── -->
+    <section id="color">
+      <h2>Color</h2>
+      <p class="sub">A neutral base, one cyan accent. Status uses muted semantic hues.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- Surfaces -->
+        <div>
+          <div class="shelf-label">SURFACES</div>
+          <div class="grid cols-4">
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #F4F5F7;"></div>
+              <div class="ds-card-name">Canvas</div>
+              <div class="ds-card-meta">--bg-0 · #F4F5F7</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #FFFFFF;"></div>
+              <div class="ds-card-name">Card</div>
+              <div class="ds-card-meta">--bg-1 · #FFFFFF</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #ECEEF2;"></div>
+              <div class="ds-card-name">Subtle fill</div>
+              <div class="ds-card-meta">--bg-2 · #ECEEF2</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #E3E6EC;"></div>
+              <div class="ds-card-name">Track</div>
+              <div class="ds-card-meta">--bg-3 · #E3E6EC</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div>
+          <div class="shelf-label">TEXT</div>
+          <div class="grid cols-4">
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #0B1220;"></div>
+              <div class="ds-card-name">Primary</div>
+              <div class="ds-card-meta">--fg-0 · #0B1220</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #475569;"></div>
+              <div class="ds-card-name">Secondary</div>
+              <div class="ds-card-meta">--fg-1 · #475569</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #8190A6;"></div>
+              <div class="ds-card-name">Tertiary</div>
+              <div class="ds-card-meta">--fg-2 · #8190A6</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #B7C0CE;"></div>
+              <div class="ds-card-name">Quaternary</div>
+              <div class="ds-card-meta">--fg-3 · #B7C0CE</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accent -->
+        <div>
+          <div class="shelf-label">ACCENT — CYAN</div>
+          <div class="grid cols-4">
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #E0F4FB;"></div>
+              <div class="ds-card-name">Cyan tint</div>
+              <div class="ds-card-meta">--cy-0 · #E0F4FB</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #0EA5E9;"></div>
+              <div class="ds-card-name">Primary</div>
+              <div class="ds-card-meta">--cy-1 · #0EA5E9</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #0284C7;"></div>
+              <div class="ds-card-name">Hover</div>
+              <div class="ds-card-meta">--cy-2 · #0284C7</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #075A8C;"></div>
+              <div class="ds-card-name">Press</div>
+              <div class="ds-card-meta">--cy-3 · #075A8C</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <div class="shelf-label">STATUS</div>
+          <div class="grid cols-3">
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #10B981;"></div>
+              <div class="ds-card-name">Success</div>
+              <div class="ds-card-meta">--ok · #10B981</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #F59E0B;"></div>
+              <div class="ds-card-name">Warning</div>
+              <div class="ds-card-meta">--warn · #F59E0B</div>
+            </div>
+            <div class="ds-card-tight ds-card">
+              <div class="swatch" style="background: #EF4444;"></div>
+              <div class="ds-card-name">Danger</div>
+              <div class="ds-card-meta">--danger · #EF4444</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TYPE ─────────────────────────────────────────────────── -->
+    <section id="type">
+      <h2>Type</h2>
+      <p class="sub">Geist for UI · JetBrains Mono for numbers and units.</p>
+      <div class="ds-card" style="padding: 4px 24px;">
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Display</div>
+            <div class="specs">Geist · 36 / 600</div>
+          </div>
+          <div class="type-sample" style="font-size: 36px; font-weight: 600; line-height: 1.05;">
+            Restore your speaker.
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Title</div>
+            <div class="specs">Geist · 26 / 600</div>
+          </div>
+          <div class="type-sample" style="font-size: 26px; font-weight: 600; line-height: 1.15;">
+            Your rescue plan
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Heading</div>
+            <div class="specs">Geist · 20 / 600</div>
+          </div>
+          <div class="type-sample" style="font-size: 20px; font-weight: 600; line-height: 1.25;">
+            Deep Clean
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Body L</div>
+            <div class="specs">Geist · 15 / 500</div>
+          </div>
+          <div class="type-sample" style="font-size: 15px; font-weight: 500; line-height: 1.5; color: var(--fg-1);">
+            Sound waves push out water and dust. No tools.
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Body</div>
+            <div class="specs">Geist · 14 / 400</div>
+          </div>
+          <div class="type-sample" style="font-size: 14px; line-height: 1.5; color: var(--fg-1);">
+            Cleaning still works without internet. History won't sync.
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Caption</div>
+            <div class="specs">Geist · 12 / 500</div>
+          </div>
+          <div class="type-sample" style="font-size: 12px; font-weight: 500; color: var(--fg-2);">
+            3 stages · 40 s
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Label</div>
+            <div class="specs">Geist · 11 / 600 · 0.16em</div>
+          </div>
+          <div class="type-sample" style="font-size: 11px; font-weight: 600; color: var(--fg-2); letter-spacing: 0.16em; text-transform: uppercase;">
+            FREQUENCY
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Numeric XL</div>
+            <div class="specs">JetBrains Mono · 64 / 500</div>
+          </div>
+          <div class="type-sample" style="font-family: var(--f-mono); font-size: 64px; font-weight: 500; line-height: 1; letter-spacing: -0.04em;">
+            165
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="name">Numeric M</div>
+            <div class="specs">JetBrains Mono · 22 / 600</div>
+          </div>
+          <div class="type-sample" style="font-family: var(--f-mono); font-size: 22px; font-weight: 600; letter-spacing: -0.02em;">
+            92<span style="color: var(--ok); font-size: 14px; margin-left: 6px;">+45</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SPACE & RADII ────────────────────────────────────────── -->
+    <section id="space">
+      <h2>Space &amp; radii</h2>
+      <p class="sub">8-pt base. Radii scale from 10 (controls) to pill (buttons).</p>
+
+      <div class="grid cols-2">
+        <!-- Spacing -->
+        <div class="ds-card">
+          <div class="shelf-label" style="margin-bottom: 14px;">SPACING (8-pt)</div>
+          <table class="token-table">
+            <tr><td class="token-name">space-1</td><td class="token-val">4px</td>
+              <td><div style="width: 4px; height: 24px; background: var(--fg-0);"></div></td></tr>
+            <tr><td class="token-name">space-2</td><td class="token-val">8px</td>
+              <td><div style="width: 8px; height: 24px; background: var(--fg-0);"></div></td></tr>
+            <tr><td class="token-name">space-3</td><td class="token-val">12px</td>
+              <td><div style="width: 12px; height: 24px; background: var(--fg-0);"></div></td></tr>
+            <tr><td class="token-name">space-4</td><td class="token-val">16px</td>
+              <td><div style="width: 16px; height: 24px; background: var(--fg-0);"></div></td></tr>
+            <tr><td class="token-name">space-5</td><td class="token-val">20px</td>
+              <td><div style="width: 20px; height: 24px; background: var(--fg-0);"></div></td></tr>
+            <tr><td class="token-name">space-6</td><td class="token-val">24px</td>
+              <td><div style="width: 24px; height: 24px; background: var(--fg-0);"></div></td></tr>
+            <tr><td class="token-name">space-8</td><td class="token-val">32px</td>
+              <td><div style="width: 32px; height: 24px; background: var(--fg-0);"></div></td></tr>
+            <tr><td class="token-name">space-10</td><td class="token-val">40px</td>
+              <td><div style="width: 40px; height: 24px; background: var(--fg-0);"></div></td></tr>
+          </table>
+        </div>
+
+        <!-- Radii -->
+        <div class="ds-card">
+          <div class="shelf-label" style="margin-bottom: 14px;">RADII</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="text-align: center;">
+              <div style="width: 80px; height: 60px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 10px; margin: 0 auto;"></div>
+              <div style="font-family: var(--f-mono); font-size: 12px; color: var(--fg-1); margin-top: 8px;">--r-sm · 10px</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="width: 80px; height: 60px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; margin: 0 auto;"></div>
+              <div style="font-family: var(--f-mono); font-size: 12px; color: var(--fg-1); margin-top: 8px;">--r-md · 14px</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="width: 80px; height: 60px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 20px; margin: 0 auto;"></div>
+              <div style="font-family: var(--f-mono); font-size: 12px; color: var(--fg-1); margin-top: 8px;">--r-lg · 20px</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="width: 80px; height: 60px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 26px; margin: 0 auto;"></div>
+              <div style="font-family: var(--f-mono); font-size: 12px; color: var(--fg-1); margin-top: 8px;">--r-xl · 26px</div>
+            </div>
+            <div style="grid-column: span 2; text-align: center;">
+              <div style="width: 200px; height: 48px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 999px; margin: 0 auto;"></div>
+              <div style="font-family: var(--f-mono); font-size: 12px; color: var(--fg-1); margin-top: 8px;">--r-pill · 999px</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MOTION ───────────────────────────────────────────────── -->
+    <section id="elev">
+      <h2>Motion</h2>
+      <p class="sub">Three signature motions. Everything else is a simple transition (120–200 ms ease).</p>
+      <div class="grid cols-3">
+        <div class="ds-card" style="text-align: center;">
+          <div style="height: 120px; display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="position: absolute; width: 80px; height: 80px; border-radius: 50%; border: 1.5px solid var(--cy-1); opacity: 0.5; animation: csRipple 2.4s ease-out infinite;"></div>
+            <div style="position: absolute; width: 80px; height: 80px; border-radius: 50%; border: 1.5px solid var(--cy-1); opacity: 0.5; animation: csRipple 2.4s 0.8s ease-out infinite;"></div>
+            <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--cy-1);"></div>
+          </div>
+          <div style="font-size: 13px; font-weight: 600; margin-top: 12px;">Ripple</div>
+          <div style="font-family: var(--f-mono); font-size: 11px; color: var(--fg-2); margin-top: 2px;">csRipple · 2400ms · ease-out</div>
+        </div>
+        <div class="ds-card" style="text-align: center;">
+          <div style="height: 120px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 70px; height: 70px; border-radius: 16px; background: var(--cy-1); animation: csPulse 2.4s ease-in-out infinite;"></div>
+          </div>
+          <div style="font-size: 13px; font-weight: 600; margin-top: 12px;">Pulse</div>
+          <div style="font-family: var(--f-mono); font-size: 11px; color: var(--fg-2); margin-top: 2px;">csPulse · 2400ms · ease-in-out</div>
+        </div>
+        <div class="ds-card" style="text-align: center;">
+          <div style="height: 120px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--danger); animation: csBlink 1s infinite;"></div>
+          </div>
+          <div style="font-size: 13px; font-weight: 600; margin-top: 12px;">Blink</div>
+          <div style="font-family: var(--f-mono); font-size: 11px; color: var(--fg-2); margin-top: 2px;">csBlink · 1000ms · linear</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ICONS ────────────────────────────────────────────────── -->
+    <section id="icons">
+      <h2>Icons</h2>
+      <p class="sub">22-px strokes (1.5pt), currentColor, square geometry. Use cyan for active, fg-0 for default.</p>
+      <div class="grid cols-6" id="icon-grid"></div>
+    </section>
+
+    <!-- ── BUTTONS ──────────────────────────────────────────────── -->
+    <section id="buttons">
+      <h2>Buttons</h2>
+      <p class="sub">Primary (filled dark) is for committal actions. Accent cyan for "Pro" CTAs.</p>
+      <div class="shelf">
+        <div>
+          <div class="shelf-label">PRIMARY · DARK</div>
+          <div class="shelf-content">
+            <button class="btn-primary" style="width: 200px;">Get started</button>
+            <button class="btn-primary" style="width: 200px; opacity: 0.3; pointer-events: none;">Disabled</button>
+          </div>
+        </div>
+        <div>
+          <div class="shelf-label">ACCENT · CYAN</div>
+          <div class="shelf-content">
+            <button class="btn-accent" style="width: 200px;">Start trial</button>
+          </div>
+        </div>
+        <div>
+          <div class="shelf-label">GHOST</div>
+          <div class="shelf-content">
+            <button class="btn-ghost" style="width: 200px;">Not now</button>
+          </div>
+        </div>
+        <div>
+          <div class="shelf-label">ICON / CIRCULAR</div>
+          <div class="shelf-content">
+            <button style="width: 52px; height: 52px; border-radius: 999px; border: none; background: var(--fg-0); color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 2 L11 7 L4 12 z" fill="currentColor"/></svg>
+            </button>
+            <button style="width: 52px; height: 52px; border-radius: 999px; border: none; background: var(--fg-0); color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+              <svg width="14" height="14" viewBox="0 0 14 14"><rect x="3" y="2" width="2.5" height="10" rx="1" fill="currentColor"/><rect x="8.5" y="2" width="2.5" height="10" rx="1" fill="currentColor"/></svg>
+            </button>
+            <button style="width: 36px; height: 36px; border-radius: 999px; border: none; background: var(--bg-2); color: var(--fg-0); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+              <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 2 L10 10 M10 2 L2 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="shelf-label">SEGMENTED · CHIPS</div>
+          <div class="shelf-content">
+            <button style="padding: 10px 16px; border-radius: 10px; background: var(--fg-0); color: #FFFFFF; border: none; font-family: var(--f-ui); font-size: 13px; font-weight: 600;">Steady</button>
+            <button style="padding: 10px 16px; border-radius: 10px; background: var(--bg-1); color: var(--fg-0); border: 1px solid var(--hairline); font-family: var(--f-ui); font-size: 13px; font-weight: 600;">Wave</button>
+            <button style="padding: 10px 16px; border-radius: 10px; background: var(--bg-1); color: var(--fg-0); border: 1px solid var(--hairline); font-family: var(--f-ui); font-size: 13px; font-weight: 600;">Burst</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FIELDS ───────────────────────────────────────────────── -->
+    <section id="fields">
+      <h2>Inputs</h2>
+      <p class="sub">Search, slider, switch, radio, segmented selection.</p>
+      <div class="shelf">
+        <div>
+          <div class="shelf-label">SEARCH</div>
+          <div style="height: 46px; width: 360px; border-radius: 12px; padding: 0 14px; background: var(--bg-2); border: 1px solid var(--hairline); display: flex; align-items: center; gap: 10px;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="7" cy="7" r="5" stroke="var(--fg-2)" stroke-width="1.5"/>
+              <path d="M10.5 10.5 L14 14" stroke="var(--fg-2)" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span style="font-size: 14px; color: var(--fg-2);">Search model</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="shelf-label">SLIDER</div>
+          <div style="width: 360px;">
+            <input type="range" min="20" max="20000" value="440" style="width: 100%; accent-color: var(--fg-0); height: 4px;"/>
+            <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px; color: var(--fg-3); font-family: var(--f-mono);">
+              <span>20 Hz</span><span>1 kHz</span><span>20 kHz</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="shelf-label">SWITCH</div>
+          <div class="shelf-content">
+            <div style="display: flex; gap: 24px; align-items: center;">
+              <span style="font-size: 12px; color: var(--fg-2);">Off</span>
+              <div style="width: 42px; height: 24px; border-radius: 999px; padding: 2px; background: var(--bg-3); position: relative;">
+                <div style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.15);"></div>
+              </div>
+              <span style="font-size: 12px; color: var(--fg-2);">On</span>
+              <div style="width: 42px; height: 24px; border-radius: 999px; padding: 2px; background: var(--fg-0); position: relative;">
+                <div style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.15); transform: translateX(18px);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="shelf-label">RADIO · PLAN</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; width: 360px;">
+            <div style="padding: 14px 16px; border-radius: 14px; background: var(--bg-1); border: 1.5px solid var(--fg-0); display: flex; align-items: center; gap: 12px;">
+              <div style="width: 20px; height: 20px; border-radius: 50%; background: var(--fg-0); display: flex; align-items: center; justify-content: center;">
+                <div style="width: 7px; height: 7px; border-radius: 50%; background: #FFFFFF;"></div>
+              </div>
+              <div style="flex: 1;">
+                <div style="font-size: 14px; font-weight: 600;">12 months</div>
+                <div style="font-size: 12px; color: var(--fg-2);">$29.99 yearly</div>
+              </div>
+              <div>
+                <span style="font-family: var(--f-mono); font-size: 20px; font-weight: 600;">$2.49</span>
+                <span style="font-size: 11px; color: var(--fg-2);"> / week</span>
+              </div>
+            </div>
+            <div style="padding: 14px 16px; border-radius: 14px; background: var(--bg-1); border: 1.5px solid var(--hairline); display: flex; align-items: center; gap: 12px;">
+              <div style="width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--fg-3);"></div>
+              <div style="flex: 1;">
+                <div style="font-size: 14px; font-weight: 600;">1 week</div>
+                <div style="font-size: 12px; color: var(--fg-2);">Renews weekly</div>
+              </div>
+              <div>
+                <span style="font-family: var(--f-mono); font-size: 20px; font-weight: 600;">$3.99</span>
+                <span style="font-size: 11px; color: var(--fg-2);"> / week</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CARDS & ROWS ─────────────────────────────────────────── -->
+    <section id="cards">
+      <h2>Cards &amp; rows</h2>
+      <p class="sub">Surface tokens applied. Always a 1-px hairline; no shadow.</p>
+      <div class="grid cols-2">
+        <div>
+          <div class="shelf-label">CARD · INFO</div>
+          <div class="ds-card" style="padding: 20px;">
+            <div style="font-size: 11px; letter-spacing: 0.16em; color: var(--fg-2); text-transform: uppercase; font-weight: 600;">HEALTH</div>
+            <div style="font-size: 22px; font-weight: 600; color: var(--ok); margin-top: 4px;">Healthy</div>
+            <div style="font-size: 13px; color: var(--fg-1); margin-top: 2px;">Cleaned 6 days ago</div>
+          </div>
+        </div>
+        <div>
+          <div class="shelf-label">CARD · DARK CTA</div>
+          <div style="padding: 18px; border-radius: 18px; background: var(--fg-0); color: #FFFFFF; display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2 L4 5 v5 c0 4.5 3 8 7 10 c4-2 7-5.5 7-10 V5 L11 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 16px; font-weight: 600;">Deep Clean</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px;">3 stages · 40 s</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="shelf-label">LIST ROW · ACTIVE</div>
+          <div style="padding: 16px 18px; border-radius: 16px; background: var(--fg-0); color: #FFFFFF; display: flex; align-items: center; gap: 14px;">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M11 2 C6 8.5 4 12 4 14.5 a7 7 0 0 0 14 0 C18 12 16 8.5 11 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 15px; font-weight: 600;">Water</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px;">After rain or a splash</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.5 9.5 L7 13 L14.5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div>
+          <div class="shelf-label">LIST ROW · DEFAULT</div>
+          <div style="padding: 16px 18px; border-radius: 16px; background: var(--bg-1); border: 1px solid var(--hairline); display: flex; align-items: center; gap: 14px;">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--bg-2); color: var(--fg-0); display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><circle cx="6" cy="10" r="1.3" fill="currentColor"/><circle cx="11" cy="7" r="1" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><circle cx="9" cy="14" r="1.1" fill="currentColor"/><circle cx="14" cy="16" r="0.9" fill="currentColor"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 15px; font-weight: 600;">Dust</div>
+              <div style="font-size: 12px; color: var(--fg-2); margin-top: 2px;">Pocket lint, sand</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AUDIO ────────────────────────────────────────────────── -->
+    <section id="audio">
+      <h2>Audio components</h2>
+      <p class="sub">Custom audio primitives. Drop-in from <code style="background: var(--bg-2); padding: 2px 6px; border-radius: 4px; font-family: var(--f-mono); font-size: 12px;">primitives.jsx</code>.</p>
+      <div id="audio-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;"></div>
+    </section>
+
+    <!-- ── STATUS / CHROME ──────────────────────────────────────── -->
+    <section id="status">
+      <h2>Status &amp; chrome</h2>
+      <p class="sub">Status bar, headers, tabs, badges, progress.</p>
+
+      <div class="shelf">
+        <div>
+          <div class="shelf-label">STATUS BAR</div>
+          <div style="width: 412px; height: 36px; background: var(--bg-1); border: 1px solid var(--hairline); border-radius: 8px;" id="statusbar-sample"></div>
+        </div>
+        <div>
+          <div class="shelf-label">HEADER</div>
+          <div style="width: 412px; height: 52px; background: var(--bg-1); border: 1px solid var(--hairline); border-radius: 8px;" id="header-sample"></div>
+        </div>
+        <div>
+          <div class="shelf-label">PROGRESS · STEPS</div>
+          <div style="display: flex; gap: 4px; width: 360px;">
+            <div style="flex: 1; height: 3px; border-radius: 2px; background: var(--fg-0);"></div>
+            <div style="flex: 1; height: 3px; border-radius: 2px; background: var(--fg-0);"></div>
+            <div style="flex: 1; height: 3px; border-radius: 2px; background: var(--bg-3);"></div>
+          </div>
+        </div>
+        <div>
+          <div class="shelf-label">PROGRESS · STAGE</div>
+          <div style="width: 360px;">
+            <div style="height: 3px; border-radius: 2px; background: var(--bg-3); overflow: hidden;">
+              <div style="height: 100%; width: 65%; background: var(--fg-0);"></div>
+            </div>
+            <div style="font-size: 11px; color: var(--fg-0); margin-top: 6px; font-weight: 600;">Dislodge</div>
+          </div>
+        </div>
+        <div>
+          <div class="shelf-label">BADGES</div>
+          <div class="shelf-content">
+            <span style="padding: 5px 10px; border-radius: 999px; background: var(--bg-2); color: var(--fg-1); font-size: 11px; font-weight: 600;">Free</span>
+            <span style="padding: 5px 10px; border-radius: 999px; background: var(--fg-0); color: #FFFFFF; font-size: 11px; font-weight: 600;">Pro</span>
+            <span style="padding: 5px 10px; border-radius: 999px; background: var(--cy-1); color: #FFFFFF; font-size: 11px; font-weight: 600;">NEW</span>
+            <span style="padding: 5px 10px; border-radius: 999px; background: var(--bg-1); border: 1px solid var(--hairline); color: var(--fg-2); font-size: 10px; font-weight: 600; letter-spacing: 0.06em;">SYSTEM</span>
+          </div>
+        </div>
+        <div>
+          <div class="shelf-label">SEVERITY LABELS</div>
+          <div class="shelf-content">
+            <span style="font-size: 14px; font-weight: 600; color: var(--ok);">Healthy</span>
+            <span style="font-size: 14px; font-weight: 600; color: var(--warn);">Moderate</span>
+            <span style="font-size: 14px; font-weight: 600; color: var(--warn);">Notable</span>
+            <span style="font-size: 14px; font-weight: 600; color: var(--danger);">High</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="primitives.jsx"></script>
+
+  <script type="text/babel">
+    // Icon grid
+    const iconList = [
+      ['water', 'Water'], ['dust', 'Dust'], ['muffled', 'Muffled'],
+      ['shield', 'Shield'], ['pulse', 'Pulse'], ['wave', 'Wave'],
+      ['test', 'Test'], ['manual', 'Manual'], ['check', 'Check'],
+      ['arrow', 'Arrow'], ['star', 'Star'], ['bell', 'Bell'],
+      ['lock', 'Lock'], ['user', 'User'], ['wifi_off', 'No wifi'],
+      ['sparkles', 'Sparkles'],
+    ];
+    function IconGrid() {
+      return iconList.map(([k, label]) => (
+        <div className="icon-cell" key={k}>
+          <div style={{ color: 'var(--fg-0)' }}>{ICONS[k](24)}</div>
+          <div className="nm">{k}</div>
+        </div>
+      ));
+    }
+    ReactDOM.createRoot(document.getElementById('icon-grid')).render(<IconGrid/>);
+
+    // Audio components
+    function AudioComp({ label, hint, children }) {
+      return (
+        <div className="ds-card">
+          <div style={{ display: 'flex', justifyContent: 'center',
+                        alignItems: 'center', minHeight: 220,
+                        padding: '12px 0' }}>{children}</div>
+          <div style={{ fontFamily: 'var(--f-mono)', fontSize: 11,
+                         letterSpacing: '0.1em', color: 'var(--fg-2)', marginTop: 14 }}>
+            {label}
+          </div>
+          <div style={{ fontSize: 13, fontWeight: 600, marginTop: 4 }}>{hint}</div>
+        </div>
+      );
+    }
+    function AudioGrid() {
+      return (
+        <>
+          <AudioComp label="CircularDial" hint="Frequency dial with 48 ticks, gap-bottom arc">
+            <CircularDial size={220} value={0.42} hz={440} label="FREQUENCY"/>
+          </AudioComp>
+          <AudioComp label="ProgressRing" hint="Score / progress ring">
+            <ProgressRing size={140} value={0.78} thickness={6}>
+              <div className="hz" style={{ fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em' }}>78</div>
+              <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>/ 100</div>
+            </ProgressRing>
+          </AudioComp>
+          <AudioComp label="Waveform" hint="Live audio bars">
+            <div style={{ width: 320 }}><Waveform height={70} bars={56}/></div>
+          </AudioComp>
+          <AudioComp label="HapticPulse" hint="Haptic visualizer (4 patterns)">
+            <div style={{ width: 320 }}><HapticPulse height={70} pattern="wave"/></div>
+          </AudioComp>
+          <AudioComp label="FrequencyCurve" hint="20Hz – 20kHz response">
+            <FrequencyCurve width={320} height={100}/>
+          </AudioComp>
+          <AudioComp label="SpeakerCone" hint="Speaker driver indicator">
+            <SpeakerCone size={130}/>
+          </AudioComp>
+        </>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('audio-grid')).render(<AudioGrid/>);
+
+    // Status bar sample
+    ReactDOM.createRoot(document.getElementById('statusbar-sample')).render(<CSStatusBar/>);
+    ReactDOM.createRoot(document.getElementById('header-sample')).render(<CSHeader title="Settings"/>);
+  </script>
+</body>
+</html>

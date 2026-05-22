@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>CleanSpeaker — Documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="tokens.css"/>
+  <style>
+    body {
+      margin: 0;
+      background: #EFF1F4;
+      font-family: var(--f-ui);
+      color: var(--fg-0);
+    }
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 56px 40px 80px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 56px;
+    }
+    /* Sidebar */
+    .toc {
+      position: sticky; top: 30px; align-self: flex-start;
+      font-size: 13px;
+    }
+    .toc-title {
+      font-size: 11px; letter-spacing: 0.18em; color: var(--fg-2);
+      text-transform: uppercase; margin-bottom: 14px; font-weight: 600;
+    }
+    .toc a {
+      display: block; padding: 6px 0;
+      color: var(--fg-1); text-decoration: none;
+      border-left: 2px solid transparent;
+      padding-left: 12px; margin-left: -14px;
+    }
+    .toc a:hover, .toc a.active {
+      color: var(--fg-0); border-left-color: var(--fg-0);
+    }
+    .toc .h3 { padding-left: 24px; font-size: 12px; color: var(--fg-2); }
+
+    /* Content */
+    article { min-width: 0; }
+    .doc-head {
+      margin-bottom: 60px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .doc-head .eyebrow {
+      font-size: 11px; letter-spacing: 0.18em; color: var(--cy-1);
+      text-transform: uppercase; font-weight: 600; margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 44px; font-weight: 600; letter-spacing: -0.025em;
+      line-height: 1.05; margin: 0 0 14px;
+    }
+    .doc-head p {
+      font-size: 16px; color: var(--fg-1); line-height: 1.6; margin: 0;
+      max-width: 580px;
+    }
+
+    section { margin-bottom: 64px; scroll-margin-top: 30px; }
+    section > h2 {
+      font-size: 26px; font-weight: 600; letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+    section > h2 + p {
+      font-size: 15px; color: var(--fg-1); line-height: 1.6;
+      margin: 0 0 24px;
+    }
+
+    h3 {
+      font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
+      margin: 32px 0 10px;
+    }
+
+    p {
+      font-size: 14px; color: var(--fg-1); line-height: 1.65;
+      margin: 0 0 14px;
+    }
+    p strong { color: var(--fg-0); font-weight: 600; }
+    a { color: var(--cy-2); }
+
+    ul { padding-left: 22px; margin: 0 0 16px; }
+    li {
+      font-size: 14px; color: var(--fg-1); line-height: 1.7;
+    }
+    li strong { color: var(--fg-0); }
+    li::marker { color: var(--fg-3); }
+
+    code {
+      font-family: var(--f-mono); font-size: 13px;
+      background: var(--bg-2); padding: 2px 6px; border-radius: 4px;
+      color: var(--fg-0);
+    }
+    pre {
+      background: #0B1220; color: #E2E8F0;
+      padding: 18px 20px; border-radius: 14px;
+      overflow-x: auto; font-family: var(--f-mono); font-size: 13px;
+      line-height: 1.6; margin: 14px 0 20px;
+    }
+    pre code {
+      background: transparent; padding: 0; color: inherit;
+    }
+    .com { color: #94A3B8; }
+    .key { color: #C4B5FD; }
+    .str { color: #86EFAC; }
+    .num { color: #FBBF24; }
+
+    /* Tables */
+    table {
+      width: 100%; border-collapse: collapse;
+      margin: 8px 0 20px;
+      background: var(--bg-1);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    th, td {
+      text-align: left; padding: 12px 16px;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 13px; line-height: 1.5;
+    }
+    tr:last-child td { border-bottom: none; }
+    th {
+      background: var(--bg-2);
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--fg-2);
+    }
+    td.col-mono {
+      font-family: var(--f-mono); color: var(--fg-0);
+      white-space: nowrap;
+    }
+    td.col-narrow { white-space: nowrap; }
+
+    /* Callout */
+    .callout {
+      padding: 16px 18px;
+      border-radius: 14px;
+      background: var(--bg-1);
+      border: 1px solid var(--hairline);
+      border-left: 3px solid var(--cy-1);
+      font-size: 14px; color: var(--fg-0);
+      line-height: 1.6;
+      margin: 16px 0 20px;
+    }
+    .callout.warn { border-left-color: var(--warn); }
+    .callout.ok { border-left-color: var(--ok); }
+    .callout strong { font-weight: 600; }
+
+    /* Inline chips */
+    .chip {
+      display: inline-block;
+      font-family: var(--f-mono); font-size: 11px;
+      padding: 2px 8px; border-radius: 4px;
+      background: var(--bg-2); color: var(--fg-0);
+      margin: 0 2px;
+    }
+    .chip-on { background: var(--fg-0); color: #FFFFFF; }
+    .chip-cy { background: var(--cy-1); color: #FFFFFF; }
+    .chip-ok { background: var(--ok); color: #FFFFFF; }
+    .chip-warn { background: var(--warn); color: #FFFFFF; }
+
+    /* Two-col card grid */
+    .grid-2 {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin-bottom: 20px;
+    }
+    .info-card {
+      background: var(--bg-1); border: 1px solid var(--hairline);
+      border-radius: 14px; padding: 18px;
+    }
+    .info-card h4 {
+      font-size: 14px; font-weight: 600; margin: 0 0 6px;
+    }
+    .info-card p {
+      font-size: 13px; margin: 0; color: var(--fg-1);
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- TOC -->
+    <nav class="toc">
+      <div class="toc-title">Documentation</div>
+      <a href="#overview">Overview</a>
+      <a href="#tech">Tech stack</a>
+      <a href="#flow">User flow</a>
+      <a href="#audio">Audio engine</a>
+      <a href="#sweep">Frequency sweep</a>
+      <a href="#haptics">Haptics &amp; feedback</a>
+      <a href="#monetization">Monetization</a>
+      <a href="#screens">Screen inventory</a>
+      <a href="#permissions">Permissions</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#qa">QA checklist</a>
+    </nav>
+
+    <article>
+      <div class="doc-head">
+        <div class="eyebrow">CleanSpeaker — implementation guide</div>
+        <h1>Documentation</h1>
+        <p>Everything needed to ship this design. Covers user flow, the audio cleaning engine, haptic feedback map, premium gating, and analytics events. Pair this with the Design System and the prototype.</p>
+      </div>
+
+      <!-- ── OVERVIEW ─────────────────────────────────────────────── -->
+      <section id="overview">
+        <h2>Overview</h2>
+        <p>CleanSpeaker is a premium consumer utility for Android that uses precisely tuned audio tones — and a haptic pulse mode — to dislodge water, dust and debris from phone speakers. Business objective is <strong>first-session monetization</strong>: the onboarding earns trust through diagnostic feedback, then converts to a 3-day trial.</p>
+
+        <div class="grid-2">
+          <div class="info-card">
+            <h4>Target user</h4>
+            <p>Android owner who's just dropped, splashed or noticed muffled audio on their phone. Wants relief in under 60 seconds.</p>
+          </div>
+          <div class="info-card">
+            <h4>Conversion KPI</h4>
+            <p>≥ 8% trial-start rate on the first session. ≥ 35% trial → paid conversion.</p>
+          </div>
+          <div class="info-card">
+            <h4>Premium gates</h4>
+            <p>Pulse Clean, Manual Hz, unlimited cycles, no ads. Free tier gets one Deep Clean per week.</p>
+          </div>
+          <div class="info-card">
+            <h4>Platforms</h4>
+            <p>Android 9+ (API 28). Kotlin + Jetpack Compose. Google Play Billing v6.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── TECH ─────────────────────────────────────────────────── -->
+      <section id="tech">
+        <h2>Tech stack</h2>
+        <p>Native Android, Compose-first. Audio is the critical path — keep the latency budget under 50ms.</p>
+        <table>
+          <thead>
+            <tr><th>Concern</th><th>Choice</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>UI</td><td class="col-mono">Compose · Material 3</td><td>Token-driven, fast iteration</td></tr>
+            <tr><td>Audio</td><td class="col-mono">AAudio · Oboe</td><td>Lowest-latency tone generation</td></tr>
+            <tr><td>Haptics</td><td class="col-mono">VibrationEffect</td><td>Composed primitives on API 30+</td></tr>
+            <tr><td>State</td><td class="col-mono">ViewModel · Flow</td><td>Lifecycle-safe cycle control</td></tr>
+            <tr><td>Storage</td><td class="col-mono">DataStore</td><td>Settings + last cycle history</td></tr>
+            <tr><td>Billing</td><td class="col-mono">Play Billing v6</td><td>Subscription, restore, grace period</td></tr>
+            <tr><td>Analytics</td><td class="col-mono">Amplitude or PostHog</td><td>Funnels &amp; cohorts</td></tr>
+            <tr><td>Remote config</td><td class="col-mono">Firebase Remote Config</td><td>Paywall A/B tests</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── FLOW ─────────────────────────────────────────────────── -->
+      <section id="flow">
+        <h2>User flow</h2>
+        <p>23 screens. First-session path: 11 screens, ~90 seconds.</p>
+
+        <h3>First session</h3>
+        <ol style="padding-left: 22px; font-size: 14px; color: var(--fg-1); line-height: 1.8;">
+          <li><strong>Permission</strong> — explicit audio + vibration consent (no system dialog yet, education first).</li>
+          <li><strong>Welcome</strong> — single CTA, no copy load.</li>
+          <li><strong>Q1 / Q2 / Q3</strong> — problem, timing, device. Tap-only, no typing required.</li>
+          <li><strong>Analyzing</strong> — 5s scripted diagnostic with progressive checklist. Builds perceived value.</li>
+          <li><strong>Rescue plan</strong> — personalized severity score + 3-stage prescription.</li>
+          <li><strong>Rating</strong> — soft ask (skippable). 5★ taps trigger in-app review API.</li>
+          <li><strong>Paywall</strong> — 3 plans, default to annual. Close → downsell.</li>
+          <li><strong>Downsell</strong> — half-price week with single CTA.</li>
+          <li><strong>Push prompt</strong> — only after paywall to protect notification opt-in.</li>
+        </ol>
+
+        <h3>Returning session</h3>
+        <p>Home → Quick action or Deep Clean → Cycle → Result → Sound test (optional). Premium gates redirect to Locked modal which routes back to Paywall.</p>
+      </section>
+
+      <!-- ── AUDIO ────────────────────────────────────────────────── -->
+      <section id="audio">
+        <h2>Audio engine</h2>
+        <p>Real-time pure-tone synthesis at the OS audio sample rate. The engine streams a sine wave to the device speaker with frequency modulation envelopes per stage.</p>
+
+        <h3>Tone generator</h3>
+<pre><code><span class="key">class</span> ToneGenerator(<span class="key">val</span> sampleRate: Int = <span class="num">48000</span>) {
+  <span class="key">private var</span> phase = <span class="num">0.0</span>
+  <span class="key">private var</span> freq = <span class="num">165.0</span>
+
+  <span class="key">fun</span> setFrequency(hz: Double) {
+    freq = hz.coerceIn(<span class="num">20.0</span>, <span class="num">20_000.0</span>)
+  }
+
+  <span class="key">fun</span> renderBlock(buffer: FloatArray) {
+    <span class="key">val</span> twoPi = <span class="num">2</span> * Math.PI
+    <span class="com">// per-sample frequency interpolation for clean sweeps</span>
+    <span class="key">for</span> (i <span class="key">in</span> buffer.indices) {
+      buffer[i] = sin(phase).toFloat() * <span class="num">0.85f</span>
+      phase += twoPi * freq / sampleRate
+      <span class="key">if</span> (phase > twoPi) phase -= twoPi
+    }
+  }
+}</code></pre>
+
+        <h3>Output configuration</h3>
+        <ul>
+          <li><strong>Stream:</strong> <code>USAGE_MEDIA</code> with <code>CONTENT_TYPE_SONIFICATION</code></li>
+          <li><strong>Buffer:</strong> 2× <code>getOptimalBufferSize()</code> for under-runs safety</li>
+          <li><strong>Routing:</strong> force speaker via <code>setCommunicationDevice()</code> on API 31+</li>
+          <li><strong>Volume:</strong> ramp from current to max over 1.5s when <code>Auto-volume</code> is on; restore on exit</li>
+        </ul>
+
+        <div class="callout warn">
+          <strong>Hearing safety.</strong> Cap output at <code>−6 dBFS</code>. Skip frequencies in the 2 kHz – 5 kHz peak-sensitivity band during ambient cleaning. Show a peripheral-audio warning if headphones are detected.
+        </div>
+      </section>
+
+      <!-- ── SWEEP ────────────────────────────────────────────────── -->
+      <section id="sweep">
+        <h2>Frequency sweep</h2>
+        <p>The Deep Clean cycle is a 3-stage envelope. Each stage targets a different physical effect on debris in the speaker chamber.</p>
+
+        <table>
+          <thead>
+            <tr><th>Stage</th><th>Target</th><th>Frequency</th><th>Duration</th><th>Envelope</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Loosen</strong></td><td>Surface adhesion</td><td class="col-mono">165 Hz ± 5%</td><td class="col-mono">12 s</td><td>Constant sine</td></tr>
+            <tr><td><strong>Dislodge</strong></td><td>Trapped water / lint</td><td class="col-mono">300 Hz</td><td class="col-mono">18 s</td><td>4 Hz amplitude pulse</td></tr>
+            <tr><td><strong>Polish</strong></td><td>Residual particulate</td><td class="col-mono">500 → 900 Hz</td><td class="col-mono">10 s</td><td>Linear sweep</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Quick actions</h3>
+        <table>
+          <thead><tr><th>Mode</th><th>Frequency</th><th>Duration</th></tr></thead>
+          <tbody>
+            <tr><td>Water Eject</td><td class="col-mono">165 Hz steady</td><td class="col-mono">30 s</td></tr>
+            <tr><td>Dust Clean</td><td class="col-mono">300 Hz pulsed</td><td class="col-mono">30 s</td></tr>
+            <tr><td>Muffled Fix</td><td class="col-mono">500 Hz sweep</td><td class="col-mono">30 s</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Manual Hz</h3>
+        <p>Premium-only. Logarithmic slider from <code>20 Hz</code> to <code>20 kHz</code>. Presets snap to Bass / A4 / Mid / Hi. No timed cycle — runs until stopped.</p>
+      </section>
+
+      <!-- ── HAPTICS ──────────────────────────────────────────────── -->
+      <section id="haptics">
+        <h2>Haptics &amp; feedback</h2>
+        <p>The whole product is a tactile instrument. Every meaningful tap, transition and state change emits a calibrated haptic. Haptics never decorate — they always confirm.</p>
+
+        <h3>Feedback intensity levels</h3>
+        <table>
+          <thead>
+            <tr><th>Level</th><th>Effect (API 30+)</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="chip">tick</span></td><td class="col-mono">EFFECT_TICK</td><td>Toggle switches, chip selection</td></tr>
+            <tr><td><span class="chip">click</span></td><td class="col-mono">EFFECT_CLICK</td><td>Primary buttons, list selection</td></tr>
+            <tr><td><span class="chip chip-on">heavy</span></td><td class="col-mono">EFFECT_HEAVY_CLICK</td><td>Start / stop cleaning cycle</td></tr>
+            <tr><td><span class="chip chip-ok">success</span></td><td class="col-mono">PRIMITIVE_THUD + TICK</td><td>Cycle complete, plan ready</td></tr>
+            <tr><td><span class="chip chip-warn">warn</span></td><td class="col-mono">2× EFFECT_TICK</td><td>Confirm abort, danger CTA</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Per-screen haptic map</h3>
+        <table>
+          <thead>
+            <tr><th>Screen</th><th>Element</th><th>Trigger</th><th>Haptic</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Welcome</td><td>"Get started"</td><td>Tap</td><td><span class="chip">click</span></td></tr>
+            <tr><td>Q1 / Q2 / Q3</td><td>Option row</td><td>Selection</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Q1 / Q2 / Q3</td><td>"Continue"</td><td>Tap</td><td><span class="chip">click</span></td></tr>
+            <tr><td>Analyzing</td><td>Step checkmark</td><td>Each milestone</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Analyzing</td><td>Completion</td><td>100% reached</td><td><span class="chip chip-ok">success</span></td></tr>
+            <tr><td>Plan</td><td>Reveal</td><td>Screen mount</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Rating</td><td>Star tap</td><td>Each star</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Paywall</td><td>Plan radio</td><td>Selection</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Paywall</td><td>"Start free trial"</td><td>Tap</td><td><span class="chip chip-on">heavy</span></td></tr>
+            <tr><td>Home</td><td>Quick action card</td><td>Tap</td><td><span class="chip">click</span></td></tr>
+            <tr><td>Home</td><td>Deep Clean CTA</td><td>Tap</td><td><span class="chip chip-on">heavy</span></td></tr>
+            <tr><td>Action</td><td>"Start"</td><td>Tap</td><td><span class="chip chip-on">heavy</span></td></tr>
+            <tr><td>Cycle</td><td>Stage transition</td><td>Each new stage</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Cycle</td><td>Play / pause</td><td>Tap</td><td><span class="chip">click</span></td></tr>
+            <tr><td>Cycle</td><td>Completion</td><td>100% reached</td><td><span class="chip chip-ok">success</span></td></tr>
+            <tr><td>Abort modal</td><td>"Stop"</td><td>Tap</td><td><span class="chip chip-warn">warn</span></td></tr>
+            <tr><td>Result</td><td>Screen mount</td><td>Render</td><td><span class="chip chip-ok">success</span></td></tr>
+            <tr><td>Sound Test</td><td>Speaker cone tap</td><td>Tap</td><td><span class="chip">click</span></td></tr>
+            <tr><td>Manual Hz</td><td>Slider release</td><td>Touch end</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Manual Hz</td><td>Preset chip</td><td>Selection</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Pulse Clean</td><td>Pattern chip</td><td>Selection</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Pulse Clean</td><td>Play / stop</td><td>Tap</td><td><span class="chip chip-on">heavy</span></td></tr>
+            <tr><td>Settings</td><td>Switch toggle</td><td>Toggle</td><td><span class="chip">tick</span></td></tr>
+            <tr><td>Locked modal</td><td>"Start trial"</td><td>Tap</td><td><span class="chip chip-on">heavy</span></td></tr>
+          </tbody>
+        </table>
+
+        <h3>Pulse Clean implementation</h3>
+        <p>The Pulse Clean mode drives <code>VibrationEffect</code> as the primary cleaning actuator — sound is layered on top when <code>combine</code> is on. Patterns are composed of primitives.</p>
+
+<pre><code><span class="com">// 4 patterns, each a VibrationEffect.Composition</span>
+<span class="key">val</span> steady = composition {
+  addPrimitive(PRIMITIVE_LOW_TICK, intensity, <span class="num">0</span>)
+  <span class="com">// repeat continuously at 40ms intervals</span>
+}
+<span class="key">val</span> wave = composition {
+  <span class="com">// modulated intensity over 800ms loop</span>
+  addPrimitive(PRIMITIVE_LOW_TICK, <span class="num">0.3f</span>, <span class="num">0</span>)
+  addPrimitive(PRIMITIVE_LOW_TICK, <span class="num">0.7f</span>, <span class="num">100</span>)
+  addPrimitive(PRIMITIVE_LOW_TICK, <span class="num">1.0f</span>, <span class="num">200</span>)
+  addPrimitive(PRIMITIVE_LOW_TICK, <span class="num">0.7f</span>, <span class="num">300</span>)
+  addPrimitive(PRIMITIVE_LOW_TICK, <span class="num">0.3f</span>, <span class="num">400</span>)
+}
+<span class="key">val</span> burst = composition {
+  addPrimitive(PRIMITIVE_THUD, intensity, <span class="num">0</span>)
+  addPrimitive(PRIMITIVE_THUD, intensity, <span class="num">1200</span>)
+}
+<span class="key">val</span> knock = composition {
+  addPrimitive(PRIMITIVE_THUD, <span class="num">1.0f</span>, <span class="num">0</span>)
+  addPrimitive(PRIMITIVE_THUD, <span class="num">1.0f</span>, <span class="num">500</span>)
+}</code></pre>
+
+        <div class="callout">
+          <strong>Devices without primitives</strong> (API &lt; 30 or older OEMs) fall back to amplitude patterns via <code>VibrationEffect.createWaveform()</code> with timings tuned per pattern.
+        </div>
+      </section>
+
+      <!-- ── MONETIZATION ─────────────────────────────────────────── -->
+      <section id="monetization">
+        <h2>Monetization</h2>
+        <p>Paywall is the single most important screen. Default plan is annual. The close button never dismisses — it routes to the downsell offer.</p>
+
+        <h3>Paywall plans</h3>
+        <table>
+          <thead><tr><th>SKU</th><th>Price</th><th>Trial</th><th>Position</th></tr></thead>
+          <tbody>
+            <tr><td class="col-mono">premium_yearly</td><td class="col-mono">$29.99/yr</td><td>3 days</td><td>Default, top</td></tr>
+            <tr><td class="col-mono">premium_monthly</td><td class="col-mono">$6.99/mo</td><td>None</td><td>Middle</td></tr>
+            <tr><td class="col-mono">premium_weekly</td><td class="col-mono">$3.99/wk</td><td>None</td><td>Bottom</td></tr>
+            <tr><td class="col-mono">premium_weekly_downsell</td><td class="col-mono">$4.99/wk</td><td>7 days</td><td>Downsell only</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Premium gates</h3>
+        <ul>
+          <li><strong>Pulse Clean</strong> — tap on free → Locked modal → Paywall</li>
+          <li><strong>Manual Hz</strong> — same gate</li>
+          <li><strong>Deep Clean</strong> — 1 free cycle per 7 days for free tier</li>
+          <li><strong>Quick actions</strong> — free, but capped at 3 cycles per day</li>
+          <li><strong>Sound test</strong> — always free</li>
+        </ul>
+
+        <h3>Restore &amp; receipts</h3>
+        <p>"Restore purchases" is reachable from Settings → Account and from the Paywall footer. Use <code>queryPurchasesAsync()</code> for entitlement verification on app launch.</p>
+      </section>
+
+      <!-- ── SCREENS ──────────────────────────────────────────────── -->
+      <section id="screens">
+        <h2>Screen inventory</h2>
+        <p>All 23 screens with their owner ViewModel and primary purpose.</p>
+        <table>
+          <thead>
+            <tr><th>#</th><th>Screen</th><th>ViewModel</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>01</td><td>Permission</td><td class="col-mono">PermissionVM</td><td>Educational pre-prompt</td></tr>
+            <tr><td>02</td><td>Welcome</td><td class="col-mono">WelcomeVM</td><td>Entry, single CTA</td></tr>
+            <tr><td>03</td><td>Q1 Problem</td><td class="col-mono">OnboardingVM</td><td>Diagnostic input</td></tr>
+            <tr><td>04</td><td>Q2 Timing</td><td class="col-mono">OnboardingVM</td><td>Severity signal</td></tr>
+            <tr><td>05</td><td>Q3 Device</td><td class="col-mono">OnboardingVM</td><td>Calibration signal</td></tr>
+            <tr><td>06</td><td>Analyzing</td><td class="col-mono">DiagnosticVM</td><td>Build perceived value</td></tr>
+            <tr><td>07</td><td>Plan</td><td class="col-mono">DiagnosticVM</td><td>Personalized result</td></tr>
+            <tr><td>08</td><td>Rating</td><td class="col-mono">RatingVM</td><td>Social proof &amp; review</td></tr>
+            <tr><td>09</td><td>Paywall</td><td class="col-mono">PaywallVM</td><td>Primary conversion</td></tr>
+            <tr><td>10</td><td>Downsell</td><td class="col-mono">PaywallVM</td><td>Recovery offer</td></tr>
+            <tr><td>11</td><td>Push prompt</td><td class="col-mono">NotificationsVM</td><td>Engagement opt-in</td></tr>
+            <tr><td>12</td><td>Empty Home</td><td class="col-mono">HomeVM</td><td>First-run guidance</td></tr>
+            <tr><td>13</td><td>Home</td><td class="col-mono">HomeVM</td><td>Returning dashboard</td></tr>
+            <tr><td>14</td><td>Action</td><td class="col-mono">ActionVM</td><td>Single-mode setup</td></tr>
+            <tr><td>15</td><td>Cycle</td><td class="col-mono">CycleVM</td><td>Active cleaning</td></tr>
+            <tr><td>16</td><td>Result</td><td class="col-mono">ResultVM</td><td>Outcome &amp; metrics</td></tr>
+            <tr><td>17</td><td>Sound Test</td><td class="col-mono">TestVM</td><td>Frequency response check</td></tr>
+            <tr><td>18</td><td>Pulse Clean</td><td class="col-mono">PulseVM</td><td>Haptic cleaning</td></tr>
+            <tr><td>19</td><td>Manual Hz</td><td class="col-mono">ManualVM</td><td>Pro tool</td></tr>
+            <tr><td>20</td><td>Settings</td><td class="col-mono">SettingsVM</td><td>Preferences</td></tr>
+            <tr><td>21</td><td>Locked</td><td class="col-mono">PaywallVM</td><td>Premium gate</td></tr>
+            <tr><td>22</td><td>Abort</td><td class="col-mono">CycleVM</td><td>Confirm exit</td></tr>
+            <tr><td>23</td><td>Offline</td><td class="col-mono">ConnectivityVM</td><td>Edge state</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── PERMISSIONS ──────────────────────────────────────────── -->
+      <section id="permissions">
+        <h2>Permissions</h2>
+        <table>
+          <thead>
+            <tr><th>Permission</th><th>Required</th><th>When asked</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="col-mono">VIBRATE</td><td>Required</td><td>Implicit on install</td></tr>
+            <tr><td class="col-mono">FOREGROUND_SERVICE_MEDIA_PLAYBACK</td><td>Required</td><td>Implicit, used during cycles</td></tr>
+            <tr><td class="col-mono">POST_NOTIFICATIONS</td><td>Optional</td><td>After paywall (Push prompt screen)</td></tr>
+            <tr><td class="col-mono">MODIFY_AUDIO_SETTINGS</td><td>Required</td><td>Implicit, for volume ramp</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── ANALYTICS ────────────────────────────────────────────── -->
+      <section id="analytics">
+        <h2>Analytics events</h2>
+        <p>Track every funnel step and every premium-gate touch. Property names are <code>snake_case</code>.</p>
+        <table>
+          <thead><tr><th>Event</th><th>Properties</th></tr></thead>
+          <tbody>
+            <tr><td class="col-mono">onboarding_started</td><td>—</td></tr>
+            <tr><td class="col-mono">onboarding_q_answered</td><td><code>step</code>, <code>value</code></td></tr>
+            <tr><td class="col-mono">diagnostic_completed</td><td><code>severity</code>, <code>score</code></td></tr>
+            <tr><td class="col-mono">rating_submitted</td><td><code>stars</code></td></tr>
+            <tr><td class="col-mono">paywall_viewed</td><td><code>source</code></td></tr>
+            <tr><td class="col-mono">paywall_plan_selected</td><td><code>plan</code></td></tr>
+            <tr><td class="col-mono">trial_started</td><td><code>plan</code></td></tr>
+            <tr><td class="col-mono">paywall_closed</td><td>—</td></tr>
+            <tr><td class="col-mono">downsell_viewed</td><td>—</td></tr>
+            <tr><td class="col-mono">downsell_converted</td><td>—</td></tr>
+            <tr><td class="col-mono">cycle_started</td><td><code>mode</code>, <code>duration_s</code></td></tr>
+            <tr><td class="col-mono">cycle_completed</td><td><code>mode</code></td></tr>
+            <tr><td class="col-mono">cycle_aborted</td><td><code>mode</code>, <code>stage</code>, <code>elapsed_s</code></td></tr>
+            <tr><td class="col-mono">premium_gate_shown</td><td><code>feature</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── QA ───────────────────────────────────────────────────── -->
+      <section id="qa">
+        <h2>QA checklist</h2>
+        <ul>
+          <li>Cycle audio plays through bottom speaker even when media volume is at 0 (force volume ramp)</li>
+          <li>Headphones / BT speaker detected → show audio warning before cycle</li>
+          <li>Interruption from incoming call pauses the cycle, resumes on call end</li>
+          <li>Foreground service notification appears within 200ms of cycle start</li>
+          <li>Screen stays on during cycle (<code>FLAG_KEEP_SCREEN_ON</code>); released on exit</li>
+          <li>Haptics respect system Do Not Disturb</li>
+          <li>Paywall close → Downsell appears once per install</li>
+          <li>Trial countdown survives device timezone change &amp; cold start</li>
+          <li>Restore purchases succeeds for users signed in with a different Google account</li>
+          <li>Offline state preserves last-known health score</li>
+          <li>Dynamic font scaling (up to 130%) does not overflow any CTA</li>
+          <li>TalkBack reads every Hz value as "one-six-five hertz", not "one-hundred-sixty-five hertz"</li>
+        </ul>
+      </section>
+    </article>
+  </div>
+
+  <script>
+    // Active TOC highlight
+    const links = document.querySelectorAll('.toc a');
+    const sections = [...document.querySelectorAll('section[id]')];
+    const onScroll = () => {
+      const y = window.scrollY + 100;
+      let cur = sections[0].id;
+      for (const s of sections) {
+        if (s.offsetTop <= y) cur = s.id;
+      }
+      links.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+      });
+    };
+    window.addEventListener('scroll', onScroll);
+    onScroll();
+  </script>
+</body>
+</html>

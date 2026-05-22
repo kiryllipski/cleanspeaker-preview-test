@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CleanSpeaker Preview Test</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --line: #d9e1ef;
+      --accent: #2563eb;
+      --accent-soft: #e8f0ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    header {
+      padding: 34px 28px 22px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .wrap {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    main { padding: 26px 0 44px; }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .project {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .project-head {
+      padding: 18px 18px 14px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    h2 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    a.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    a.button.primary {
+      color: #fff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px;
+      background: #fbfcff;
+    }
+    figure {
+      margin: 0;
+      min-width: 0;
+    }
+    figure a {
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--accent-soft);
+      aspect-ratio: 412 / 829;
+    }
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+    figcaption {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    @media (max-width: 900px) {
+      .projects { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      header { padding: 26px 18px 18px; }
+      .wrap { width: min(100vw - 20px, 1180px); }
+      .project-head { display: block; }
+      .actions { justify-content: flex-start; margin-top: 12px; }
+      .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>CleanSpeaker Preview Test</h1>
+      <p class="lead">Two static design projects prepared for GitHub Pages: live HTML previews plus captured app-screen galleries.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="projects" aria-label="Projects">
+      <article class="project">
+        <div class="project-head">
+          <div>
+            <h2>CleanSpeaker Claude Design v3</h2>
+            <p class="meta">23 captured screens</p>
+          </div>
+          <div class="actions">
+            <a class="button primary" href="projects/cleanspeaker-claude-design-v3/All%20Screens.html">Open all screens</a>
+            <a class="button" href="projects/cleanspeaker-claude-design-v3/Prototype.html">Prototype</a>
+          </div>
+        </div>
+        <div class="shots">
+          <figure>
+            <a href="screenshots/cleanspeaker-claude-design-v3/01-Use%20your%20speaker.png"><img src="screenshots/cleanspeaker-claude-design-v3/01-Use%20your%20speaker.png" alt="Use your speaker"></a>
+            <figcaption>Use your speaker</figcaption>
+          </figure>
+          <figure>
+            <a href="screenshots/cleanspeaker-claude-design-v3/09-Try%20Pro%20free%20for%203%20days.png"><img src="screenshots/cleanspeaker-claude-design-v3/09-Try%20Pro%20free%20for%203%20days.png" alt="Try Pro free for 3 days"></a>
+            <figcaption>Try Pro free</figcaption>
+          </figure>
+          <figure>
+            <a href="screenshots/cleanspeaker-claude-design-v3/14-14Water%20EjectAction.png"><img src="screenshots/cleanspeaker-claude-design-v3/14-14Water%20EjectAction.png" alt="Water eject action"></a>
+            <figcaption>Water Eject</figcaption>
+          </figure>
+          <figure>
+            <a href="screenshots/cleanspeaker-claude-design-v3/20-20SettingsSystem.png"><img src="screenshots/cleanspeaker-claude-design-v3/20-20SettingsSystem.png" alt="Settings system"></a>
+            <figcaption>Settings</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <div>
+            <h2>CleanSpeaker Claude Design v4</h2>
+            <p class="meta">10 captured states</p>
+          </div>
+          <div class="actions">
+            <a class="button primary" href="projects/cleanspeaker-claude-design-v4/CleanSpeaker.html">Open prototype</a>
+            <a class="button" href="screenshots/cleanspeaker-claude-design-v4/01-splash.png">Screenshots</a>
+          </div>
+        </div>
+        <div class="shots">
+          <figure>
+            <a href="screenshots/cleanspeaker-claude-design-v4/01-splash.png"><img src="screenshots/cleanspeaker-claude-design-v4/01-splash.png" alt="Splash"></a>
+            <figcaption>Splash</figcaption>
+          </figure>
+          <figure>
+            <a href="screenshots/cleanspeaker-claude-design-v4/02-onboarding.png"><img src="screenshots/cleanspeaker-claude-design-v4/02-onboarding.png" alt="Onboarding"></a>
+            <figcaption>Onboarding</figcaption>
+          </figure>
+          <figure>
+            <a href="screenshots/cleanspeaker-claude-design-v4/03-trust.png"><img src="screenshots/cleanspeaker-claude-design-v4/03-trust.png" alt="Trust"></a>
+            <figcaption>Trust</figcaption>
+          </figure>
+          <figure>
+            <a href="screenshots/cleanspeaker-claude-design-v4/04-paywall.png"><img src="screenshots/cleanspeaker-claude-design-v4/04-paywall.png" alt="Paywall"></a>
+            <figcaption>Paywall</figcaption>
+          </figure>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

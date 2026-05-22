@@ -1,0 +1,333 @@
+/* CleanSpeaker — design tokens */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand */
+  --blue: #2E6BFF;
+  --blue-600: #2557E0;
+  --blue-700: #1E47BD;
+  --blue-soft: #E5EDFF;
+  --blue-faint: #F2F6FF;
+  --blue-mist: #F7FAFF;
+  --blue-glow: rgba(46, 107, 255, 0.18);
+
+  /* Neutrals */
+  --ink: #0E1530;
+  --ink-2: #1B233F;
+  --muted: #6B7591;
+  --muted-2: #8C95AC;
+  --line: #ECEFF6;
+  --line-2: #E2E7F1;
+
+  /* Surfaces */
+  --surface: #FFFFFF;
+  --surface-2: #F6F8FC;
+  --surface-3: #F0F3F9;
+
+  /* Status */
+  --gold: #F1B53A;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Type */
+  --font: 'Manrope', 'SF Pro Display', system-ui, sans-serif;
+
+  /* Radii */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+
+  /* Shadow */
+  --shadow-card: 0 1px 2px rgba(15, 25, 70, 0.04), 0 8px 24px rgba(15, 25, 70, 0.06);
+  --shadow-cta: 0 8px 24px rgba(46, 107, 255, 0.35);
+  --shadow-soft: 0 10px 30px rgba(15, 25, 70, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: #E9F1FD;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; }
+
+/* App surface inside device frame */
+.cs-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #E9F1FD;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--font);
+  color: var(--ink);
+}
+
+.cs-statusbar {
+  flex: 0 0 auto;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cs-statusbar .icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cs-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.cs-content::-webkit-scrollbar { width: 0; }
+
+.cs-content.padded {
+  padding: 8px 24px 16px;
+}
+
+.cs-cta {
+  appearance: none;
+  border: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 63px;
+  padding: 17px 24px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #3669F0 0%, #5482FA 55%, #3BD8F1 100%);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0px 20px 44px -12px rgba(95, 168, 255, 0.55), 0px 4px 16px rgba(62, 139, 226, 0.5);
+  transition: transform 120ms var(--ease), filter 120ms var(--ease);
+}
+.cs-cta:active { transform: scale(0.98); filter: brightness(0.95); }
+.cs-cta:disabled { opacity: 0.4; box-shadow: none; cursor: not-allowed; }
+
+.cs-cta.ghost {
+  background: var(--blue-soft);
+  color: var(--blue);
+  box-shadow: none;
+}
+.cs-cta.ghost:active { background: #D8E3FF; }
+
+.cs-cta.dark {
+  background: var(--ink);
+  box-shadow: 0 8px 24px rgba(14, 21, 48, 0.25);
+}
+
+.cs-back {
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  border: 0;
+}
+.cs-back:active { background: var(--surface-3); }
+
+.cs-toptitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px 0;
+  height: 56px;
+  flex: 0 0 auto;
+}
+.cs-toptitle .title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cs-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 16px;
+}
+
+/* Sound wave glow */
+@keyframes csRipple {
+  0%   { transform: scale(0.4); opacity: 0.8; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+/* Expanding white-stroke ring, faint accent fill, fades out */
+@keyframes csRingPulse {
+  0%   { transform: translate(-50%, -50%) scale(0.18); opacity: 0; }
+  10%  { opacity: 0.95; }
+  60%  { opacity: 0.35; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+@keyframes csPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+@keyframes csSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes csFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes csSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes csConfetti {
+  to { transform: translateY(120px) rotate(720deg); opacity: 0; }
+}
+
+/* Tab bar */
+.cs-tabbar {
+  display: flex;
+  background: #fff;
+  border-top: 1px solid var(--line);
+  padding: 8px 6px 10px;
+  flex: 0 0 auto;
+}
+.cs-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.cs-tab.active { color: var(--blue); }
+.cs-tab.pro { color: var(--gold); }
+
+/* Ad banner */
+.cs-adbanner {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #fff;
+  border-top: 1px solid var(--line);
+}
+.cs-adbanner .ad-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 18px;
+  flex: 0 0 auto;
+}
+.cs-adbanner .ad-body {
+  flex: 1; min-width: 0;
+}
+.cs-adbanner .ad-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: #97A0BC;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-right: 6px;
+  vertical-align: 2px;
+}
+.cs-adbanner .ad-title {
+  font-size: 13px; font-weight: 700;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cs-adbanner .ad-sub {
+  font-size: 11px; color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cs-adbanner .ad-cta {
+  padding: 8px 14px;
+  background: var(--blue);
+  color: #fff;
+  border: 0;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+/* Bottom sheet */
+.cs-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 21, 48, 0.4);
+  z-index: 30;
+  animation: csFadeIn 200ms var(--ease);
+}
+.cs-sheet {
+  position: absolute;
+  left: 8px; right: 8px; bottom: 8px;
+  background: #fff;
+  border-radius: 22px;
+  padding: 14px 16px 18px;
+  z-index: 31;
+  animation: csSlideUp 280ms var(--ease);
+  box-shadow: 0 -12px 40px rgba(14, 21, 48, 0.18);
+}
+.cs-sheet .handle {
+  width: 36px; height: 4px; border-radius: 2px;
+  background: var(--line-2); margin: 0 auto 14px;
+}
+
+/* Generic icon button */
+.cs-iconbtn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface-2);
+  border: 0;
+  cursor: pointer;
+  color: var(--ink);
+}
+.cs-iconbtn:active { background: var(--surface-3); }
+.cs-iconbtn.active {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* Confetti dot */
+.cs-confetto {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  animation: csConfetti 1600ms var(--ease) forwards;
+}

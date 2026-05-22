@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>CleanSpeaker — All Screens</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="tokens.css"/>
+  <template id="__bundler_thumbnail" data-bg-color="#EFF1F4">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#EFF1F4"/>
+      <g transform="translate(600 400)">
+        <circle r="220" fill="none" stroke="#E3E6EC" stroke-width="14"/>
+        <path d="M -156 -156 A 220 220 0 0 1 156 -156"
+              fill="none" stroke="#0EA5E9" stroke-width="14" stroke-linecap="round"/>
+        <circle r="60" fill="#FFFFFF" stroke="#E3E6EC" stroke-width="2"/>
+        <circle r="22" fill="#0EA5E9"/>
+      </g>
+      <text x="600" y="700" text-anchor="middle"
+            font-family="system-ui, -apple-system, sans-serif"
+            font-size="34" font-weight="600" fill="#0B1220"
+            letter-spacing="-0.5">CleanSpeaker</text>
+    </svg>
+  </template>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #EFF1F4;
+      font-family: var(--f-ui);
+      color: var(--fg-0);
+      overflow-x: auto;
+    }
+    .lineup {
+      padding: 50px 56px 70px;
+      display: flex; flex-direction: column;
+      min-width: max-content;
+    }
+    .header { max-width: 720px; margin-bottom: 32px; }
+    h1 {
+      font-size: 36px; font-weight: 600; margin: 0 0 10px;
+      letter-spacing: -0.02em; line-height: 1.1;
+    }
+    .sub {
+      font-size: 15px; color: var(--fg-1); max-width: 600px;
+      line-height: 1.55; margin: 0;
+    }
+
+    .group-tabs {
+      display: flex; gap: 36px;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 36px; padding-bottom: 18px;
+    }
+    .group-tab { display: flex; flex-direction: column; gap: 4px; }
+    .group-tab .count {
+      font-family: var(--f-mono); font-size: 11px;
+      color: var(--fg-3); letter-spacing: 0.15em;
+    }
+    .group-tab .name {
+      font-size: 14px; font-weight: 600; color: var(--fg-0);
+    }
+
+    .row {
+      display: flex; gap: 32px;
+      margin-bottom: 50px;
+      align-items: flex-start;
+    }
+    .row-meta {
+      width: 220px; flex-shrink: 0; padding-top: 8px;
+    }
+    .row-no {
+      font-family: var(--f-mono); font-size: 11px;
+      color: var(--fg-2); letter-spacing: 0.2em; margin-bottom: 6px;
+    }
+    .row-title {
+      font-size: 22px; font-weight: 600; letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+    .row-desc {
+      font-size: 13px; color: var(--fg-1); line-height: 1.5;
+      margin: 0;
+    }
+
+    .frames { display: flex; gap: 28px; flex-wrap: nowrap; }
+    .frame {
+      flex-shrink: 0;
+      display: flex; flex-direction: column;
+      align-items: center;
+    }
+    .frame-screen {
+      width: 412px;
+      height: 828px;
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      background: var(--bg-0);
+      border: 1px solid var(--hairline);
+      box-shadow:
+        0 20px 50px -20px rgba(0,0,0,0.12),
+        0 4px 12px -6px rgba(0,0,0,0.06);
+    }
+    .frame-screen > div { width: 100%; height: 100%; }
+    .frame-caption {
+      margin-top: 14px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--fg-1);
+    }
+    .frame-caption .num {
+      font-family: var(--f-mono); color: var(--fg-2);
+      font-size: 11px; letter-spacing: 0.15em;
+    }
+    .frame-caption .name { font-weight: 600; color: var(--fg-0); }
+    .frame-caption .tag {
+      padding: 2px 8px; border-radius: 999px;
+      background: var(--bg-1); border: 1px solid var(--hairline);
+      font-size: 10px; color: var(--fg-2);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-links {
+      margin-top: 30px;
+      display: flex; gap: 16px;
+      align-items: center;
+    }
+    .footer-links a {
+      color: var(--fg-0); text-decoration: none;
+      padding: 8px 16px; border-radius: 999px;
+      border: 1px solid var(--hairline); background: var(--bg-1);
+      font-size: 13px; font-weight: 500;
+    }
+    .footer-links a:hover { background: var(--bg-2); }
+  </style>
+</head>
+<body>
+  <div class="lineup">
+    <div class="header">
+      <h1>CleanSpeaker — all screens</h1>
+      <p class="sub">Premium Android utility. Onboarding builds trust through diagnostic feedback; the paywall converts within the first session.</p>
+    </div>
+
+    <div class="group-tabs">
+      <div class="group-tab"><span class="count">01 — 11</span><span class="name">Onboarding & conversion</span></div>
+      <div class="group-tab"><span class="count">12 — 19</span><span class="name">Core app & cleaning</span></div>
+      <div class="group-tab"><span class="count">20 — 23</span><span class="name">Dev states & modals</span></div>
+    </div>
+
+    <div id="lineup-root"></div>
+
+    <div class="footer-links">
+      <a href="Prototype.html">Prototype →</a>
+      <a href="Design System.html">Design system →</a>
+      <a href="Documentation.html">Documentation →</a>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="primitives.jsx"></script>
+  <script type="text/babel" src="screens-onboarding.jsx"></script>
+  <script type="text/babel" src="screens-app.jsx"></script>
+  <script type="text/babel" src="screens-extra.jsx"></script>
+
+  <script type="text/babel">
+    const ROWS = [
+      {
+        no: '01', title: 'Onboarding & conversion',
+        desc: 'Permission → welcome → 3 questions → analyzing → personalized plan → social proof → paywall (with downsell on close) → push prompt.',
+        scenes: [
+          { id: '01', name: 'Permission', tag: 'System',     C: ScrPermission, props: {} },
+          { id: '02', name: 'Welcome',    tag: 'Splash',     C: ScrWelcome,    props: {} },
+          { id: '03', name: 'Q1 · Problem', tag: 'Onboarding', C: ScrQ1,
+            props: { state: { problem: 'water' } } },
+          { id: '04', name: 'Q2 · Timing',  tag: 'Onboarding', C: ScrQ2,
+            props: { state: { problem: 'water', when: 'today' } } },
+          { id: '05', name: 'Q3 · Device',  tag: 'Onboarding', C: ScrQ3,
+            props: { state: { problem: 'water', when: 'today', phone: 'Samsung Galaxy S24 Ultra' } } },
+          { id: '06', name: 'Analyzing',    tag: 'Diagnostic', C: ScrAnalyzing,
+            props: { state: { phone: 'Samsung Galaxy S24 Ultra' } } },
+          { id: '07', name: 'Plan',         tag: 'Result',     C: ScrPlan,
+            props: { state: { problem: 'water' } } },
+          { id: '08', name: 'Rating',       tag: 'Trust',      C: ScrRating,    props: {} },
+          { id: '09', name: 'Paywall',      tag: 'Convert',    C: ScrPaywall,   props: {} },
+          { id: '10', name: 'Downsell',     tag: 'Recovery',   C: ScrDownsell,  props: {} },
+          { id: '11', name: 'Push prompt',  tag: 'System',     C: ScrPush,      props: {} },
+        ],
+      },
+      {
+        no: '02', title: 'Core app & cleaning',
+        desc: 'Empty home (first-run) → home (returning) → quick actions → cycle → result → tools. Pulse Clean is the new haptic mode.',
+        scenes: [
+          { id: '12', name: 'Empty Home',   tag: 'First run', C: ScrEmptyHome, props: {} },
+          { id: '13', name: 'Home',         tag: 'Returning', C: ScrHome,      props: {} },
+          { id: '14', name: 'Water Eject',  tag: 'Action',    C: ScrAction,
+            props: { state: { action: { id: 'water-eject', t: 'Water Eject', hz: '165 Hz', i: null } } } },
+          { id: '15', name: 'Deep Clean',   tag: 'Cycle',     C: ScrCycle,
+            props: { state: { action: null } } },
+          { id: '16', name: 'Result',       tag: 'Success',   C: ScrResult,    props: {} },
+          { id: '17', name: 'Sound Test',   tag: 'Tool',      C: ScrTest,      props: {} },
+          { id: '18', name: 'Pulse Clean',  tag: 'Pro · new', C: ScrPulse,     props: {} },
+          { id: '19', name: 'Manual Hz',    tag: 'Pro',       C: ScrManual,    props: {} },
+        ],
+      },
+      {
+        no: '03', title: 'Dev-ready states & modals',
+        desc: 'Settings, premium-locked modal, mid-cycle abort confirm, and offline state.',
+        scenes: [
+          { id: '20', name: 'Settings',     tag: 'System',    C: ScrSettings,  props: {} },
+          { id: '21', name: 'Premium lock', tag: 'Modal',     C: ScrLocked,    props: {} },
+          { id: '22', name: 'Abort cycle',  tag: 'Modal',     C: ScrAbortModal, props: {} },
+          { id: '23', name: 'Offline',      tag: 'Edge case', C: ScrOffline,   props: {} },
+        ],
+      },
+    ];
+
+    function StaticScene({ C, props }) {
+      const noNav = () => {};
+      const set = () => {};
+      const stateBase = props.state || {};
+      if (stateBase.action && !stateBase.action.i) {
+        stateBase.action.i = ICONS.water(20);
+      }
+      return <C nav={noNav} state={stateBase} set={set}/>;
+    }
+
+    function Row({ row }) {
+      return (
+        <div className="row">
+          <div className="row-meta">
+            <div className="row-no">SECTION {row.no}</div>
+            <h2 className="row-title">{row.title}</h2>
+            <p className="row-desc">{row.desc}</p>
+          </div>
+          <div className="frames">
+            {row.scenes.map(s => (
+              <div className="frame" key={s.id}>
+                <div className="frame-screen">
+                  <StaticScene C={s.C} props={s.props}/>
+                </div>
+                <div className="frame-caption">
+                  <span className="num">{s.id}</span>
+                  <span className="name">{s.name}</span>
+                  <span className="tag">{s.tag}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      return <>{ROWS.map(r => <Row key={r.no} row={r}/>)}</>;
+    }
+
+    ReactDOM.createRoot(document.getElementById('lineup-root')).render(<App/>);
+  </script>
+</body>
+</html>

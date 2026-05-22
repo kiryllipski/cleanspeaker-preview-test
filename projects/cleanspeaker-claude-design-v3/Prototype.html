@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>CleanSpeaker — Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="tokens.css"/>
+  <style>
+    body {
+      min-height: 100vh;
+      background: #EFF1F4;
+      display: flex; flex-direction: column;
+      align-items: center; padding: 28px 20px 40px;
+      font-family: var(--f-ui);
+    }
+    .app-shell { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .app-title { text-align: center; margin-bottom: 6px; }
+    .app-title h1 {
+      font-size: 17px; font-weight: 600; margin: 0;
+      letter-spacing: -0.01em; color: var(--fg-0);
+    }
+    .app-title p {
+      font-size: 12px; color: var(--fg-2); margin: 4px 0 0;
+    }
+    .device {
+      width: 432px;
+      height: 902px;
+      background: #1A2238;
+      border-radius: 56px;
+      padding: 10px;
+      box-shadow:
+        inset 0 0 0 1.5px rgba(0,0,0,0.4),
+        0 30px 60px -20px rgba(0,0,0,0.25),
+        0 8px 24px -12px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .device-screen {
+      width: 100%; height: 100%;
+      border-radius: 46px;
+      overflow: hidden;
+      background: var(--bg-0);
+      position: relative;
+    }
+    .device-screen > div { width: 100%; height: 100%; }
+
+    .controls {
+      margin-top: 18px;
+      display: flex; align-items: center; gap: 14px;
+      padding: 8px 14px; border-radius: 999px;
+      background: #FFFFFF;
+      border: 1px solid var(--hairline);
+      box-shadow: 0 4px 16px -8px rgba(0,0,0,0.1);
+    }
+    .controls button {
+      width: 34px; height: 34px; border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: var(--bg-1);
+      color: var(--fg-0); cursor: pointer; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .controls button:hover { background: var(--bg-2); }
+    .controls button:disabled { opacity: 0.3; cursor: default; }
+    .controls .label {
+      font-size: 12px; color: var(--fg-1); min-width: 150px; text-align: center;
+      font-feature-settings: 'tnum';
+    }
+    .scene-counter {
+      color: var(--fg-3); font-size: 11px;
+      font-family: var(--f-mono); margin-left: 6px;
+    }
+    .hint {
+      font-size: 11px; color: var(--fg-2); margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-title">
+      <h1>CleanSpeaker — Interactive prototype</h1>
+      <p>Use arrows to step through, or tap inside the phone.</p>
+    </div>
+
+    <div class="device">
+      <div class="device-screen" id="screen-root"></div>
+    </div>
+
+    <div class="controls">
+      <button id="prev" title="Previous">
+        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M9 2 L4 7 L9 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="label">
+        <span id="scene-label">Welcome</span>
+        <span class="scene-counter" id="scene-counter">— 1 / 1</span>
+      </div>
+      <button id="next" title="Next">
+        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M5 2 L10 7 L5 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="restart" title="Restart" style="width: auto; padding: 0 14px;">
+        <span style="font-size: 11px; color: var(--fg-1);">↺ Restart</span>
+      </button>
+    </div>
+    <div class="hint">← / → keys also navigate</div>
+    <div style="margin-top: 18px; display: flex; gap: 12px; align-items: center;">
+      <a href="All Screens.html" style="color: var(--fg-0); text-decoration: none; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--bg-1); font-size: 13px; font-weight: 500;">All screens →</a>
+      <a href="Design System.html" style="color: var(--fg-0); text-decoration: none; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--bg-1); font-size: 13px; font-weight: 500;">Design system →</a>
+      <a href="Documentation.html" style="color: var(--fg-0); text-decoration: none; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--bg-1); font-size: 13px; font-weight: 500;">Documentation →</a>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="primitives.jsx"></script>
+  <script type="text/babel" src="screens-onboarding.jsx"></script>
+  <script type="text/babel" src="screens-app.jsx"></script>
+  <script type="text/babel" src="screens-extra.jsx"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const SCENES = [
+      { id: 'permission', label: 'Permission',         C: ScrPermission },
+      { id: 'welcome',   label: 'Welcome',             C: ScrWelcome },
+      { id: 'q1',        label: 'Q1 · Problem',        C: ScrQ1 },
+      { id: 'q2',        label: 'Q2 · Timing',         C: ScrQ2 },
+      { id: 'q3',        label: 'Q3 · Phone',          C: ScrQ3 },
+      { id: 'analyzing', label: 'Analyzing',           C: ScrAnalyzing },
+      { id: 'plan',      label: 'Rescue plan',         C: ScrPlan },
+      { id: 'rating',    label: 'Rating',              C: ScrRating },
+      { id: 'paywall',   label: 'Paywall',             C: ScrPaywall },
+      { id: 'downsell',  label: 'Downsell',            C: ScrDownsell },
+      { id: 'push',      label: 'Push permission',     C: ScrPush },
+      { id: 'empty',     label: 'Empty home',          C: ScrEmptyHome },
+      { id: 'home',      label: 'Home',                C: ScrHome },
+      { id: 'action',    label: 'Action',              C: ScrAction },
+      { id: 'cycle',     label: 'Cycle',               C: ScrCycle },
+      { id: 'abort',     label: 'Abort modal',         C: ScrAbortModal },
+      { id: 'result',    label: 'Result',              C: ScrResult },
+      { id: 'test',      label: 'Sound test',          C: ScrTest },
+      { id: 'pulse',     label: 'Pulse Clean',         C: ScrPulse },
+      { id: 'manual',    label: 'Manual Hz',           C: ScrManual },
+      { id: 'locked',    label: 'Premium locked',      C: ScrLocked },
+      { id: 'settings',  label: 'Settings',            C: ScrSettings },
+      { id: 'offline',   label: 'Offline',             C: ScrOffline },
+    ];
+
+    function App() {
+      const [sceneId, setSceneId] = useState('welcome');
+      const [state, setState] = useState({
+        problem: 'water', when: 'today',
+        phone: 'Samsung Galaxy S24 Ultra',
+        action: { id: 'water-eject', t: 'Water Eject', hz: '165 Hz', i: ICONS.water(20) },
+      });
+
+      const idx = SCENES.findIndex(s => s.id === sceneId);
+      const scene = SCENES[idx];
+
+      const nav = (target, payload) => {
+        if ((target === 'action' || target === 'cycle') && payload) {
+          setState(s => ({ ...s, action: payload }));
+        }
+        setSceneId(target);
+      };
+      const set = (k, v) => setState(s => ({ ...s, [k]: v }));
+
+      useEffect(() => {
+        const prev = document.getElementById('prev');
+        const next = document.getElementById('next');
+        const restart = document.getElementById('restart');
+        const label = document.getElementById('scene-label');
+        const counter = document.getElementById('scene-counter');
+        label.textContent = scene.label;
+        counter.textContent = `— ${idx + 1} / ${SCENES.length}`;
+        prev.disabled = idx === 0;
+        next.disabled = idx === SCENES.length - 1;
+        const onP = () => idx > 0 && setSceneId(SCENES[idx - 1].id);
+        const onN = () => idx < SCENES.length - 1 && setSceneId(SCENES[idx + 1].id);
+        const onR = () => setSceneId('welcome');
+        prev.addEventListener('click', onP);
+        next.addEventListener('click', onN);
+        restart.addEventListener('click', onR);
+        const onKey = (e) => {
+          if (e.key === 'ArrowLeft') onP();
+          if (e.key === 'ArrowRight') onN();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => {
+          prev.removeEventListener('click', onP);
+          next.removeEventListener('click', onN);
+          restart.removeEventListener('click', onR);
+          window.removeEventListener('keydown', onKey);
+        };
+      }, [idx]);
+
+      const Scene = scene.C;
+      return <Scene nav={nav} state={state} set={set}/>;
+    }
+
+    ReactDOM.createRoot(document.getElementById('screen-root')).render(<App/>);
+  </script>
+</body>
+</html>
