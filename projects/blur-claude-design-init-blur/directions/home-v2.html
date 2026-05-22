@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Blur — Home v2 (Direction D · Linen)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0c;
+    --bg-2: #111114;
+    --line: #1f1f24;
+    --ink: #f5f5f0;
+    --muted: #8b8b92;
+    --muted-2: #5a5a62;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{padding:64px 32px 120px;min-height:100vh}
+
+  .page-head{max-width:1400px;margin:0 auto 56px}
+  .page-head .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+  .page-head h1{font-family:'Fraunces',serif;font-weight:400;font-size:54px;letter-spacing:-.025em;line-height:1.02;margin-bottom:18px}
+  .page-head h1 em{font-style:italic;font-weight:400;color:var(--muted)}
+  .page-head p{font-size:16px;line-height:1.55;color:var(--muted);max-width:680px}
+
+  .layout{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:48px}
+  .principles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:48px}
+  .princ{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .princ .num{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
+  .princ h3{font-family:'Fraunces',serif;font-weight:400;font-size:20px;letter-spacing:-.02em;margin-bottom:8px;line-height:1.15}
+  .princ h3 em{font-style:italic;color:var(--muted)}
+  .princ p{font-size:13px;line-height:1.55;color:var(--muted)}
+  .princ p b{color:var(--ink);font-weight:500}
+
+  .frames{display:flex;gap:36px;flex-wrap:wrap;justify-content:center;align-items:flex-start;margin-bottom:48px}
+  .frame-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:340px}
+  .frame-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2)}
+  .frame-caption{font-size:12px;color:var(--muted);line-height:1.5;text-align:center;padding:0 8px}
+
+  /* iPhone frame */
+  .iphone{
+    width: 320px; height: 668px;
+    border-radius: 50px;
+    background:#0c0c0e;
+    padding:11px;
+    box-shadow:
+      0 0 0 1.5px #1f1f24,
+      0 0 0 8px #050507,
+      0 60px 120px rgba(0,0,0,.55),
+      0 20px 40px rgba(0,0,0,.4);
+    position:relative;flex-shrink:0;
+  }
+  .iphone .screen{
+    width:100%;height:100%;border-radius:39px;overflow:hidden;
+    position:relative;background:#fff;
+  }
+  .iphone .island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:108px;height:32px;border-radius:18px;background:#000;z-index:50}
+  .iphone .status{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:18px 28px 0;font-size:13px;font-weight:600;z-index:40;pointer-events:none}
+  .iphone .home-indicator{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:4px;border-radius:2px;background:rgba(0,0,0,.35);z-index:40}
+
+  /* Direction D — Linen tokens */
+  .D{
+    --pa:#FAF8F4; --pa-2:#F0EDE5; --ink:#1A1614; --mute:#7A746E; --mute-2:#B5AFA8; --line:#E6E1D9;
+    --acc:#6E5CE6; --acc-2:#A99AFF; --acc-soft:#EDE9FF;
+    background:var(--pa);color:var(--ink);width:100%;height:100%;position:relative;
+    display:flex;flex-direction:column;
+  }
+
+  /* Top bar */
+  .D .topbar{padding:54px 22px 0;display:flex;justify-content:space-between;align-items:center}
+  .D .logo{font-family:'Fraunces',serif;font-size:24px;font-weight:500;letter-spacing:-.02em;display:flex;align-items:center;gap:7px}
+  .D .logo .dot{width:9px;height:9px;background:var(--acc);border-radius:50%}
+  .D .topbar .icons{display:flex;gap:8px}
+  .D .topbar .icon-btn{width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink)}
+  .D .topbar .icon-btn.pro{background:var(--ink);color:#fff;border-color:var(--ink);font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;padding:0 10px;width:auto;height:36px;display:flex;align-items:center;gap:5px}
+  .D .topbar .icon-btn.pro::before{content:'✦';color:var(--acc-2)}
+
+  /* Greeting */
+  .D .greeting{padding:20px 22px 18px}
+  .D .greeting .small{font-size:12px;color:var(--mute);font-weight:500;margin-bottom:4px}
+  .D .greeting h2{font-family:'Fraunces',serif;font-weight:400;font-size:30px;line-height:1.05;letter-spacing:-.025em}
+  .D .greeting h2 em{font-style:italic;color:var(--mute)}
+
+  /* Continue last (only active state) */
+  .D .continue-card{
+    margin:0 16px 14px;background:var(--ink);color:var(--pa);border-radius:20px;padding:14px;
+    display:flex;gap:14px;align-items:center;position:relative;overflow:hidden;
+  }
+  .D .continue-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle, rgba(110,92,230,.45) 0%, transparent 65%);filter:blur(20px)}
+  .D .continue-card .thumb{width:60px;height:60px;border-radius:12px;overflow:hidden;flex-shrink:0;position:relative;z-index:2}
+  .D .continue-card .thumb img{width:100%;height:100%;object-fit:cover}
+  .D .continue-card .body{flex:1;position:relative;z-index:2;min-width:0}
+  .D .continue-card .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc-2);margin-bottom:3px}
+  .D .continue-card .ttl{font-size:14px;font-weight:600;line-height:1.2;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .D .continue-card .meta{font-size:11px;color:rgba(250,248,244,.55)}
+  .D .continue-card .play{width:36px;height:36px;border-radius:50%;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;position:relative;z-index:2}
+
+  /* Hero "add photo" */
+  .D .hero-add{
+    margin:0 16px 14px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:0;
+    overflow:hidden;
+  }
+  .D .hero-add .area{
+    padding:36px 22px 20px;text-align:center;background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(110,92,230,.07) 0%, transparent 70%);
+    position:relative;
+  }
+  .D .hero-add .icon-stack{position:relative;width:60px;height:60px;margin:0 auto 14px}
+  .D .hero-add .icon-stack .img-frame{position:absolute;width:46px;height:46px;border-radius:10px;border:2px solid #fff;background:linear-gradient(135deg, #d4c8f0, #b8a8e8);box-shadow:0 8px 16px rgba(110,92,230,.15)}
+  .D .hero-add .icon-stack .img-frame.f1{top:8px;left:0;transform:rotate(-8deg)}
+  .D .hero-add .icon-stack .img-frame.f2{top:0;left:14px;transform:rotate(4deg);background:linear-gradient(135deg, #f0d4c8, #e8b8a0)}
+  .D .hero-add .icon-stack .plus{position:absolute;bottom:-2px;right:-2px;width:24px;height:24px;border-radius:50%;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;box-shadow:0 4px 10px rgba(110,92,230,.4),0 0 0 3px var(--pa)}
+  .D .hero-add .ttl{font-family:'Fraunces',serif;font-weight:400;font-size:20px;letter-spacing:-.02em;line-height:1.1;margin-bottom:5px}
+  .D .hero-add .ttl em{font-style:italic;color:var(--acc)}
+  .D .hero-add .sub{font-size:12px;color:var(--mute);line-height:1.5;max-width:230px;margin:0 auto}
+  .D .hero-add .seg{display:flex;border-top:1px solid var(--line);background:var(--pa-2)}
+  .D .hero-add .seg-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 12px;font-size:13px;font-weight:600;color:var(--ink);position:relative}
+  .D .hero-add .seg-btn:first-child::after{content:'';position:absolute;right:0;top:24%;bottom:24%;width:1px;background:var(--line)}
+  .D .hero-add .seg-btn .ic{font-size:15px;color:var(--acc)}
+
+  /* Recent strip */
+  .D .recent-h{padding:6px 22px 10px;display:flex;justify-content:space-between;align-items:baseline}
+  .D .recent-h .t{font-size:13px;font-weight:700;color:var(--ink)}
+  .D .recent-h .more{font-size:12px;color:var(--mute);font-weight:500}
+  .D .recent-strip{display:flex;gap:8px;padding:0 16px 0;overflow:hidden}
+  .D .recent{flex:0 0 auto;width:88px;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--pa-2);position:relative;border:1px solid var(--line)}
+  .D .recent img{width:100%;height:100%;object-fit:cover}
+  .D .recent .meta-pill{position:absolute;bottom:6px;left:6px;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);padding:3px 7px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.04em;color:var(--ink)}
+  .D .recent.draft::before{content:'DRAFT';position:absolute;top:6px;right:6px;background:var(--acc);color:#fff;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:.08em;padding:2px 5px;border-radius:4px;font-weight:700}
+
+  /* Empty state placeholder */
+  .D .empty-state{
+    margin:8px 16px 0;padding:32px 22px;text-align:center;
+    background:#fff;border:1px dashed var(--line);border-radius:18px;
+  }
+  .D .empty-state .gloss{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--mute);margin-bottom:6px}
+  .D .empty-state .small{font-size:12px;color:var(--mute-2);line-height:1.5}
+
+  /* Tutorial / discover card */
+  .D .discover{margin:14px 16px 14px;background:var(--acc-soft);border-radius:18px;padding:14px;display:flex;gap:12px;align-items:center;position:relative}
+  .D .discover .num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:var(--acc);font-weight:700;margin-bottom:3px}
+  .D .discover .ttl{font-size:13px;font-weight:600;line-height:1.2;color:var(--ink);margin-bottom:2px}
+  .D .discover .sub{font-size:10px;color:var(--mute)}
+  .D .discover .play{width:42px;height:42px;border-radius:12px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+
+  /* Pro inline (only non-pro) */
+  .D .pro-inline{
+    margin:auto 16px 26px;background:var(--ink);color:var(--pa);border-radius:20px;padding:16px;
+    display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;
+  }
+  .D .pro-inline::before{content:'';position:absolute;top:-40%;left:-20%;width:160%;height:200%;background:radial-gradient(circle, rgba(110,92,230,.5) 0%, transparent 50%);filter:blur(30px)}
+  .D .pro-inline .body{flex:1;position:relative;z-index:2}
+  .D .pro-inline .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--acc-2);margin-bottom:5px}
+  .D .pro-inline .ttl{font-family:'Fraunces',serif;font-weight:400;font-size:18px;line-height:1.1;letter-spacing:-.02em;margin-bottom:3px}
+  .D .pro-inline .ttl em{font-style:italic}
+  .D .pro-inline .meta{font-size:10px;color:rgba(250,248,244,.55);line-height:1.4}
+  .D .pro-inline .arrow{width:36px;height:36px;border-radius:50%;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;position:relative;z-index:2}
+
+  /* Annotation arrows for design rationale */
+  .annot{
+    position:absolute;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;
+    color:var(--muted);line-height:1.4;max-width:160px;
+  }
+  .annot::before{content:'';display:block;width:1px;height:20px;background:var(--muted-2);margin:0 0 4px 8px}
+  .annot.left{text-align:right}
+  .annot.left::before{margin-left:auto;margin-right:8px}
+
+  /* Footer */
+  .footer{max-width:1400px;margin:64px auto 0;padding-top:48px;border-top:1px solid var(--line);text-align:center}
+  .footer p{font-size:14px;color:var(--muted);max-width:680px;margin:0 auto 12px}
+  .footer .key{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);letter-spacing:.1em}
+
+  @media (max-width:880px){
+    .principles{grid-template-columns:1fr}
+    .frames{flex-direction:column;align-items:center}
+  }
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <div class="eyebrow">BLUR · DIRECTION D · LINEN · HOME · v2</div>
+  <h1>Home, <em>rethought.</em></h1>
+  <p>Single-task launcher. Один primary action, никакого tab bar, навигация через состояние, а не destinations. Три стейта показаны рядом — first session (empty), active (есть проекты), Pro user (без апселла).</p>
+</header>
+
+<div class="principles">
+  <div class="princ">
+    <div class="num">PRINCIPLE 01</div>
+    <h3>One primary action <em>— add photo</em></h3>
+    <p><b>Hero «Add photo» card</b> с двумя сегментами Camera / Library. Это главное, ради чего юзер открыл апп. Tools убраны на главную — выбор инструмента имеет смысл только когда фото уже есть.</p>
+  </div>
+  <div class="princ">
+    <div class="num">PRINCIPLE 02</div>
+    <h3>No tab bar <em>— state, not destinations</em></h3>
+    <p>Settings — иконкой в top-bar. Projects — через «See all» в секции Recent. Pro — inline-картой и кнопкой ✦ в top-bar. <b>Никакой нижней навигации</b> — освобождаем экранную площадь и убираем лишний выбор.</p>
+  </div>
+  <div class="princ">
+    <div class="num">PRINCIPLE 03</div>
+    <h3>Recent first, <em>continue last</em></h3>
+    <p>Если есть незавершённый проект — приоритетная карточка <b>«Continue»</b> над hero. Это второй по частоте паттерн использования: пришёл доделать. Дальше — горизонтальный strip recent с draft-метками.</p>
+  </div>
+</div>
+
+<div class="frames">
+  <!-- STATE 1: Empty (first session, no projects) -->
+  <div class="frame-wrap">
+    <div class="iphone">
+      <div class="screen">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span>●●●●● ⌒ ▮</span></div>
+        <div class="D">
+          <div class="topbar">
+            <div class="logo"><span class="dot"></span>Blur</div>
+            <div class="icons">
+              <div class="icon-btn pro">PRO</div>
+              <div class="icon-btn">⚙</div>
+            </div>
+          </div>
+          <div class="greeting">
+            <div class="small">Hello there 👋</div>
+            <h2>Let's make your<br/>first <em>blur.</em></h2>
+          </div>
+          <div class="hero-add">
+            <div class="area">
+              <div class="icon-stack">
+                <div class="img-frame f1"></div>
+                <div class="img-frame f2"></div>
+                <div class="plus">+</div>
+              </div>
+              <div class="ttl">Add a <em>photo</em> to begin</div>
+              <div class="sub">Pick from your library or take a new one — we'll handle the focus.</div>
+            </div>
+            <div class="seg">
+              <div class="seg-btn"><span class="ic">⌖</span>Camera</div>
+              <div class="seg-btn"><span class="ic">⊞</span>Library</div>
+            </div>
+          </div>
+          <div class="empty-state">
+            <div class="gloss">Your work will live here.</div>
+            <div class="small">As you save edits, they'll appear in this strip.</div>
+          </div>
+          <div class="discover">
+            <div>
+              <div class="num">★ 30 SECONDS</div>
+              <div class="ttl">See it in action</div>
+              <div class="sub">A quick demo of one-tap blur</div>
+            </div>
+            <div class="play">▶</div>
+          </div>
+          <div class="pro-inline">
+            <div class="body">
+              <div class="lbl">★ TRY FREE FOR 3 DAYS</div>
+              <div class="ttl">Unlock <em>everything.</em></div>
+              <div class="meta">Save 70% on yearly · cancel anytime</div>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+    <div class="frame-label">D · Home · Empty</div>
+    <div class="frame-caption">First session — нет проектов. Hero доминирует, плюс tutorial-card и Pro-promo как контекстная подсказка.</div>
+  </div>
+
+  <!-- STATE 2: Active (has projects + draft to continue) -->
+  <div class="frame-wrap">
+    <div class="iphone">
+      <div class="screen">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span>●●●●● ⌒ ▮</span></div>
+        <div class="D">
+          <div class="topbar">
+            <div class="logo"><span class="dot"></span>Blur</div>
+            <div class="icons">
+              <div class="icon-btn pro">PRO</div>
+              <div class="icon-btn">⚙</div>
+            </div>
+          </div>
+          <div class="greeting">
+            <div class="small">Tuesday, May 6</div>
+            <h2>Welcome back, <em>Anna.</em></h2>
+          </div>
+          <div class="continue-card">
+            <div class="thumb"><img src="img/portrait.png" /></div>
+            <div class="body">
+              <div class="lbl">DRAFT · 2 STEPS LEFT</div>
+              <div class="ttl">Portrait, soft bokeh</div>
+              <div class="meta">Continue where you left off</div>
+            </div>
+            <div class="play">▶</div>
+          </div>
+          <div class="hero-add">
+            <div class="area" style="padding:24px 22px 16px">
+              <div class="icon-stack" style="margin-bottom:10px;width:50px;height:50px">
+                <div class="img-frame f1" style="width:38px;height:38px"></div>
+                <div class="img-frame f2" style="width:38px;height:38px;left:12px"></div>
+                <div class="plus" style="width:20px;height:20px;font-size:11px">+</div>
+              </div>
+              <div class="ttl" style="font-size:18px">Start a new <em>blur</em></div>
+            </div>
+            <div class="seg">
+              <div class="seg-btn"><span class="ic">⌖</span>Camera</div>
+              <div class="seg-btn"><span class="ic">⊞</span>Library</div>
+            </div>
+          </div>
+          <div class="recent-h">
+            <div class="t">Recent · 8</div>
+            <div class="more">See all →</div>
+          </div>
+          <div class="recent-strip">
+            <div class="recent draft"><img src="img/portrait.png" /><div class="meta-pill">5/6</div></div>
+            <div class="recent"><img src="img/stilllife.png" /><div class="meta-pill">DONE</div></div>
+            <div class="recent"><img src="img/street.png" /><div class="meta-pill">DONE</div></div>
+            <div class="recent"><img src="img/portrait.png" style="filter:saturate(.7) brightness(1.05)" /></div>
+          </div>
+          <div class="pro-inline">
+            <div class="body">
+              <div class="lbl">★ TRY FREE FOR 3 DAYS</div>
+              <div class="ttl">Unlock the <em>full lens.</em></div>
+              <div class="meta">Save 70% on yearly · cancel anytime</div>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+    <div class="frame-label">D · Home · Active</div>
+    <div class="frame-caption">Есть проекты + draft. Continue card в приоритете, hero уменьшается, появляется recent-strip с meta-метками шагов.</div>
+  </div>
+
+  <!-- STATE 3: Pro user (no upsell, more space for recents) -->
+  <div class="frame-wrap">
+    <div class="iphone">
+      <div class="screen">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span>●●●●● ⌒ ▮</span></div>
+        <div class="D">
+          <div class="topbar">
+            <div class="logo"><span class="dot"></span>Blur</div>
+            <div class="icons">
+              <div class="icon-btn" style="background:var(--acc-soft);color:var(--acc);border-color:transparent;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.04em;font-size:10px;width:auto;padding:0 10px;height:36px;display:flex;align-items:center;gap:5px">✦ PRO</div>
+              <div class="icon-btn">⚙</div>
+            </div>
+          </div>
+          <div class="greeting">
+            <div class="small">Friday, May 9</div>
+            <h2>What are we<br/>making <em>today?</em></h2>
+          </div>
+          <div class="hero-add">
+            <div class="area">
+              <div class="icon-stack">
+                <div class="img-frame f1"></div>
+                <div class="img-frame f2"></div>
+                <div class="plus">+</div>
+              </div>
+              <div class="ttl">Start a new <em>blur</em></div>
+              <div class="sub">Pick a photo and we'll handle the focus.</div>
+            </div>
+            <div class="seg">
+              <div class="seg-btn"><span class="ic">⌖</span>Camera</div>
+              <div class="seg-btn"><span class="ic">⊞</span>Library</div>
+            </div>
+          </div>
+          <div class="recent-h">
+            <div class="t">Your work · 24</div>
+            <div class="more">See all →</div>
+          </div>
+          <div class="recent-strip">
+            <div class="recent"><img src="img/portrait.png" /><div class="meta-pill">DONE</div></div>
+            <div class="recent"><img src="img/stilllife.png" /><div class="meta-pill">DONE</div></div>
+            <div class="recent"><img src="img/street.png" /><div class="meta-pill">DONE</div></div>
+            <div class="recent"><img src="img/portrait.png" style="filter:contrast(.95)" /><div class="meta-pill">DONE</div></div>
+          </div>
+          <div class="discover" style="margin-top:auto;margin-bottom:26px;background:#fff;border:1px solid var(--line)">
+            <div>
+              <div class="num">★ NEW IN MAY</div>
+              <div class="ttl">AI motion blur</div>
+              <div class="sub">Add cinematic motion to any subject</div>
+            </div>
+            <div class="play" style="background:var(--ink)">→</div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+    <div class="frame-label">D · Home · Pro</div>
+    <div class="frame-caption">Подписчик. Pro-card убрана, освобождая воздух для recent-strip и «New feature» карточки внизу как retention-driver.</div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>Скажи: ок ли структура? Хочешь увидеть микро-вариации (например, hero с фоновым blurred-collage; «Continue» как отдельный pinned-row; bottom feature-strip с горизонтальным скроллом тулзов)? Или закрепляем эту версию и идём раскатывать остальные 15 экранов воронки?</p>
+  <div class="key">[ HOME · v2 · DIRECTION D · LINEN ]</div>
+</footer>
+
+</body>
+</html>

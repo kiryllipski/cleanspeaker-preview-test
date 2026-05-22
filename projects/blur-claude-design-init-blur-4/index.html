@@ -1,0 +1,2442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Blur Photo — iOS Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal:#11BC9B;
+    --teal-deep:#0EA587;
+    --dark:#0D1718;
+    --dark-2:#111B1C;
+    --dark-3:#16252A;
+    --dark-4:#1F2F32;
+    --light:#F6F8F7;
+    --card:#FFFFFF;
+    --soft:#DDF8F2;
+    --text:#111827;
+    --muted:#667277;
+    --muted-2:#8A9998;
+    --border:#E3E8E7;
+    --border-dark:#22343A;
+    --mask: rgba(17,188,155,0.38);
+    --shadow-card: 0 1px 2px rgba(15,23,28,.04), 0 6px 24px rgba(15,23,28,.06);
+    --shadow-pop: 0 8px 30px rgba(8,16,18,.18);
+    --font: -apple-system, "SF Pro Text", "SF Pro Display", "Inter", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color: transparent;}
+  html,body{margin:0;padding:0;background:#0B1416;font-family:var(--font);color:var(--text);overscroll-behavior:none;}
+  body{
+    min-height:100dvh;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+    background:
+      radial-gradient(80% 60% at 20% 0%, #142428 0%, #0B1416 60%),
+      radial-gradient(60% 60% at 100% 100%, #0E1F1C 0%, #0B1416 70%),
+      #0B1416;
+  }
+  /* Hide scrollbars inside phone */
+  .noscroll::-webkit-scrollbar{display:none;}
+  .noscroll{scrollbar-width:none;}
+
+  /* Render-only animations */
+  @keyframes scanY {
+    0%{transform:translateY(-100%)} 100%{transform:translateY(100%)}
+  }
+  @keyframes pulseDot {
+    0%,100%{opacity:.45;transform:scale(1)}
+    50%{opacity:1;transform:scale(1.25)}
+  }
+  @keyframes fadeUp {
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:none}
+  }
+  @keyframes shimmer {
+    0%{background-position:-200% 0}
+    100%{background-position:200% 0}
+  }
+  @keyframes spin { to { transform: rotate(360deg);} }
+</style>
+</head><body>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<div id="root"></div>
+<script type="text/babel">
+/* Outline icons – 1.75–2px stroke, currentColor */
+const Ico = {
+  Back:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>,
+  Close:  ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>,
+  Undo:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H8"/></svg>,
+  Redo:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 0 0-5 5v0a5 5 0 0 0 5 5h7"/></svg>,
+  Help:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1.9-1.1 1.8"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>,
+  Save:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>,
+  Settings:({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>,
+  Image:  ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg>,
+  Plus:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>,
+  Lock:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>,
+  Bolt:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>,
+  Sparkle:({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z"/><path d="M19 14l.7 1.8L21 16.5l-1.3.7L19 19l-.7-1.8L17 16.5l1.3-.7z"/></svg>,
+  Brush:  ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 4l6 6-9 9H5v-6z"/><path d="M3 21l3-3"/></svg>,
+  Eraser: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 16l8-8 7 7-7 7H5z"/><path d="M14 5l5 5"/></svg>,
+  Layers: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>,
+  Wand:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 4l5 5-11 11H4v-5z"/><path d="M14 5l5 5"/><path d="M3 6h2M5 4v2M19 16h2M20 15v2"/></svg>,
+  Face:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="11" r=".7" fill="currentColor"/><circle cx="15" cy="11" r=".7" fill="currentColor"/><path d="M9 15c1 1 2 1.4 3 1.4S14 16 15 15"/></svg>,
+  Mosaic: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>,
+  Drop:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>,
+  Type:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg>,
+  Share:  ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13"/><path d="M8 7l4-4 4 4"/><rect x="4" y="14" width="16" height="7" rx="2"/></svg>,
+  Copy:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>,
+  Check:  ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7"/></svg>,
+  Camera: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h3l2-3h8l2 3h3v11H3z"/><circle cx="12" cy="13" r="4"/></svg>,
+  Folder: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>,
+  Search: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>,
+  Trash:  ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/></svg>,
+  Crown:  ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18h18M4 7l4 4 4-7 4 7 4-4-2 11H6z"/></svg>,
+  Refresh:({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-3.5-7.1"/><path d="M21 4v5h-5"/></svg>,
+  Slider: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h10M20 7h-2M6 7a2 2 0 1 0 4 0 2 2 0 0 0-4 0zM4 17h2M10 17h10M16 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0z"/></svg>,
+  Grid:   ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
+  Person: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>,
+  Mountain:({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 20l5-9 4 6 3-4 6 7z"/><circle cx="17" cy="6" r="2"/></svg>,
+  Arrows: ({s=22})=> <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/></svg>,
+  Battery:()=> <svg width="24" height="11" viewBox="0 0 24 11" fill="none"><rect x="0.5" y="0.5" width="20" height="10" rx="2.5" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="17" height="7" rx="1.2" fill="currentColor"/><rect x="21.5" y="3.5" width="2" height="4" rx="1" fill="currentColor" opacity=".4"/></svg>,
+  Wifi:   ()=> <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M8 9.5l1.4-1.4a2 2 0 0 0-2.8 0L8 9.5zM3.5 5a6.4 6.4 0 0 1 9 0M.8 2.3a10.4 10.4 0 0 1 14.4 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>,
+  Cell:   ()=> <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="3" width="3" height="8" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>,
+};
+window.Ico = Ico;
+/* iPhone 15 Pro frame – screen 393×852pt */
+function Phone({ children, theme="light", label }) {
+  const dark = theme === "dark";
+  const statusColor = dark ? "#F8FAF9" : "#0D1718";
+  return (
+    <div data-screen-label={label} style={{
+      width:393, height:852, position:"relative",
+      borderRadius:55, padding:11,
+      background:"linear-gradient(155deg,#1c1f21,#0a0c0d)",
+      boxShadow:"0 50px 120px -20px rgba(0,0,0,.55), 0 6px 20px rgba(0,0,0,.4), inset 0 0 0 1.5px #2a2d2f, inset 0 0 0 3px #0a0c0d",
+      flexShrink:0,
+    }}>
+      {/* side buttons */}
+      <div style={{position:"absolute", left:-2, top:170, width:3, height:32, background:"#0a0c0d", borderRadius:2}}/>
+      <div style={{position:"absolute", left:-2, top:220, width:3, height:60, background:"#0a0c0d", borderRadius:2}}/>
+      <div style={{position:"absolute", left:-2, top:300, width:3, height:60, background:"#0a0c0d", borderRadius:2}}/>
+      <div style={{position:"absolute", right:-2, top:230, width:3, height:90, background:"#0a0c0d", borderRadius:2}}/>
+
+      <div style={{
+        width:"100%", height:"100%",
+        borderRadius:44, overflow:"hidden",
+        position:"relative",
+        background: dark ? "var(--dark)" : "var(--light)",
+      }}>
+        {/* status bar */}
+        <div style={{
+          position:"absolute", top:0, left:0, right:0, height:54,
+          display:"flex", alignItems:"center", padding:"16px 36px 0",
+          color: statusColor, fontWeight:600, fontSize:15, letterSpacing:.2,
+          zIndex:50, pointerEvents:"none",
+        }}>
+          <div style={{flex:1}}>9:41</div>
+          {/* Dynamic Island */}
+          <div style={{
+            position:"absolute", left:"50%", top:11, transform:"translateX(-50%)",
+            width:124, height:36, background:"#000", borderRadius:20,
+          }}/>
+          <div style={{display:"flex", alignItems:"center", gap:6, color:statusColor}}>
+            <Ico.Cell /><Ico.Wifi /><Ico.Battery />
+          </div>
+        </div>
+
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Sheet({ children, height="auto", style={}, dark=true }) {
+  return (
+    <div style={{
+      position:"absolute", left:0, right:0, bottom:0,
+      background: dark ? "rgba(13,23,24,0.86)" : "rgba(255,255,255,0.92)",
+      backdropFilter:"blur(28px) saturate(140%)",
+      WebkitBackdropFilter:"blur(28px) saturate(140%)",
+      borderTopLeftRadius:28, borderTopRightRadius:28,
+      borderTop: dark ? "1px solid rgba(255,255,255,0.06)" : "1px solid var(--border)",
+      paddingBottom: 30,
+      color: dark ? "#F8FAF9" : "var(--text)",
+      ...style,
+    }}>
+      <div style={{display:"flex", justifyContent:"center", paddingTop:8}}>
+        <div style={{width:36, height:5, borderRadius:99, background: dark? "rgba(255,255,255,0.18)":"rgba(0,0,0,0.18)"}}/>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function Pill({ children, color="teal", size="sm", style={} }) {
+  const colors = {
+    teal:    { bg:"#DDF8F2", fg:"#0EA587" },
+    teal_d:  { bg:"rgba(17,188,155,.16)", fg:"#11BC9B" },
+    dark:    { bg:"rgba(255,255,255,.08)", fg:"#F8FAF9" },
+    light:   { bg:"#F1F4F3", fg:"#667277" },
+    pro:     { bg:"linear-gradient(135deg,#11BC9B,#0EA587)", fg:"#fff" },
+  };
+  const c = colors[color];
+  const small = size==="sm";
+  return <span style={{
+    display:"inline-flex", alignItems:"center", gap:6,
+    background:c.bg, color:c.fg,
+    fontSize: small? 11:13, fontWeight:600,
+    padding: small ? "4px 9px" : "6px 12px",
+    borderRadius:99, lineHeight:1, letterSpacing:.2,
+    ...style,
+  }}>{children}</span>;
+}
+
+function Button({ children, variant="primary", icon, onClick, style={}, full=true }) {
+  const styles = {
+    primary: { bg:"#11BC9B", fg:"#04201B", border:"none" },
+    primary_dark: { bg:"#11BC9B", fg:"#04201B", border:"none" },
+    dark: { bg:"#0D1718", fg:"#F8FAF9", border:"none" },
+    light:{ bg:"#FFFFFF", fg:"#111827", border:"1px solid var(--border)" },
+    glass:{ bg:"rgba(255,255,255,0.08)", fg:"#F8FAF9", border:"1px solid rgba(255,255,255,0.12)" },
+    ghost:{ bg:"transparent", fg:"#11BC9B", border:"none" },
+  };
+  const s = styles[variant];
+  return <button onClick={onClick} style={{
+    width: full ? "100%" : "auto",
+    display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8,
+    height:54, borderRadius:18,
+    background:s.bg, color:s.fg, border:s.border,
+    fontFamily:"var(--font)", fontSize:17, fontWeight:600,
+    cursor:"pointer", letterSpacing:.1,
+    ...style,
+  }}>{icon}{children}</button>;
+}
+
+/* Slider with rendered thumb */
+function Slider({ value=50, color="#11BC9B", track="rgba(255,255,255,.16)", onChange }) {
+  const [v, setV] = React.useState(value);
+  React.useEffect(()=>setV(value), [value]);
+  const ref = React.useRef(null);
+  const drag = (e) => {
+    const rect = ref.current.getBoundingClientRect();
+    const move = (clientX) => {
+      const p = Math.max(0, Math.min(100, ((clientX - rect.left)/rect.width)*100));
+      setV(p); onChange && onChange(p);
+    };
+    const onMove = (ev) => {
+      const cx = ev.touches ? ev.touches[0].clientX : ev.clientX;
+      move(cx);
+    };
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", onMove);
+    window.addEventListener("touchend", onUp);
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    move(cx);
+  };
+  return (
+    <div ref={ref} onMouseDown={drag} onTouchStart={drag}
+      style={{position:"relative", height:30, padding:"13px 0", cursor:"pointer", touchAction:"none"}}>
+      <div style={{height:4, borderRadius:99, background:track, position:"relative"}}>
+        <div style={{position:"absolute", left:0, top:0, height:4, borderRadius:99, background:color, width:v+"%"}}/>
+      </div>
+      <div style={{
+        position:"absolute", top:"50%", left:`calc(${v}% - 12px)`,
+        width:24, height:24, borderRadius:99, background:"#fff",
+        boxShadow:"0 1px 2px rgba(0,0,0,.18), 0 4px 14px rgba(0,0,0,.16)",
+        transform:"translateY(-50%)",
+      }}/>
+    </div>
+  );
+}
+
+window.Phone = Phone;
+window.Sheet = Sheet;
+window.Pill = Pill;
+window.Button = Button;
+window.Slider = Slider;
+function Onboarding(){
+  const [splitPct, setSplitPct] = React.useState(52);
+  const drag = (e)=>{
+    const card = e.currentTarget.closest("[data-hero]");
+    if(!card) return;
+    const rect = card.getBoundingClientRect();
+    const move = (cx)=>{
+      const p = Math.max(8, Math.min(92, ((cx - rect.left)/rect.width)*100));
+      setSplitPct(p);
+    };
+    const onMove = (ev)=>{
+      const cx = ev.touches ? ev.touches[0].clientX : ev.clientX;
+      move(cx);
+    };
+    const onUp = ()=>{
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", onMove);
+    window.addEventListener("touchend", onUp);
+    onMove(e);
+  };
+
+  return (
+    <div style={{
+      position:"absolute", inset:0,
+      background:"var(--light)",
+      paddingTop:54,
+      display:"flex", flexDirection:"column",
+    }}>
+      {/* Pagination dots */}
+      <div style={{display:"flex", justifyContent:"center", gap:6, padding:"14px 0 8px"}}>
+        <div style={{width:24, height:5, borderRadius:99, background:"#11BC9B"}}/>
+        <div style={{width:5, height:5, borderRadius:99, background:"#CFD7D5"}}/>
+        <div style={{width:5, height:5, borderRadius:99, background:"#CFD7D5"}}/>
+      </div>
+
+      {/* Hero before/after */}
+      <div data-hero style={{
+        margin:"10px 24px 22px",
+        height:430, borderRadius:28, overflow:"hidden",
+        position:"relative",
+        boxShadow:"0 30px 60px -20px rgba(8,16,18,.18), 0 8px 30px rgba(8,16,18,.06)",
+        background:"#0D1718",
+        userSelect:"none",
+      }}>
+        <Photo kind="street" />
+        {/* Right side = blurred (AFTER) */}
+        <div style={{
+          position:"absolute", inset:0,
+          clipPath:`inset(0 0 0 ${splitPct}%)`,
+        }}>
+          <Photo kind="street" filter="blur(14px) saturate(1.05)" />
+          {/* Privacy redactions on the AFTER side */}
+          <PhotoRedactions />
+        </div>
+
+        {/* Labels */}
+        <div style={{
+          position:"absolute", left:14, top:14,
+          background:"rgba(13,23,24,.6)", color:"#F8FAF9",
+          fontSize:11, fontWeight:600, padding:"5px 10px", borderRadius:99,
+          letterSpacing:.4, textTransform:"uppercase",
+          backdropFilter:"blur(10px)",
+        }}>Before</div>
+        <div style={{
+          position:"absolute", right:14, top:14,
+          background:"rgba(17,188,155,.92)", color:"#04201B",
+          fontSize:11, fontWeight:700, padding:"5px 10px", borderRadius:99,
+          letterSpacing:.4, textTransform:"uppercase",
+        }}>After</div>
+
+        {/* Slider handle */}
+        <div onMouseDown={drag} onTouchStart={drag} style={{
+          position:"absolute", top:0, bottom:0,
+          left:`calc(${splitPct}% - 1px)`, width:2, background:"#fff",
+          boxShadow:"0 0 12px rgba(0,0,0,.4)",
+          touchAction:"none", cursor:"ew-resize",
+        }}>
+          <div style={{
+            position:"absolute", left:"50%", top:"50%", transform:"translate(-50%,-50%)",
+            width:42, height:42, borderRadius:99, background:"#fff",
+            display:"flex", alignItems:"center", justifyContent:"center",
+            boxShadow:"0 6px 20px rgba(0,0,0,.25)",
+            color:"#0D1718",
+          }}><Ico.Arrows s={20}/></div>
+        </div>
+      </div>
+
+      {/* Headline */}
+      <div style={{padding:"0 28px"}}>
+        <div style={{
+          fontSize:30, fontWeight:700, lineHeight:1.1, color:"#0D1718",
+          letterSpacing:-.6,
+        }}>Blur what should<br/>stay <span style={{color:"#0EA587"}}>private.</span></div>
+        <div style={{
+          marginTop:12, color:"#667277", fontSize:15.5, lineHeight:1.5,
+        }}>Hide faces, backgrounds, addresses, and<br/>objects before sharing.</div>
+      </div>
+
+      <div style={{flex:1}}/>
+
+      {/* CTAs */}
+      <div style={{padding:"0 24px 30px"}}>
+        <Button variant="primary" onClick={()=>window.__nav("home")}>Start editing</Button>
+        <button onClick={()=>window.__nav("editor")} style={{
+          marginTop:10, width:"100%", height:50,
+          background:"transparent", border:"none", color:"#667277",
+          fontFamily:"var(--font)", fontSize:15.5, fontWeight:500, cursor:"pointer",
+        }}>Try sample photo</button>
+      </div>
+    </div>
+  );
+}
+window.Onboarding = Onboarding;
+
+/* ============== Photo asset ============== */
+/* SVG-rendered photographic scene so the prototype works offline.
+   Different "kinds" depict typical privacy-sensitive scenes. */
+
+function Photo({ kind="street", filter, mask, style }){
+  const Inner = {
+    street: <StreetScene/>,
+    portrait: <PortraitScene/>,
+    product: <ProductScene/>,
+    doorstep: <DoorstepScene/>,
+    bokeh: <BokehScene/>,
+  }[kind] || <StreetScene/>;
+
+  return (
+    <div style={{
+      position:"absolute", inset:0,
+      filter, ...style,
+    }}>
+      <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+        style={{width:"100%", height:"100%", display:"block"}}>
+        {Inner}
+      </svg>
+      {mask}
+    </div>
+  );
+}
+window.Photo = Photo;
+
+function StreetScene(){
+  return (
+    <g>
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#E9D6BD"/>
+          <stop offset="60%" stopColor="#C9A892"/>
+          <stop offset="100%" stopColor="#7A6E68"/>
+        </linearGradient>
+        <linearGradient id="bldgL" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#3E3328"/>
+          <stop offset="100%" stopColor="#2A221B"/>
+        </linearGradient>
+        <linearGradient id="bldgR" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#574131"/>
+          <stop offset="100%" stopColor="#322419"/>
+        </linearGradient>
+        <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#574437"/>
+          <stop offset="100%" stopColor="#1F1612"/>
+        </linearGradient>
+        <radialGradient id="haze" cx="50%" cy="42%" r="60%">
+          <stop offset="0%" stopColor="rgba(255,220,170,0.55)"/>
+          <stop offset="100%" stopColor="rgba(255,220,170,0)"/>
+        </radialGradient>
+        <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#E8B69A"/><stop offset="100%" stopColor="#B97D5E"/>
+        </linearGradient>
+        <linearGradient id="coat" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#7A1F1F"/><stop offset="100%" stopColor="#4A0F0F"/>
+        </linearGradient>
+        <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#3A2820"/><stop offset="100%" stopColor="#1B1310"/>
+        </linearGradient>
+        <linearGradient id="car" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#23252A"/><stop offset="100%" stopColor="#0E1014"/>
+        </linearGradient>
+      </defs>
+      {/* sky */}
+      <rect width="600" height="800" fill="url(#sky)"/>
+      {/* sun haze */}
+      <rect width="600" height="800" fill="url(#haze)"/>
+      {/* buildings */}
+      <polygon points="0,140 230,80 230,520 0,520" fill="url(#bldgL)"/>
+      <polygon points="370,80 600,140 600,520 370,520" fill="url(#bldgR)"/>
+      {/* windows L */}
+      {Array.from({length:5}).map((_,r)=>Array.from({length:4}).map((_,c)=>(
+        <rect key={`L${r}${c}`} x={20+c*52} y={170+r*60} width={32} height={26} rx={2}
+          fill="rgba(245,210,160,.36)"/>
+      )))}
+      {/* windows R */}
+      {Array.from({length:5}).map((_,r)=>Array.from({length:4}).map((_,c)=>(
+        <rect key={`R${r}${c}`} x={400+c*52} y={170+r*60} width={32} height={26} rx={2}
+          fill="rgba(245,210,160,.36)"/>
+      )))}
+      {/* ground */}
+      <rect y="520" width="600" height="280" fill="url(#ground)"/>
+      {/* road lines */}
+      <rect y="555" width="600" height="3" fill="rgba(255,220,180,.18)"/>
+      {/* parked car w/ visible plate */}
+      <g transform="translate(380,520)">
+        <rect x="0" y="0" width="200" height="120" rx="22" fill="url(#car)"/>
+        <rect x="14" y="22" width="172" height="40" rx="8" fill="#13161A" stroke="rgba(255,255,255,.06)"/>
+        <rect x="60" y="92" width="80" height="24" rx="4" fill="#F1E7C8"/>
+        <text x="100" y="110" fontFamily="monospace" fontSize="16" fontWeight="700"
+          textAnchor="middle" fill="#0D1718" letterSpacing="2">7K2 8FL</text>
+        <circle cx="40" cy="130" r="14" fill="#0a0c0d"/>
+        <circle cx="160" cy="130" r="14" fill="#0a0c0d"/>
+      </g>
+      {/* person in foreground */}
+      <g transform="translate(180,250)">
+        {/* body coat */}
+        <path d="M40,180 C 0,260 -10,420 0,560 L 240,560 C 250,420 240,260 200,180 L 40,180 Z"
+          fill="url(#coat)"/>
+        {/* neck */}
+        <rect x="100" y="160" width="40" height="40" fill="url(#skin)"/>
+        {/* head */}
+        <ellipse cx="120" cy="120" rx="60" ry="72" fill="url(#skin)"/>
+        {/* hair */}
+        <path d="M60,90 C 60,40 180,40 180,90 C 188,110 188,140 178,150 C 178,90 62,90 62,150 C 52,140 52,110 60,90 Z"
+          fill="url(#hair)"/>
+        {/* eyes */}
+        <ellipse cx="100" cy="118" rx="5" ry="3" fill="#1A1310"/>
+        <ellipse cx="140" cy="118" rx="5" ry="3" fill="#1A1310"/>
+        {/* mouth */}
+        <path d="M105,150 Q120,158 135,150" stroke="#5C2820" strokeWidth="3" fill="none" strokeLinecap="round"/>
+        {/* coffee cup */}
+        <g transform="translate(170,300) rotate(-8)">
+          <rect width="38" height="56" rx="4" fill="#FFFFFF"/>
+          <rect width="38" height="14" fill="#7A4A30"/>
+          <rect x="-3" y="14" width="44" height="6" fill="#3A1F12"/>
+        </g>
+      </g>
+      {/* small text-like passers-by far away */}
+      <rect x="40" y="540" width="48" height="60" rx="14" fill="rgba(0,0,0,.45)"/>
+      <rect x="100" y="555" width="32" height="40" rx="10" fill="rgba(0,0,0,.4)"/>
+    </g>
+  );
+}
+
+function PortraitScene(){
+  return (
+    <g>
+      <defs>
+        <radialGradient id="pBg" cx="60%" cy="40%" r="80%">
+          <stop offset="0%" stopColor="#3D5C66"/>
+          <stop offset="100%" stopColor="#0F1A1F"/>
+        </radialGradient>
+        <linearGradient id="pSkin" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#F0C9AE"/><stop offset="100%" stopColor="#A86C4E"/>
+        </linearGradient>
+        <linearGradient id="pHair" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#5C3A28"/><stop offset="100%" stopColor="#241510"/>
+        </linearGradient>
+        <linearGradient id="pShirt" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#E2D7C6"/><stop offset="100%" stopColor="#A19783"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="800" fill="url(#pBg)"/>
+      {/* bokeh circles */}
+      {[
+        [80,120,60,0.18],[120,520,80,0.14],[480,220,90,0.16],[520,640,70,0.12],
+        [60,720,50,0.2],[300,80,40,0.18],[380,720,55,0.14],
+      ].map(([x,y,r,a],i)=>(
+        <circle key={i} cx={x} cy={y} r={r} fill={`rgba(255,236,196,${a})`}/>
+      ))}
+      {/* shoulders */}
+      <path d="M0,800 L 0,640 C 100,540 240,520 300,520 C 360,520 500,540 600,640 L 600,800 Z"
+        fill="url(#pShirt)"/>
+      {/* neck */}
+      <rect x="265" y="430" width="70" height="100" fill="url(#pSkin)"/>
+      {/* head */}
+      <ellipse cx="300" cy="370" rx="120" ry="140" fill="url(#pSkin)"/>
+      {/* hair */}
+      <path d="M180,290 C 180,200 420,200 420,290 C 440,330 440,370 410,380 C 410,280 190,280 190,380 C 160,370 160,330 180,290 Z"
+        fill="url(#pHair)"/>
+      {/* features */}
+      <ellipse cx="262" cy="360" rx="9" ry="5" fill="#241510"/>
+      <ellipse cx="338" cy="360" rx="9" ry="5" fill="#241510"/>
+      <path d="M280,420 Q300,432 320,420" stroke="#7C3A28" strokeWidth="4" fill="none" strokeLinecap="round"/>
+    </g>
+  );
+}
+
+function ProductScene(){
+  return (
+    <g>
+      <defs>
+        <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#C9A57B"/><stop offset="100%" stopColor="#7B5634"/>
+        </linearGradient>
+        <linearGradient id="leather" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#7C4F2C"/><stop offset="100%" stopColor="#3F2614"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="800" fill="url(#wood)"/>
+      {/* wood grain */}
+      {Array.from({length:14}).map((_,i)=>(
+        <rect key={i} y={i*60} width="600" height="2" fill="rgba(0,0,0,.06)"/>
+      ))}
+      {/* shadow */}
+      <ellipse cx="300" cy="540" rx="200" ry="22" fill="rgba(0,0,0,.32)"/>
+      {/* leather bag */}
+      <rect x="140" y="280" width="320" height="240" rx="32" fill="url(#leather)"/>
+      <path d="M 200 280 Q 200 200 300 200 Q 400 200 400 280" stroke="#3F2614" strokeWidth="14" fill="none"/>
+      <rect x="280" y="380" width="40" height="50" rx="6" fill="#2A1607"/>
+      <circle cx="300" cy="405" r="4" fill="#E2C58F"/>
+      {/* notebook */}
+      <rect x="60" y="600" width="220" height="40" rx="6" fill="#1A1310"/>
+      <rect x="60" y="600" width="220" height="6" fill="#E2C58F"/>
+      {/* key */}
+      <g transform="translate(420,620) rotate(-15)">
+        <circle cx="0" cy="0" r="20" fill="#9C7A3A" stroke="#5A4520" strokeWidth="3"/>
+        <rect x="14" y="-4" width="60" height="8" fill="#9C7A3A"/>
+      </g>
+    </g>
+  );
+}
+
+function DoorstepScene(){
+  return (
+    <g>
+      <defs>
+        <linearGradient id="door" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#2C4A4A"/><stop offset="100%" stopColor="#15292A"/>
+        </linearGradient>
+        <linearGradient id="wallD" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#D9CFC0"/><stop offset="100%" stopColor="#9D9079"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="800" fill="url(#wallD)"/>
+      {/* bricks pattern */}
+      {Array.from({length:20}).map((_,r)=>Array.from({length:8}).map((_,c)=>(
+        <rect key={`b${r}${c}`} x={c*78 + (r%2?38:0)} y={r*42}
+          width={76} height={40} fill="none"
+          stroke="rgba(0,0,0,.06)"/>
+      )))}
+      {/* door */}
+      <rect x="160" y="180" width="280" height="500" rx="6" fill="url(#door)"/>
+      <rect x="180" y="200" width="240" height="220" rx="4" fill="rgba(255,255,255,.04)"/>
+      <rect x="180" y="440" width="240" height="220" rx="4" fill="rgba(255,255,255,.04)"/>
+      <circle cx="400" cy="430" r="6" fill="#C8A876"/>
+      {/* number plaque */}
+      <rect x="280" y="120" width="120" height="46" rx="6" fill="#E8DCC4"/>
+      <text x="340" y="153" fontFamily="serif" fontSize="30" fontWeight="700"
+        textAnchor="middle" fill="#1A1310">2841</text>
+      {/* package */}
+      <rect x="220" y="640" width="160" height="100" rx="4" fill="#C9A57B"/>
+      <rect x="220" y="680" width="160" height="2" fill="rgba(0,0,0,.18)"/>
+      <rect x="240" y="660" width="60" height="14" fill="#fff"/>
+    </g>
+  );
+}
+
+function BokehScene(){
+  return (
+    <g>
+      <defs>
+        <radialGradient id="bk" cx="50%" cy="50%" r="80%">
+          <stop offset="0%" stopColor="#395C66"/><stop offset="100%" stopColor="#0F1A1F"/>
+        </radialGradient>
+      </defs>
+      <rect width="600" height="800" fill="url(#bk)"/>
+      {Array.from({length:24}).map((_,i)=>{
+        const x = (i*73)%600 + (i%3)*20;
+        const y = (i*97)%800;
+        const r = 30 + (i%5)*16;
+        const a = 0.06 + (i%4)*0.04;
+        return <circle key={i} cx={x} cy={y} r={r} fill={`rgba(255,236,196,${a})`}/>;
+      })}
+    </g>
+  );
+}
+
+window.StreetScene = StreetScene;
+window.PortraitScene = PortraitScene;
+window.ProductScene = ProductScene;
+window.DoorstepScene = DoorstepScene;
+window.BokehScene = BokehScene;
+
+function PhotoRedactions(){
+  return (
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+      {/* Face redaction (mosaic) */}
+      <g transform="translate(245,330)">
+        {Array.from({length:5}).map((_,r)=>Array.from({length:5}).map((_,c)=>(
+          <rect key={`m${r}${c}`} x={c*22} y={r*22} width={20} height={20}
+            fill={["#A38166","#7C5F4A","#C8A286","#5E4633","#9B7758"][((r+c)*3+r)%5]}/>
+        )))}
+      </g>
+      {/* License plate redaction (solid) */}
+      <rect x="438" y="610" width="84" height="26" rx="4" fill="#0D1718"/>
+      <rect x="438" y="610" width="84" height="26" rx="4" fill="rgba(17,188,155,0.0)" stroke="#11BC9B" strokeWidth="0"/>
+    </svg>
+  );
+}
+window.PhotoRedactions = PhotoRedactions;
+function Home(){
+  const quick = [
+    { id:"privacy",  label:"Privacy Blur",     sub:"Faces & plates",  icon:<Ico.Face s={20}/>, accent:"#11BC9B"},
+    { id:"bg",       label:"Blur Background",  sub:"Studio bokeh",    icon:<Ico.Drop s={20}/>, accent:"#11BC9B"},
+    { id:"object",   label:"Remove Object",    sub:"Smart erase",     icon:<Ico.Eraser s={20}/>, accent:"#11BC9B"},
+    { id:"removebg", label:"Remove Background",sub:"Subject cutout",  icon:<Ico.Layers s={20}/>, accent:"#11BC9B"},
+  ];
+  const recents = [
+    { kind:"street",  title:"Street walk",  meta:"2 hrs ago · Faces blurred", date:"Today" },
+    { kind:"product", title:"Camera bag",   meta:"Yesterday · BG removed",  date:"Yesterday" },
+    { kind:"doorstep",title:"Front door",   meta:"Mar 12 · Address hidden", date:"Last week" },
+  ];
+
+  return (
+    <div style={{position:"absolute", inset:0, paddingTop:54, background:"var(--light)", overflow:"auto"}} className="noscroll">
+      {/* Top bar */}
+      <div style={{padding:"16px 22px 10px", display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+        <div style={{display:"flex", alignItems:"center", gap:10}}>
+          <div style={{
+            fontSize:26, fontWeight:700, letterSpacing:-.5, color:"#0D1718",
+          }}>Blur Photo</div>
+          <Pill color="pro" style={{boxShadow:"0 4px 14px rgba(17,188,155,.3)"}}>
+            <Ico.Crown s={11}/> PRO
+          </Pill>
+        </div>
+        <button style={{
+          width:40, height:40, borderRadius:99, background:"#fff",
+          border:"1px solid var(--border)", color:"#0D1718",
+          display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer",
+        }}><Ico.Settings s={20}/></button>
+      </div>
+
+      {/* Big import card */}
+      <button onClick={()=>window.__nav("picker")} style={{
+        margin:"6px 18px 16px", padding:0,
+        width:"calc(100% - 36px)",
+        height:178, borderRadius:26, border:"none", cursor:"pointer",
+        background:"linear-gradient(135deg, #0D1718 0%, #16302C 60%, #0EA587 130%)",
+        position:"relative", overflow:"hidden", textAlign:"left",
+        boxShadow:"0 18px 40px -12px rgba(13,23,24,.45)",
+      }}>
+        {/* subtle bokeh */}
+        <svg width="100%" height="100%" style={{position:"absolute", inset:0, opacity:.55}}>
+          <circle cx="320" cy="40" r="80" fill="rgba(17,188,155,0.16)"/>
+          <circle cx="270" cy="160" r="40" fill="rgba(255,255,255,0.06)"/>
+          <circle cx="60" cy="160" r="50" fill="rgba(17,188,155,0.12)"/>
+        </svg>
+        <div style={{position:"relative", padding:"22px 24px", color:"#F8FAF9"}}>
+          <div style={{display:"flex", alignItems:"center", gap:8, fontSize:12, fontWeight:600, color:"#83E6D0", letterSpacing:.6, textTransform:"uppercase"}}>
+            <Ico.Sparkle s={14}/> AI privacy editor
+          </div>
+          <div style={{fontSize:26, fontWeight:700, marginTop:8, lineHeight:1.15, letterSpacing:-.5}}>
+            Edit a photo
+          </div>
+          <div style={{fontSize:14, color:"#A6C2BD", marginTop:4}}>
+            Auto-detect faces, plates & private info
+          </div>
+          <div style={{
+            position:"absolute", right:24, bottom:22,
+            width:48, height:48, borderRadius:99, background:"#11BC9B",
+            display:"flex", alignItems:"center", justifyContent:"center",
+            color:"#04201B",
+          }}><Ico.Plus s={22}/></div>
+        </div>
+      </button>
+
+      {/* Quick actions grid */}
+      <div style={{padding:"4px 18px 0"}}>
+        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:10}}>
+          {quick.map(q=>(
+            <button key={q.id} onClick={()=>window.__nav(
+              q.id==="bg" || q.id==="removebg" ? "background" :
+              q.id==="object" ? "eraser" : "select"
+            )} style={{
+              background:"#fff", border:"1px solid var(--border)",
+              borderRadius:18, padding:"14px 14px 14px",
+              display:"flex", flexDirection:"column", alignItems:"flex-start",
+              gap:10, cursor:"pointer", textAlign:"left",
+              boxShadow:"0 1px 0 rgba(15,23,28,.02)",
+            }}>
+              <div style={{
+                width:38, height:38, borderRadius:11,
+                background:"#DDF8F2", color:"#0EA587",
+                display:"flex", alignItems:"center", justifyContent:"center",
+              }}>{q.icon}</div>
+              <div>
+                <div style={{fontSize:14, fontWeight:600, color:"#0D1718"}}>{q.label}</div>
+                <div style={{fontSize:12, color:"#8A9998", marginTop:2}}>{q.sub}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent projects */}
+      <div style={{padding:"22px 22px 8px", display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+        <div style={{fontSize:17, fontWeight:600, color:"#0D1718", letterSpacing:-.2}}>Recent</div>
+        <div style={{fontSize:13, color:"#0EA587", fontWeight:600}}>See all</div>
+      </div>
+
+      <div className="noscroll" style={{
+        display:"flex", gap:12, padding:"4px 22px 14px",
+        overflowX:"auto",
+      }}>
+        {recents.map((r,i)=>(
+          <button key={i} onClick={()=>window.__nav("editor")} style={{
+            flex:"0 0 auto", width:130, height:160, borderRadius:18,
+            border:"none", cursor:"pointer", padding:0, position:"relative",
+            background:"#0D1718", overflow:"hidden",
+            boxShadow:"0 1px 0 rgba(15,23,28,.04)",
+          }}>
+            <Photo kind={r.kind}/>
+            <div style={{
+              position:"absolute", inset:0,
+              background:"linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,.65) 100%)",
+            }}/>
+            <div style={{
+              position:"absolute", left:10, top:10,
+              background:"rgba(17,188,155,.92)", color:"#04201B",
+              fontSize:9, fontWeight:700, padding:"3px 7px", borderRadius:99,
+              letterSpacing:.4, textTransform:"uppercase",
+            }}>Edited</div>
+            <div style={{
+              position:"absolute", left:10, right:10, bottom:10, color:"#fff", textAlign:"left"
+            }}>
+              <div style={{fontSize:12, fontWeight:600}}>{r.title}</div>
+              <div style={{fontSize:10, opacity:.78, marginTop:2}}>{r.date}</div>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Trust row */}
+      <div style={{
+        margin:"8px 18px 30px", padding:"14px 16px",
+        background:"#fff", border:"1px solid var(--border)", borderRadius:18,
+        display:"flex", alignItems:"center", justifyContent:"space-between",
+      }}>
+        {[
+          { icon:<Ico.Sparkle s={16}/>, label:"Original quality", sub:"Lossless"},
+          { icon:<Ico.Lock s={16}/>,    label:"Private editing",  sub:"On device"},
+          { icon:<Ico.Bolt s={16}/>,    label:"Fast export",      sub:"< 20 sec"},
+        ].map((t,i)=>(
+          <div key={i} style={{display:"flex", alignItems:"center", gap:10, flex:1}}>
+            <div style={{
+              width:32, height:32, borderRadius:10, background:"#DDF8F2", color:"#0EA587",
+              display:"flex", alignItems:"center", justifyContent:"center",
+            }}>{t.icon}</div>
+            <div>
+              <div style={{fontSize:11.5, fontWeight:600, color:"#0D1718"}}>{t.label}</div>
+              <div style={{fontSize:10, color:"#8A9998"}}>{t.sub}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tab bar */}
+      <TabBar active="home"/>
+    </div>
+  );
+}
+
+function TabBar({ active="home" }){
+  const items = [
+    { id:"home",   icon:<Ico.Image s={22}/>,  label:"Edit" },
+    { id:"picker", icon:<Ico.Folder s={22}/>, label:"Library" },
+    { id:"paywall",icon:<Ico.Crown s={22}/>,  label:"Pro" },
+    { id:"home",   icon:<Ico.Settings s={22}/>,label:"Settings" },
+  ];
+  return (
+    <div style={{
+      position:"absolute", left:0, right:0, bottom:0,
+      background:"rgba(255,255,255,0.92)",
+      backdropFilter:"blur(20px) saturate(140%)",
+      borderTop:"1px solid var(--border)",
+      paddingBottom:30, paddingTop:8, paddingLeft:22, paddingRight:22,
+      display:"flex", justifyContent:"space-around",
+    }}>
+      {items.map((it,i)=>(
+        <button key={i} onClick={()=>window.__nav(it.id)} style={{
+          background:"none", border:"none", cursor:"pointer",
+          display:"flex", flexDirection:"column", alignItems:"center", gap:3,
+          color: active===it.id ? "#0EA587" : "#8A9998",
+          fontFamily:"var(--font)", fontSize:11, fontWeight:500,
+          padding:"6px 14px", minWidth:60,
+        }}>{it.icon}<span>{it.label}</span></button>
+      ))}
+    </div>
+  );
+}
+window.Home = Home;
+window.TabBar = TabBar;
+function Picker(){
+  const [granted, setGranted] = React.useState(false);
+  const albums = ["Recents", "Favorites", "Selfies", "Screenshots", "Documents"];
+  const photos = [
+    "street", "portrait", "doorstep", "product", "bokeh", "street",
+    "portrait", "product", "doorstep", "bokeh", "street", "portrait",
+  ];
+
+  if(!granted){
+    return (
+      <div style={{position:"absolute", inset:0, paddingTop:54, background:"var(--light)", display:"flex", flexDirection:"column"}}>
+        {/* nav */}
+        <div style={{display:"flex", alignItems:"center", padding:"14px 22px"}}>
+          <button onClick={()=>window.__nav("home")} style={{
+            background:"none", border:"none", color:"#0D1718", cursor:"pointer", padding:0,
+            display:"flex", alignItems:"center", gap:6, fontSize:15, fontWeight:500,
+          }}><Ico.Back s={20}/></button>
+        </div>
+
+        {/* hero */}
+        <div style={{padding:"24px 28px 0"}}>
+          <div style={{
+            width:88, height:88, borderRadius:24,
+            background:"linear-gradient(135deg, #DDF8F2, #B6F0DF)",
+            display:"flex", alignItems:"center", justifyContent:"center",
+            color:"#0EA587", marginBottom:22,
+          }}>
+            <Ico.Image s={44}/>
+          </div>
+          <div style={{fontSize:28, fontWeight:700, color:"#0D1718", letterSpacing:-.4, lineHeight:1.15}}>
+            Choose a photo<br/>to edit
+          </div>
+          <div style={{marginTop:12, color:"#667277", fontSize:15.5, lineHeight:1.5}}>
+            We only use the photo you select. Nothing is uploaded unless you export.
+          </div>
+        </div>
+
+        <div style={{padding:"22px 24px"}}>
+          {[
+            { icon:<Ico.Lock s={18}/>, t:"Private by default", s:"Editing happens on your device"},
+            { icon:<Ico.Sparkle s={18}/>, t:"Limited photo access", s:"You pick what we can see"},
+            { icon:<Ico.Bolt s={18}/>, t:"Fast & local", s:"No cloud round-trips required"},
+          ].map((row,i)=>(
+            <div key={i} style={{
+              display:"flex", alignItems:"center", gap:14,
+              padding:"10px 0",
+              borderTop: i? "1px solid var(--border)" : "none",
+            }}>
+              <div style={{
+                width:36, height:36, borderRadius:11, background:"#DDF8F2", color:"#0EA587",
+                display:"flex", alignItems:"center", justifyContent:"center",
+              }}>{row.icon}</div>
+              <div>
+                <div style={{fontSize:14.5, fontWeight:600, color:"#0D1718"}}>{row.t}</div>
+                <div style={{fontSize:12.5, color:"#8A9998", marginTop:2}}>{row.s}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{flex:1}}/>
+        <div style={{padding:"0 24px 30px"}}>
+          <Button variant="primary" onClick={()=>setGranted(true)}>Choose photo</Button>
+          <div style={{textAlign:"center", color:"#8A9998", fontSize:13, marginTop:14}}>
+            Or <span onClick={()=>window.__nav("editor")} style={{color:"#0EA587", fontWeight:600}}>try a sample photo</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{position:"absolute", inset:0, paddingTop:54, background:"var(--light)", display:"flex", flexDirection:"column"}}>
+      {/* nav */}
+      <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 22px"}}>
+        <button onClick={()=>setGranted(false)} style={{
+          background:"none", border:"none", color:"#11BC9B", fontSize:15.5, fontWeight:600, cursor:"pointer",
+        }}>Cancel</button>
+        <div style={{fontSize:16, fontWeight:600, color:"#0D1718"}}>Recents</div>
+        <button onClick={()=>window.__nav("editor")} style={{
+          background:"none", border:"none", color:"#11BC9B", fontSize:15.5, fontWeight:600, cursor:"pointer",
+        }}>Done</button>
+      </div>
+
+      {/* Album dropdown */}
+      <div style={{padding:"4px 22px 12px"}}>
+        <button style={{
+          background:"#fff", border:"1px solid var(--border)", borderRadius:14,
+          padding:"10px 14px", display:"flex", alignItems:"center", justifyContent:"space-between",
+          width:"100%", cursor:"pointer",
+        }}>
+          <div style={{display:"flex", alignItems:"center", gap:10}}>
+            <Ico.Folder s={18}/>
+            <span style={{fontSize:14, fontWeight:600, color:"#0D1718"}}>Recents</span>
+            <span style={{fontSize:12, color:"#8A9998"}}>2,418 photos</span>
+          </div>
+          <Ico.Search s={18}/>
+        </button>
+      </div>
+
+      {/* Filter chips */}
+      <div className="noscroll" style={{display:"flex", gap:8, overflowX:"auto", padding:"0 22px 12px"}}>
+        {albums.map((a,i)=>(
+          <div key={a} style={{
+            flex:"0 0 auto",
+            padding:"7px 14px", borderRadius:99,
+            background: i===0 ? "#0D1718" : "#fff",
+            color: i===0 ? "#F8FAF9" : "#0D1718",
+            border: i===0 ? "none" : "1px solid var(--border)",
+            fontSize:13, fontWeight:600, cursor:"pointer",
+          }}>{a}</div>
+        ))}
+      </div>
+
+      {/* Photo grid */}
+      <div className="noscroll" style={{
+        flex:1, overflowY:"auto", padding:"0 14px 110px",
+      }}>
+        <div style={{display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:3}}>
+          {photos.map((p,i)=>{
+            const selected = i===0;
+            return (
+              <div key={i} onClick={()=>window.__nav("editor")} style={{
+                position:"relative", paddingTop:"100%", borderRadius:6, overflow:"hidden",
+                background:"#0D1718", cursor:"pointer",
+              }}>
+                <div style={{position:"absolute", inset:0}}>
+                  <Photo kind={p}/>
+                </div>
+                {/* Live AI tag on a few */}
+                {(i===0 || i===2 || i===6 || i===8) && (
+                  <div style={{
+                    position:"absolute", left:6, top:6, background:"rgba(17,188,155,.92)",
+                    color:"#04201B", fontSize:9, fontWeight:700, padding:"2px 6px", borderRadius:99,
+                    letterSpacing:.3,
+                  }}>AI</div>
+                )}
+                {/* Selected ring */}
+                <div style={{
+                  position:"absolute", inset:0, borderRadius:6,
+                  border: selected ? "3px solid #11BC9B" : "none",
+                }}/>
+                {selected && (
+                  <div style={{
+                    position:"absolute", right:6, top:6, width:22, height:22, borderRadius:99,
+                    background:"#11BC9B", color:"#04201B",
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                  }}><Ico.Check s={14}/></div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Use button */}
+      <div style={{
+        position:"absolute", bottom:0, left:0, right:0,
+        padding:"14px 22px 30px",
+        background:"linear-gradient(180deg, rgba(246,248,247,0) 0%, rgba(246,248,247,0.98) 30%)",
+      }}>
+        <Button variant="primary" onClick={()=>window.__nav("editor")}>Use photo</Button>
+      </div>
+    </div>
+  );
+}
+window.Picker = Picker;
+/* Shared editor chrome used by Editor, SmartSelect, Background, Eraser, Export screens */
+
+function EditorTopBar({ onSave }){
+  return (
+    <div style={{
+      position:"absolute", top:54, left:0, right:0, height:54,
+      display:"flex", alignItems:"center", justifyContent:"space-between",
+      padding:"0 16px",
+      color:"#F8FAF9",
+      zIndex:30,
+    }}>
+      <button onClick={()=>window.__nav("home")} style={iconBtnStyle()}><Ico.Back s={20}/></button>
+      <div style={{display:"flex", gap:6}}>
+        <button style={iconBtnStyle()}><Ico.Undo s={20}/></button>
+        <button style={iconBtnStyle()}><Ico.Redo s={20}/></button>
+        <button style={iconBtnStyle()}><Ico.Help s={20}/></button>
+        <button onClick={onSave || (()=>window.__nav("export"))} style={{
+          ...iconBtnStyle(),
+          background:"#11BC9B", color:"#04201B",
+          paddingLeft:14, paddingRight:14, width:"auto",
+          fontSize:14, fontWeight:600,
+        }}>Save</button>
+      </div>
+    </div>
+  );
+}
+function iconBtnStyle(){
+  return {
+    width:36, height:36, borderRadius:99,
+    background:"rgba(255,255,255,0.08)",
+    border:"1px solid rgba(255,255,255,0.06)",
+    color:"#F8FAF9",
+    display:"flex", alignItems:"center", justifyContent:"center",
+    cursor:"pointer", padding:0,
+    backdropFilter:"blur(18px)",
+  };
+}
+window.EditorTopBar = EditorTopBar;
+window.iconBtnStyle = iconBtnStyle;
+
+function ToolTabs({ active="blur" }){
+  const tabs = [
+    { id:"blur",       label:"Blur",       icon:<Ico.Drop s={18}/>,   nav:"editor" },
+    { id:"mask",       label:"Mask",       icon:<Ico.Wand s={18}/>,   nav:"select" },
+    { id:"background", label:"Background", icon:<Ico.Mountain s={18}/>,nav:"background" },
+    { id:"erase",      label:"Erase",      icon:<Ico.Eraser s={18}/>, nav:"eraser" },
+    { id:"export",     label:"Export",     icon:<Ico.Save s={18}/>,   nav:"export" },
+  ];
+  return (
+    <div style={{
+      display:"flex", justifyContent:"space-between", alignItems:"center",
+      padding:"14px 14px 6px",
+    }}>
+      {tabs.map(t=>{
+        const on = t.id===active;
+        return (
+          <button key={t.id} onClick={()=>window.__nav(t.nav)} style={{
+            background:"transparent", border:"none", cursor:"pointer",
+            display:"flex", flexDirection:"column", alignItems:"center", gap:5,
+            color: on ? "#11BC9B" : "rgba(248,250,249,.6)",
+            fontFamily:"var(--font)", fontSize:11.5, fontWeight:600,
+            padding:"4px 10px", letterSpacing:.2, position:"relative",
+          }}>
+            <div style={{
+              width:42, height:42, borderRadius:14,
+              background: on ? "rgba(17,188,155,.16)" : "transparent",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              border: on? "1px solid rgba(17,188,155,.32)":"1px solid transparent",
+              transition:"all .2s",
+            }}>{t.icon}</div>
+            {t.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+window.ToolTabs = ToolTabs;
+
+/* Canvas: photo + optional before/after split, optional AI scan overlay, optional mask */
+function Canvas({ kind="street", split=null, mask=null, scan=false, redactions=true, blurAmt=14, mode="soft", children }){
+  /* mode: soft (gaussian) | pixelate | mosaic | redact */
+  const filter =
+    mode==="soft" ? `blur(${blurAmt}px) saturate(1.05)` :
+    mode==="pixelate" ? `blur(2px) contrast(1.1)` :
+    mode==="mosaic" ? `blur(.5px)` : null;
+
+  return (
+    <div style={{
+      position:"absolute", top:108, bottom:0, left:0, right:0,
+      background:"#0B1416", overflow:"hidden",
+    }}>
+      <div style={{position:"absolute", inset:0}}>
+        <Photo kind={kind}/>
+      </div>
+
+      {split !== null && (
+        <>
+          <div style={{
+            position:"absolute", inset:0,
+            clipPath:`inset(0 0 0 ${split}%)`,
+          }}>
+            <Photo kind={kind} filter={filter}/>
+            {redactions && <PhotoRedactions/>}
+            {mode==="pixelate" && <PixelGridOverlay/>}
+            {mode==="mosaic" && <MosaicOverlay/>}
+            {mode==="redact" && <RedactBars/>}
+          </div>
+          {/* Slider line */}
+          <SplitHandle pct={split}/>
+          <div style={{
+            position:"absolute", left:14, top:14,
+            background:"rgba(13,23,24,.6)", color:"#F8FAF9",
+            fontSize:11, fontWeight:600, padding:"5px 10px", borderRadius:99,
+            backdropFilter:"blur(8px)", letterSpacing:.4, textTransform:"uppercase",
+          }}>Before</div>
+          <div style={{
+            position:"absolute", right:14, top:14,
+            background:"rgba(17,188,155,.92)", color:"#04201B",
+            fontSize:11, fontWeight:700, padding:"5px 10px", borderRadius:99,
+            letterSpacing:.4, textTransform:"uppercase",
+          }}>After</div>
+        </>
+      )}
+
+      {scan && <ScanOverlay/>}
+      {mask}
+
+      {children}
+    </div>
+  );
+}
+window.Canvas = Canvas;
+
+function SplitHandle({pct=50, dark=true}){
+  return (
+    <div style={{
+      position:"absolute", top:0, bottom:0,
+      left:`calc(${pct}% - 1px)`, width:2, background:"#fff",
+      boxShadow:"0 0 12px rgba(0,0,0,.4)",
+    }}>
+      <div style={{
+        position:"absolute", left:"50%", top:"50%", transform:"translate(-50%,-50%)",
+        width:42, height:42, borderRadius:99, background:"#fff",
+        display:"flex", alignItems:"center", justifyContent:"center",
+        boxShadow:"0 6px 20px rgba(0,0,0,.25)", color:"#0D1718",
+      }}><Ico.Arrows s={18}/></div>
+    </div>
+  );
+}
+window.SplitHandle = SplitHandle;
+
+function ScanOverlay(){
+  return (
+    <div style={{position:"absolute", inset:0, pointerEvents:"none", overflow:"hidden"}}>
+      {/* scan line */}
+      <div style={{
+        position:"absolute", left:0, right:0, height:120,
+        background:"linear-gradient(180deg, rgba(17,188,155,0) 0%, rgba(17,188,155,.5) 50%, rgba(17,188,155,0) 100%)",
+        animation:"scanY 2.4s ease-in-out infinite",
+      }}/>
+      {/* corner marks */}
+      {[
+        {top:14,left:14},{top:14,right:14},{bottom:14,left:14},{bottom:14,right:14},
+      ].map((p,i)=>{
+        const cls = {
+          width:18, height:18, position:"absolute", borderColor:"#11BC9B",
+          borderStyle:"solid", borderWidth:0, ...p
+        };
+        if(p.top && p.left)   { cls.borderTopWidth=2; cls.borderLeftWidth=2; }
+        if(p.top && p.right)  { cls.borderTopWidth=2; cls.borderRightWidth=2; }
+        if(p.bottom && p.left){ cls.borderBottomWidth=2; cls.borderLeftWidth=2; }
+        if(p.bottom && p.right){cls.borderBottomWidth=2; cls.borderRightWidth=2; }
+        return <div key={i} style={cls}/>;
+      })}
+    </div>
+  );
+}
+
+function PixelGridOverlay(){
+  return (
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+      <defs>
+        <pattern id="pix" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+          <rect width="22" height="22" fill="rgba(0,0,0,0)"/>
+          <rect width="22" height="22" fill="rgba(0,0,0,0)" stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
+        </pattern>
+      </defs>
+      <rect width="600" height="800" fill="url(#pix)"/>
+    </svg>
+  );
+}
+
+function MosaicOverlay(){
+  return (
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+      {Array.from({length: 800/22}).map((_,r)=>Array.from({length: 600/22}).map((_,c)=>{
+        const seed = (r*7 + c*3) % 9;
+        const fill = ["#A38166","#7C5F4A","#C8A286","#5E4633","#9B7758","#3D5460","#5C7C84","#7B5634","#0F1A1F"][seed];
+        return <rect key={`mo${r}${c}`} x={c*22} y={r*22} width={22} height={22} fill={fill} fillOpacity={(r>14 && r<22 && c>9 && c<16) ? .7 : 0}/>;
+      }))}
+    </svg>
+  );
+}
+
+function RedactBars(){
+  return (
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+      <rect x="220" y="320" width="160" height="60" rx="4" fill="#0D1718"/>
+      <rect x="438" y="610" width="84" height="26" rx="4" fill="#0D1718"/>
+    </svg>
+  );
+}
+window.PixelGridOverlay = PixelGridOverlay;
+window.MosaicOverlay = MosaicOverlay;
+window.RedactBars = RedactBars;
+window.ScanOverlay = ScanOverlay;
+
+/* ============== Editor (Blur tab) ============== */
+function Editor(){
+  const [split, setSplit] = React.useState(50);
+  const [mode, setMode] = React.useState("soft");
+  const [intensity, setIntensity] = React.useState(70);
+  const dragSplit = (e)=>{
+    const root = e.currentTarget.closest("[data-canvas-root]");
+    if(!root) return;
+    const rect = root.getBoundingClientRect();
+    const move = (cx)=>{
+      const p = Math.max(8, Math.min(92, ((cx - rect.left)/rect.width)*100));
+      setSplit(p);
+    };
+    const onMove = (ev)=>{
+      const cx = ev.touches ? ev.touches[0].clientX : ev.clientX;
+      move(cx);
+    };
+    const onUp = ()=>{
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", onMove);
+    window.addEventListener("touchend", onUp);
+    onMove(e);
+  };
+
+  const blurAmt = 4 + (intensity/100)*22;
+
+  return (
+    <div style={{position:"absolute", inset:0, background:"var(--dark)", color:"#F8FAF9"}}>
+      <EditorTopBar/>
+
+      <div data-canvas-root style={{position:"absolute", top:108, bottom:340, left:0, right:0, overflow:"hidden"}}>
+        <div style={{position:"absolute", inset:0}}>
+          <Photo kind="street"/>
+        </div>
+        <div style={{
+          position:"absolute", inset:0,
+          clipPath:`inset(0 0 0 ${split}%)`,
+        }}>
+          <Photo kind="street" filter={
+            mode==="soft" ? `blur(${blurAmt}px)` :
+            mode==="pixelate" ? `blur(1px) contrast(1.05)` :
+            mode==="mosaic" ? null : null
+          }/>
+          {mode==="pixelate" && <PixelGridOverlay/>}
+          {mode==="mosaic" && <MosaicOverlay/>}
+          {mode==="redact" && <RedactBars/>}
+          {mode!=="redact" && <PhotoRedactions/>}
+        </div>
+
+        <div onMouseDown={dragSplit} onTouchStart={dragSplit} style={{position:"absolute", inset:0, touchAction:"none"}}>
+          <SplitHandle pct={split}/>
+        </div>
+
+        {/* Labels */}
+        <div style={{
+          position:"absolute", left:14, top:14,
+          background:"rgba(13,23,24,.6)", color:"#F8FAF9",
+          fontSize:11, fontWeight:600, padding:"5px 10px", borderRadius:99,
+          backdropFilter:"blur(10px)", letterSpacing:.4, textTransform:"uppercase",
+        }}>Before</div>
+        <div style={{
+          position:"absolute", right:14, top:14,
+          background:"rgba(17,188,155,.92)", color:"#04201B",
+          fontSize:11, fontWeight:700, padding:"5px 10px", borderRadius:99,
+          letterSpacing:.4, textTransform:"uppercase",
+        }}>After</div>
+
+        {/* AI detected pill */}
+        <div style={{
+          position:"absolute", left:14, bottom:14,
+          background:"rgba(13,23,24,.7)", color:"#F8FAF9",
+          fontSize:11.5, fontWeight:600, padding:"7px 12px", borderRadius:99,
+          backdropFilter:"blur(10px)",
+          display:"flex", alignItems:"center", gap:6,
+        }}>
+          <span style={{
+            width:6, height:6, borderRadius:99, background:"#11BC9B",
+            animation:"pulseDot 1.6s ease-in-out infinite",
+          }}/>
+          AI detected 3 faces · 1 plate · 2 texts
+        </div>
+      </div>
+
+      {/* Bottom sheet */}
+      <Sheet style={{height:340}}>
+        <ToolTabs active="blur"/>
+
+        <div style={{padding:"6px 22px 0"}}>
+          <div style={{
+            display:"flex", justifyContent:"space-between", alignItems:"center",
+            marginBottom:10,
+          }}>
+            <div style={{fontSize:14, fontWeight:600, color:"#F8FAF9"}}>Intensity</div>
+            <div style={{fontSize:13, color:"#11BC9B", fontWeight:600}}>{Math.round(intensity)}%</div>
+          </div>
+          <Slider value={intensity} onChange={setIntensity}/>
+        </div>
+
+        <div style={{padding:"14px 16px 0"}}>
+          <div style={{display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:8}}>
+            {[
+              { id:"soft",     label:"Soft",     icon:<Ico.Drop s={18}/> },
+              { id:"pixelate", label:"Pixelate", icon:<Ico.Grid s={18}/> },
+              { id:"mosaic",   label:"Mosaic",   icon:<Ico.Mosaic s={18}/> },
+              { id:"redact",   label:"Redact",   icon:<Ico.Lock s={18}/> },
+            ].map(m=>{
+              const on = mode===m.id;
+              return (
+                <button key={m.id} onClick={()=>setMode(m.id)} style={{
+                  background: on ? "#11BC9B" : "rgba(255,255,255,0.06)",
+                  color: on ? "#04201B" : "#F8FAF9",
+                  border: on ? "none" : "1px solid rgba(255,255,255,0.08)",
+                  borderRadius:14, padding:"10px 0",
+                  display:"flex", flexDirection:"column", alignItems:"center", gap:4,
+                  fontFamily:"var(--font)", fontSize:12, fontWeight:600, cursor:"pointer",
+                }}>
+                  {m.icon}
+                  <span>{m.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div style={{padding:"16px 16px 0"}}>
+          <Button variant="primary" onClick={()=>window.__nav("export")}>
+            Apply blur
+          </Button>
+        </div>
+      </Sheet>
+    </div>
+  );
+}
+window.Editor = Editor;
+function SmartSelect(){
+  const [target, setTarget] = React.useState("face"); // object | background | face | text
+  const [brush, setBrush] = React.useState(48);
+  const [scanning, setScanning] = React.useState(true);
+  React.useEffect(()=>{
+    const t = setTimeout(()=>setScanning(false), 2400);
+    return ()=>clearTimeout(t);
+  }, []);
+
+  return (
+    <div style={{position:"absolute", inset:0, background:"var(--dark)", color:"#F8FAF9"}}>
+      <EditorTopBar/>
+
+      <div style={{position:"absolute", top:108, bottom:380, left:0, right:0, overflow:"hidden"}}>
+        <div style={{position:"absolute", inset:0}}>
+          <Photo kind="street"/>
+        </div>
+
+        {/* AI mask: face */}
+        {target==="face" && <FaceMaskOverlay/>}
+        {target==="background" && <BgMaskOverlay/>}
+        {target==="object" && <ObjectMaskOverlay/>}
+        {target==="text" && <TextMaskOverlay/>}
+
+        {scanning && <ScanOverlay/>}
+
+        {/* Detection pill */}
+        <div style={{
+          position:"absolute", left:14, top:14,
+          background:"rgba(13,23,24,.7)", color:"#F8FAF9",
+          fontSize:11.5, fontWeight:600, padding:"7px 12px", borderRadius:99,
+          backdropFilter:"blur(10px)",
+          display:"flex", alignItems:"center", gap:6,
+        }}>
+          <span style={{
+            width:6, height:6, borderRadius:99, background:"#11BC9B",
+            animation: scanning ? "pulseDot 1.4s ease-in-out infinite" : "none",
+          }}/>
+          {scanning ? "Scanning…" : `AI detected 3 ${target==='face'?'faces':target+'s'}`}
+        </div>
+
+        {/* Brush cursor preview */}
+        {!scanning && (
+          <div style={{
+            position:"absolute", left:`60%`, top:`58%`,
+            width:brush, height:brush, borderRadius:99,
+            border:"2px solid #11BC9B",
+            boxShadow:"0 0 0 1px rgba(0,0,0,0.4) inset, 0 0 0 1px rgba(0,0,0,0.4)",
+            transform:"translate(-50%,-50%)",
+            pointerEvents:"none",
+          }}/>
+        )}
+      </div>
+
+      {/* Bottom sheet */}
+      <Sheet style={{height:380}}>
+        <ToolTabs active="mask"/>
+
+        {/* Segmented target */}
+        <div style={{padding:"4px 16px 0"}}>
+          <div style={{
+            background:"rgba(255,255,255,0.06)",
+            borderRadius:12, padding:3,
+            display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:2,
+          }}>
+            {[
+              {id:"object", label:"Object"},
+              {id:"background", label:"Background"},
+              {id:"face", label:"Face"},
+              {id:"text", label:"Text"},
+            ].map(s=>{
+              const on = target===s.id;
+              return (
+                <button key={s.id} onClick={()=>{setTarget(s.id); setScanning(true); setTimeout(()=>setScanning(false), 1400);}} style={{
+                  background: on ? "rgba(255,255,255,0.16)" : "transparent",
+                  color: on ? "#F8FAF9" : "rgba(248,250,249,.65)",
+                  border:"none", borderRadius:10,
+                  padding:"9px 0",
+                  fontFamily:"var(--font)", fontSize:13, fontWeight:600, cursor:"pointer",
+                  boxShadow: on ? "0 1px 2px rgba(0,0,0,.18)" : "none",
+                }}>{s.label}</button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Brush tools */}
+        <div style={{padding:"14px 16px 0", display:"flex", gap:8}}>
+          {[
+            { id:"brush", icon:<Ico.Brush s={18}/>, label:"Brush", on:true },
+            { id:"eraser", icon:<Ico.Eraser s={18}/>, label:"Eraser" },
+            { id:"refine", icon:<Ico.Wand s={18}/>, label:"Refine edge" },
+            { id:"clear", icon:<Ico.Trash s={18}/>, label:"Clear" },
+          ].map(b=>{
+            const on = b.on;
+            return (
+              <button key={b.id} style={{
+                flex:1,
+                background: on ? "rgba(17,188,155,0.16)" : "rgba(255,255,255,0.06)",
+                color: on ? "#11BC9B" : "#F8FAF9",
+                border: on ? "1px solid rgba(17,188,155,0.32)" : "1px solid rgba(255,255,255,0.08)",
+                borderRadius:14, padding:"10px 0",
+                display:"flex", flexDirection:"column", alignItems:"center", gap:4,
+                fontFamily:"var(--font)", fontSize:11, fontWeight:600, cursor:"pointer",
+              }}>{b.icon}{b.label}</button>
+            );
+          })}
+        </div>
+
+        {/* Brush size */}
+        <div style={{padding:"14px 22px 0"}}>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8}}>
+            <div style={{fontSize:13, fontWeight:600, color:"#F8FAF9"}}>Brush size</div>
+            <div style={{fontSize:12, color:"#11BC9B", fontWeight:600}}>{Math.round(brush)} px</div>
+          </div>
+          <Slider value={brush} onChange={setBrush}/>
+        </div>
+
+        <div style={{padding:"14px 16px 0"}}>
+          <Button variant="primary" onClick={()=>window.__nav("editor")}>
+            Apply blur
+          </Button>
+        </div>
+      </Sheet>
+    </div>
+  );
+}
+window.SmartSelect = SmartSelect;
+
+function FaceMaskOverlay(){
+  return (
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+      <ellipse cx="300" cy="370" rx="64" ry="78" fill="rgba(17,188,155,0.38)" stroke="#11BC9B" strokeWidth="2"/>
+      <rect x="38" y="540" width="48" height="60" rx="14" fill="rgba(17,188,155,0.38)" stroke="#11BC9B" strokeWidth="2"/>
+      <rect x="98" y="555" width="32" height="40" rx="10" fill="rgba(17,188,155,0.38)" stroke="#11BC9B" strokeWidth="2"/>
+      {/* Detection markers */}
+      <circle cx="300" cy="285" r="4" fill="#11BC9B"/>
+      <circle cx="62" cy="544" r="3" fill="#11BC9B"/>
+      <circle cx="114" cy="557" r="3" fill="#11BC9B"/>
+    </svg>
+  );
+}
+function BgMaskOverlay(){
+  return (
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+      <defs>
+        <mask id="cutPerson">
+          <rect width="600" height="800" fill="#fff"/>
+          {/* subject silhouette */}
+          <ellipse cx="300" cy="370" rx="64" ry="78" fill="#000"/>
+          <rect x="220" y="430" width="160" height="370" rx="80" fill="#000"/>
+        </mask>
+      </defs>
+      <rect width="600" height="800" fill="rgba(17,188,155,0.38)" mask="url(#cutPerson)"/>
+    </svg>
+  );
+}
+function ObjectMaskOverlay(){
+  return (
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+      <rect x="378" y="518" width="206" height="124" rx="22"
+        fill="rgba(17,188,155,0.38)" stroke="#11BC9B" strokeWidth="2"/>
+      <circle cx="481" cy="577" r="3" fill="#11BC9B"/>
+    </svg>
+  );
+}
+function TextMaskOverlay(){
+  return (
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+      <rect x="436" y="606" width="88" height="32" rx="4"
+        fill="rgba(17,188,155,0.38)" stroke="#11BC9B" strokeWidth="2"/>
+      <rect x="220" y="320" width="160" height="60" rx="4"
+        fill="rgba(17,188,155,0.38)" stroke="#11BC9B" strokeWidth="2"/>
+    </svg>
+  );
+}
+window.FaceMaskOverlay = FaceMaskOverlay;
+function Background(){
+  const [tab, setTab] = React.useState("blur"); // blur | remove | replace
+  const [preset, setPreset] = React.useState("portrait");
+  const [intensity, setIntensity] = React.useState(72);
+  const [replaceBg, setReplaceBg] = React.useState("white");
+
+  return (
+    <div style={{position:"absolute", inset:0, background:"var(--dark)", color:"#F8FAF9"}}>
+      <EditorTopBar/>
+
+      <div style={{position:"absolute", top:108, bottom:380, left:0, right:0, overflow:"hidden"}}>
+        {/* Background-blurred subject */}
+        <div style={{position:"absolute", inset:0, filter: tab==="blur" ? `blur(${4 + intensity*0.18}px) saturate(1.05)` : "none"}}>
+          <Photo kind="portrait"/>
+        </div>
+
+        {/* For replace tab, show replacement background */}
+        {tab==="replace" && (
+          <div style={{position:"absolute", inset:0, ...({
+            white:{ background:"#F4F1EC" },
+            gray: { background:"#E1E2DF" },
+            beige:{ background:"#E9DDC9" },
+            grad: { background:"linear-gradient(135deg,#DDF8F2 0%,#FFFCEB 60%,#EFE0FF 100%)" },
+            custom:{ background:"linear-gradient(135deg,#102323,#0EA587)"},
+          }[replaceBg])}}/>
+        )}
+
+        {/* Subject silhouette layer (sharp portrait) */}
+        <div style={{
+          position:"absolute", inset:0,
+          maskImage: "radial-gradient(ellipse 240px 360px at 50% 60%, #000 60%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse 240px 360px at 50% 60%, #000 60%, transparent 70%)",
+        }}>
+          <Photo kind="portrait"/>
+        </div>
+
+        {/* Subtle vignette */}
+        <div style={{
+          position:"absolute", inset:0, pointerEvents:"none",
+          boxShadow:"inset 0 -100px 200px rgba(13,23,24,.45)",
+        }}/>
+
+        {/* Top labels */}
+        <div style={{
+          position:"absolute", left:14, top:14,
+          background:"rgba(13,23,24,.6)", color:"#F8FAF9",
+          fontSize:11, fontWeight:600, padding:"5px 10px", borderRadius:99,
+          backdropFilter:"blur(10px)", letterSpacing:.4, textTransform:"uppercase",
+        }}>Subject</div>
+        <div style={{
+          position:"absolute", right:14, top:14,
+          background:"rgba(17,188,155,.92)", color:"#04201B",
+          fontSize:11, fontWeight:700, padding:"5px 10px", borderRadius:99,
+          letterSpacing:.4, textTransform:"uppercase",
+        }}>{tab==="blur"?"Bokeh":tab==="remove"?"Cutout":"Replaced"}</div>
+
+      </div>
+
+      <Sheet style={{height:380}}>
+        <ToolTabs active="background"/>
+
+        {/* Tabs: Blur, Remove, Replace */}
+        <div style={{padding:"6px 16px 0"}}>
+          <div style={{
+            background:"rgba(255,255,255,0.06)", borderRadius:12, padding:3,
+            display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:2,
+          }}>
+            {[
+              { id:"blur", label:"Blur"},
+              { id:"remove", label:"Remove"},
+              { id:"replace", label:"Replace"},
+            ].map(s=>{
+              const on = tab===s.id;
+              return (
+                <button key={s.id} onClick={()=>setTab(s.id)} style={{
+                  background: on ? "rgba(255,255,255,0.16)" : "transparent",
+                  color: on ? "#F8FAF9" : "rgba(248,250,249,.65)",
+                  border:"none", borderRadius:10, padding:"9px 0",
+                  fontFamily:"var(--font)", fontSize:13, fontWeight:600, cursor:"pointer",
+                }}>{s.label}</button>
+              );
+            })}
+          </div>
+        </div>
+
+        {tab==="blur" && (
+          <>
+            {/* Presets */}
+            <div className="noscroll" style={{padding:"14px 16px 0", display:"flex", gap:8, overflowX:"auto"}}>
+              {[
+                {id:"portrait", label:"Portrait", icon:<Ico.Person s={16}/>},
+                {id:"bokeh",    label:"Bokeh",    icon:<Ico.Drop s={16}/>},
+                {id:"motion",   label:"Motion",   icon:<Ico.Bolt s={16}/>},
+                {id:"studio",   label:"Studio",   icon:<Ico.Sparkle s={16}/>},
+              ].map(p=>{
+                const on = preset===p.id;
+                return (
+                  <button key={p.id} onClick={()=>setPreset(p.id)} style={{
+                    flex:"0 0 auto", display:"flex", gap:6, alignItems:"center",
+                    padding:"9px 14px", borderRadius:12,
+                    background: on? "rgba(17,188,155,0.16)" : "rgba(255,255,255,0.06)",
+                    color: on? "#11BC9B" : "#F8FAF9",
+                    border: on? "1px solid rgba(17,188,155,0.32)" : "1px solid rgba(255,255,255,0.08)",
+                    fontFamily:"var(--font)", fontSize:13, fontWeight:600, cursor:"pointer",
+                  }}>{p.icon}{p.label}</button>
+                );
+              })}
+            </div>
+            <div style={{padding:"16px 22px 0"}}>
+              <div style={{display:"flex", justifyContent:"space-between", marginBottom:8}}>
+                <div style={{fontSize:13, fontWeight:600}}>Intensity</div>
+                <div style={{fontSize:12, color:"#11BC9B", fontWeight:600}}>{Math.round(intensity)}%</div>
+              </div>
+              <Slider value={intensity} onChange={setIntensity}/>
+            </div>
+          </>
+        )}
+
+        {tab==="remove" && (
+          <div style={{padding:"16px 22px 0"}}>
+            <div style={{
+              padding:"12px 14px", background:"rgba(17,188,155,0.10)",
+              border:"1px solid rgba(17,188,155,0.28)", borderRadius:14,
+              display:"flex", alignItems:"center", gap:10,
+            }}>
+              <Ico.Sparkle s={18}/>
+              <div style={{fontSize:13, color:"#F8FAF9"}}>
+                Subject isolated. Background is now transparent.
+              </div>
+            </div>
+            <div style={{
+              marginTop:14, padding:"14px",
+              background:"rgba(255,255,255,0.04)", borderRadius:14,
+              display:"flex", alignItems:"center", justifyContent:"space-between",
+            }}>
+              <div>
+                <div style={{fontSize:13.5, fontWeight:600}}>Refine hair edges</div>
+                <div style={{fontSize:11.5, color:"#8A9998", marginTop:2}}>Auto-feather flyaways</div>
+              </div>
+              <Toggle on={true}/>
+            </div>
+          </div>
+        )}
+
+        {tab==="replace" && (
+          <div className="noscroll" style={{padding:"14px 12px 0", display:"flex", gap:8, overflowX:"auto"}}>
+            {[
+              { id:"white", label:"Clean white", style:{ background:"#F4F1EC" }},
+              { id:"gray",  label:"Soft gray",  style:{ background:"#E1E2DF" }},
+              { id:"beige", label:"Warm beige", style:{ background:"#E9DDC9" }},
+              { id:"grad",  label:"Gradient",   style:{ background:"linear-gradient(135deg,#DDF8F2 0%,#FFFCEB 60%,#EFE0FF 100%)" }},
+              { id:"custom",label:"Custom",     style:{ background:"linear-gradient(135deg,#102323,#0EA587)" }},
+            ].map(b=>{
+              const on = replaceBg===b.id;
+              return (
+                <button key={b.id} onClick={()=>setReplaceBg(b.id)} style={{
+                  flex:"0 0 86px",
+                  display:"flex", flexDirection:"column", alignItems:"center", gap:6,
+                  background:"transparent", border:"none", cursor:"pointer", padding:0,
+                }}>
+                  <div style={{
+                    width:80, height:80, borderRadius:14,
+                    border: on ? "2px solid #11BC9B" : "1px solid rgba(255,255,255,.12)",
+                    boxSizing:"border-box",
+                    boxShadow: on ? "0 0 0 4px rgba(17,188,155,.18)" : "none",
+                    ...b.style,
+                  }}/>
+                  <div style={{fontSize:11, color: on?"#11BC9B":"#C5CFCD", fontWeight:600}}>{b.label}</div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        <div style={{padding:"16px 16px 0"}}>
+          <Button variant="primary" onClick={()=>window.__nav("export")}>
+            {tab==="blur"?"Apply background blur" : tab==="remove" ? "Use cutout" : "Apply background"}
+          </Button>
+        </div>
+      </Sheet>
+    </div>
+  );
+}
+
+function Toggle({ on=false }){
+  return (
+    <div style={{
+      width:48, height:28, borderRadius:99,
+      background: on ? "#11BC9B" : "rgba(255,255,255,0.16)",
+      position:"relative", transition:"background .2s",
+    }}>
+      <div style={{
+        position:"absolute", top:2, left: on? 22:2,
+        width:24, height:24, borderRadius:99, background:"#fff",
+        boxShadow:"0 1px 3px rgba(0,0,0,.25)", transition:"left .2s",
+      }}/>
+    </div>
+  );
+}
+window.Toggle = Toggle;
+window.Background = Background;
+function Eraser(){
+  // states: select (paint over object) -> processing -> result
+  const [state, setState] = React.useState("select");
+  const [brush, setBrush] = React.useState(60);
+
+  const startProcess = () => {
+    setState("processing");
+    setTimeout(()=>setState("result"), 2200);
+  };
+
+  return (
+    <div style={{position:"absolute", inset:0, background:"var(--dark)", color:"#F8FAF9"}}>
+      <EditorTopBar/>
+
+      <div style={{position:"absolute", top:108, bottom:380, left:0, right:0, overflow:"hidden"}}>
+        <div style={{position:"absolute", inset:0}}>
+          <Photo kind="product"/>
+        </div>
+
+        {/* Selection state: highlight notebook + key as objects to remove */}
+        {state==="select" && (
+          <>
+            <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+              style={{position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none"}}>
+              {/* paint stroke over notebook */}
+              <rect x="56" y="595" width="226" height="50" rx="6"
+                fill="rgba(17,188,155,0.55)" stroke="#11BC9B" strokeWidth="2"/>
+              <text x="170" y="625" fontFamily="var(--font)" fontSize="14" fontWeight="700"
+                textAnchor="middle" fill="#04201B" style={{textTransform:"uppercase", letterSpacing:1}}>Selected</text>
+              {/* paint stroke over key */}
+              <ellipse cx="438" cy="616" rx="60" ry="34"
+                fill="rgba(17,188,155,0.55)" stroke="#11BC9B" strokeWidth="2"/>
+            </svg>
+            {/* Brush cursor */}
+            <div style={{
+              position:"absolute", left:`75%`, top:`78%`,
+              width:brush, height:brush, borderRadius:99,
+              border:"2px solid #11BC9B",
+              boxShadow:"0 0 0 1px rgba(0,0,0,0.4) inset",
+              transform:"translate(-50%,-50%)", pointerEvents:"none",
+            }}/>
+            {/* Hint */}
+            <div style={{
+              position:"absolute", left:14, top:14,
+              background:"rgba(13,23,24,.7)", color:"#F8FAF9",
+              fontSize:11.5, fontWeight:600, padding:"7px 12px", borderRadius:99,
+              backdropFilter:"blur(10px)",
+            }}>
+              Brush over the objects to remove
+            </div>
+          </>
+        )}
+
+        {state==="processing" && (
+          <div style={{
+            position:"absolute", inset:0,
+            display:"flex", alignItems:"center", justifyContent:"center",
+            background:"rgba(13,23,24,0.55)", backdropFilter:"blur(2px)",
+          }}>
+            <div style={{
+              padding:"22px 26px",
+              background:"rgba(13,23,24,0.85)",
+              border:"1px solid rgba(255,255,255,0.08)",
+              borderRadius:20, textAlign:"center",
+              boxShadow:"0 12px 40px rgba(0,0,0,.4)",
+            }}>
+              <div style={{
+                width:36, height:36, margin:"0 auto 12px",
+                borderRadius:99,
+                border:"3px solid rgba(17,188,155,.25)",
+                borderTopColor:"#11BC9B",
+                animation:"spin 1s linear infinite",
+              }}/>
+              <div style={{fontSize:15, fontWeight:600, color:"#F8FAF9"}}>Rebuilding background</div>
+              <div style={{fontSize:12.5, color:"#8A9998", marginTop:4}}>Inpainting context-aware fills…</div>
+            </div>
+          </div>
+        )}
+
+        {state==="result" && (
+          <ResultSplit/>
+        )}
+      </div>
+
+      {/* Bottom sheet content swaps by state */}
+      <Sheet style={{height:380}}>
+        <ToolTabs active="erase"/>
+
+        {state==="select" && (
+          <>
+            {/* tools */}
+            <div style={{padding:"12px 16px 0", display:"flex", gap:8}}>
+              {[
+                { id:"brush",  icon:<Ico.Brush s={18}/>,  label:"Brush", on:true },
+                { id:"lasso",  icon:<Ico.Wand s={18}/>,   label:"Auto" },
+                { id:"erase",  icon:<Ico.Eraser s={18}/>, label:"Eraser" },
+                { id:"clear",  icon:<Ico.Trash s={18}/>,  label:"Clear" },
+              ].map(b=>{
+                const on = b.on;
+                return (
+                  <button key={b.id} style={{
+                    flex:1,
+                    background: on ? "rgba(17,188,155,0.16)" : "rgba(255,255,255,0.06)",
+                    color: on ? "#11BC9B" : "#F8FAF9",
+                    border: on ? "1px solid rgba(17,188,155,0.32)" : "1px solid rgba(255,255,255,0.08)",
+                    borderRadius:14, padding:"10px 0",
+                    display:"flex", flexDirection:"column", alignItems:"center", gap:4,
+                    fontFamily:"var(--font)", fontSize:11, fontWeight:600, cursor:"pointer",
+                  }}>{b.icon}{b.label}</button>
+                );
+              })}
+            </div>
+            <div style={{padding:"14px 22px 0"}}>
+              <div style={{display:"flex", justifyContent:"space-between", marginBottom:8}}>
+                <div style={{fontSize:13, fontWeight:600}}>Brush size</div>
+                <div style={{fontSize:12, color:"#11BC9B", fontWeight:600}}>{Math.round(brush)} px</div>
+              </div>
+              <Slider value={brush} onChange={setBrush}/>
+            </div>
+            <div style={{padding:"14px 16px 0", display:"flex", gap:10}}>
+              <Button variant="glass" onClick={()=>window.__nav("editor")} style={{flex:"0 0 110px"}}>Cancel</Button>
+              <Button variant="primary" onClick={startProcess} icon={<Ico.Sparkle s={18}/>} style={{flex:1}}>Remove object</Button>
+            </div>
+          </>
+        )}
+
+        {state==="processing" && (
+          <div style={{padding:"22px 22px 0", textAlign:"center"}}>
+            <div style={{fontSize:14, fontWeight:600, color:"#F8FAF9"}}>Working on it…</div>
+            <div style={{fontSize:12, color:"#8A9998", marginTop:4}}>Usually under 5 seconds</div>
+            <div style={{
+              marginTop:16, height:6, borderRadius:99, background:"rgba(255,255,255,0.06)", overflow:"hidden",
+            }}>
+              <div style={{
+                width:"60%", height:"100%",
+                background:"linear-gradient(90deg, transparent, #11BC9B, transparent)",
+                backgroundSize:"200% 100%",
+                animation:"shimmer 1.6s linear infinite",
+              }}/>
+            </div>
+          </div>
+        )}
+
+        {state==="result" && (
+          <>
+            <div style={{padding:"14px 22px 0"}}>
+              <div style={{
+                padding:"10px 14px", background:"rgba(17,188,155,0.10)",
+                border:"1px solid rgba(17,188,155,0.28)", borderRadius:14,
+                display:"flex", alignItems:"center", gap:10,
+              }}>
+                <Ico.Check s={16}/>
+                <div style={{fontSize:13}}>Removed in 1.8s. Background reconstructed.</div>
+              </div>
+            </div>
+            <div style={{padding:"14px 16px 0", display:"flex", gap:10}}>
+              <Button variant="glass" onClick={()=>{ setState("select"); }} icon={<Ico.Refresh s={16}/>} style={{flex:1}}>Try again</Button>
+              <Button variant="primary" onClick={()=>window.__nav("export")} icon={<Ico.Check s={18}/>} style={{flex:1}}>Looks good</Button>
+            </div>
+          </>
+        )}
+      </Sheet>
+    </div>
+  );
+}
+
+function ResultSplit(){
+  const [split, setSplit] = React.useState(50);
+  const drag = (e)=>{
+    const root = e.currentTarget.closest("[data-result-root]");
+    if(!root) return;
+    const rect = root.getBoundingClientRect();
+    const move = (cx)=>{
+      const p = Math.max(8, Math.min(92, ((cx - rect.left)/rect.width)*100));
+      setSplit(p);
+    };
+    const onMove = (ev)=>{
+      const cx = ev.touches ? ev.touches[0].clientX : ev.clientX;
+      move(cx);
+    };
+    const onUp = ()=>{
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", onMove);
+    window.addEventListener("touchend", onUp);
+    onMove(e);
+  };
+  return (
+    <div data-result-root style={{position:"absolute", inset:0}}>
+      <div style={{position:"absolute", inset:0}}><Photo kind="product"/></div>
+      {/* AFTER: cleaned-up product photo (mask out notebook + key) */}
+      <div style={{
+        position:"absolute", inset:0,
+        clipPath:`inset(0 0 0 ${split}%)`,
+      }}>
+        <Photo kind="product"/>
+        {/* paint over removed objects with same wood color to imitate inpaint */}
+        <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"
+          style={{position:"absolute", inset:0, width:"100%", height:"100%"}}>
+          <defs>
+            <linearGradient id="patch" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#B68F65"/><stop offset="100%" stopColor="#7A5634"/>
+            </linearGradient>
+          </defs>
+          <rect x="56" y="595" width="226" height="50" rx="2" fill="url(#patch)"/>
+          <ellipse cx="438" cy="616" rx="60" ry="32" fill="url(#patch)"/>
+          {/* faint grain to match wood */}
+          {Array.from({length:5}).map((_,i)=>(
+            <rect key={i} x="56" y={596+i*10} width="226" height="1.5" fill="rgba(0,0,0,.06)"/>
+          ))}
+          <ellipse cx="438" cy="618" rx="58" ry="2" fill="rgba(0,0,0,.06)"/>
+        </svg>
+      </div>
+      <div onMouseDown={drag} onTouchStart={drag} style={{position:"absolute", inset:0, touchAction:"none"}}>
+        <SplitHandle pct={split}/>
+      </div>
+      <div style={{
+        position:"absolute", left:14, top:14,
+        background:"rgba(13,23,24,.6)", color:"#F8FAF9",
+        fontSize:11, fontWeight:600, padding:"5px 10px", borderRadius:99,
+        letterSpacing:.4, textTransform:"uppercase", backdropFilter:"blur(10px)",
+      }}>Before</div>
+      <div style={{
+        position:"absolute", right:14, top:14,
+        background:"rgba(17,188,155,.92)", color:"#04201B",
+        fontSize:11, fontWeight:700, padding:"5px 10px", borderRadius:99,
+        letterSpacing:.4, textTransform:"uppercase",
+      }}>After</div>
+    </div>
+  );
+}
+window.Eraser = Eraser;
+function Exporter(){
+  const [res, setRes] = React.useState("hd"); // standard | hd | 4k
+  const [fmt, setFmt] = React.useState("jpg"); // jpg | png
+  const [keepSize, setKeepSize] = React.useState(true);
+
+  const onSave = ()=>{
+    if(res==="4k"){
+      window.__nav("paywall");
+    } else {
+      // simulate save success — keep simple by just bumping a flash
+      alert("Saved to Photos");
+    }
+  };
+
+  return (
+    <div style={{position:"absolute", inset:0, background:"var(--dark)", color:"#F8FAF9"}}>
+      <EditorTopBar onSave={onSave}/>
+
+      <div style={{position:"absolute", top:108, bottom:386, left:0, right:0, overflow:"hidden"}}>
+        <div style={{position:"absolute", inset:0}}>
+          <Photo kind="street" filter="saturate(1.05)"/>
+          <PhotoRedactions/>
+        </div>
+        {/* glow under preview */}
+        <div style={{
+          position:"absolute", inset:0, pointerEvents:"none",
+          boxShadow:"inset 0 -120px 200px rgba(13,23,24,.55)",
+        }}/>
+        {/* pill */}
+        <div style={{
+          position:"absolute", left:14, top:14,
+          background:"rgba(17,188,155,.92)", color:"#04201B",
+          fontSize:11, fontWeight:700, padding:"5px 10px", borderRadius:99,
+          letterSpacing:.4, textTransform:"uppercase",
+        }}>Final preview</div>
+        <div style={{
+          position:"absolute", right:14, top:14,
+          background:"rgba(13,23,24,.7)", color:"#F8FAF9",
+          fontSize:11, fontWeight:600, padding:"5px 10px", borderRadius:99,
+          backdropFilter:"blur(10px)", letterSpacing:.4, textTransform:"uppercase",
+        }}>3 Edits</div>
+
+        {/* Bottom info row over canvas */}
+        <div style={{
+          position:"absolute", left:14, right:14, bottom:14,
+          padding:"12px 14px", borderRadius:14,
+          background:"rgba(13,23,24,0.7)", backdropFilter:"blur(14px)",
+          border:"1px solid rgba(255,255,255,.08)",
+          color:"#F8FAF9",
+          display:"flex", alignItems:"center", justifyContent:"space-between",
+        }}>
+          <div style={{display:"flex", alignItems:"center", gap:10}}>
+            <Ico.Image s={18}/>
+            <div>
+              <div style={{fontSize:13, fontWeight:600}}>3024 × 4032</div>
+              <div style={{fontSize:11, color:"#A6C2BD"}}>Original quality preserved</div>
+            </div>
+          </div>
+          <Pill color="teal_d"><Ico.Check s={11}/> Ready</Pill>
+        </div>
+      </div>
+
+      <Sheet style={{height:386}}>
+        <div style={{padding:"10px 22px 0", display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:18, fontWeight:600, color:"#F8FAF9", letterSpacing:-.2}}>Export</div>
+            <div style={{fontSize:12, color:"#8A9998", marginTop:2}}>Choose quality and format</div>
+          </div>
+          <div style={{display:"flex", gap:8}}>
+            <button style={{
+              ...iconBtnStyle(),
+            }}><Ico.Share s={18}/></button>
+            <button style={{
+              ...iconBtnStyle(),
+            }}><Ico.Copy s={18}/></button>
+          </div>
+        </div>
+
+        {/* Resolution */}
+        <div style={{padding:"14px 16px 0"}}>
+          <div style={{display:"flex", gap:8}}>
+            {[
+              { id:"standard", label:"Standard", sub:"1080 px"},
+              { id:"hd",       label:"HD",       sub:"2K"},
+              { id:"4k",       label:"4K",       sub:"Pro", pro:true},
+            ].map(r=>{
+              const on = res===r.id;
+              return (
+                <button key={r.id} onClick={()=>setRes(r.id)} style={{
+                  flex:1, position:"relative",
+                  background: on ? "rgba(17,188,155,0.16)" : "rgba(255,255,255,0.06)",
+                  color: on ? "#11BC9B" : "#F8FAF9",
+                  border: on ? "1px solid rgba(17,188,155,0.32)" : "1px solid rgba(255,255,255,0.08)",
+                  borderRadius:14, padding:"12px 0",
+                  display:"flex", flexDirection:"column", alignItems:"center", gap:2,
+                  fontFamily:"var(--font)", cursor:"pointer",
+                }}>
+                  <div style={{fontSize:14, fontWeight:600}}>{r.label}</div>
+                  <div style={{fontSize:11, color: on? "rgba(17,188,155,.85)" : "rgba(248,250,249,.5)"}}>{r.sub}</div>
+                  {r.pro && (
+                    <div style={{position:"absolute", top:-8, right:-6}}>
+                      <Pill color="pro" size="sm" style={{padding:"3px 8px", fontSize:10}}>
+                        <Ico.Crown s={10}/> PRO
+                      </Pill>
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Format */}
+        <div style={{padding:"14px 22px 0"}}>
+          <div style={{fontSize:13, fontWeight:600, marginBottom:8}}>Format</div>
+          <div style={{
+            background:"rgba(255,255,255,0.06)", borderRadius:12, padding:3,
+            display:"grid", gridTemplateColumns:"1fr 1fr", gap:2,
+          }}>
+            {["jpg","png"].map(f=>{
+              const on = fmt===f;
+              return (
+                <button key={f} onClick={()=>setFmt(f)} style={{
+                  background: on ? "rgba(255,255,255,0.16)" : "transparent",
+                  color: on ? "#F8FAF9" : "rgba(248,250,249,.65)",
+                  border:"none", borderRadius:10, padding:"9px 0",
+                  fontFamily:"var(--font)", fontSize:13, fontWeight:600, cursor:"pointer",
+                  textTransform:"uppercase", letterSpacing:1,
+                }}>{f}</button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Keep original size */}
+        <div style={{
+          margin:"14px 22px 0", padding:"12px 14px",
+          background:"rgba(255,255,255,0.04)", borderRadius:14,
+          display:"flex", alignItems:"center", justifyContent:"space-between",
+        }}>
+          <div>
+            <div style={{fontSize:13.5, fontWeight:600}}>Keep original size</div>
+            <div style={{fontSize:11.5, color:"#8A9998", marginTop:2}}>Match the source pixel dimensions</div>
+          </div>
+          <div onClick={()=>setKeepSize(!keepSize)} style={{cursor:"pointer"}}><Toggle on={keepSize}/></div>
+        </div>
+
+        {/* CTA */}
+        <div style={{padding:"14px 16px 0"}}>
+          <Button variant="primary" icon={<Ico.Save s={18}/>} onClick={onSave}>
+            Save to Photos
+          </Button>
+        </div>
+      </Sheet>
+    </div>
+  );
+}
+window.Exporter = Exporter;
+function Paywall(){
+  const [plan, setPlan] = React.useState("yearly");
+
+  const benefits = [
+    { icon:<Ico.Bolt s={18}/>,    t:"Unlimited exports", s:"No daily caps"},
+    { icon:<Ico.Sparkle s={18}/>, t:"4K quality",        s:"Print-ready resolution"},
+    { icon:<Ico.Layers s={18}/>,  t:"Batch blur",        s:"Process up to 50 photos"},
+    { icon:<Ico.Eraser s={18}/>,  t:"Object eraser",     s:"Unlimited AI removals"},
+    { icon:<Ico.Drop s={18}/>,    t:"No watermark",      s:"Clean exports for sharing"},
+  ];
+
+  return (
+    <div style={{position:"absolute", inset:0, background:"var(--light)", overflow:"auto"}} className="noscroll">
+      {/* Top bar */}
+      <div style={{
+        position:"sticky", top:0, zIndex:10, paddingTop:54,
+        background:"linear-gradient(180deg, var(--light) 0%, var(--light) 70%, rgba(246,248,247,0) 100%)",
+      }}>
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", padding:"14px 22px"}}>
+          <button onClick={()=>window.__nav("export")} style={{
+            background:"none", border:"none", color:"#0D1718", cursor:"pointer", padding:0,
+            display:"flex", alignItems:"center", gap:6, fontSize:15, fontWeight:500,
+          }}><Ico.Close s={22}/></button>
+          <button style={{
+            background:"none", border:"none", color:"#11BC9B", cursor:"pointer", padding:0,
+            fontSize:14, fontWeight:600,
+          }}>Restore</button>
+        </div>
+      </div>
+
+      {/* Hero */}
+      <div style={{padding:"4px 28px 0"}}>
+        <div style={{
+          width:64, height:64, borderRadius:18,
+          background:"linear-gradient(135deg, #11BC9B, #0EA587)",
+          display:"flex", alignItems:"center", justifyContent:"center",
+          color:"#04201B", marginBottom:18,
+          boxShadow:"0 12px 30px rgba(17,188,155,.32)",
+        }}><Ico.Crown s={28}/></div>
+        <div style={{
+          fontSize:30, fontWeight:700, color:"#0D1718",
+          letterSpacing:-.5, lineHeight:1.1,
+        }}>Unlock unlimited<br/>private edits.</div>
+        <div style={{marginTop:10, fontSize:15, color:"#667277", lineHeight:1.5}}>
+          Pro removes the watermark, unlocks 4K, batch blur, and the AI object eraser.
+        </div>
+      </div>
+
+      {/* Benefits list */}
+      <div style={{margin:"22px 22px 0", padding:"6px 4px",
+        background:"#fff", border:"1px solid var(--border)", borderRadius:18,
+      }}>
+        {benefits.map((b,i)=>(
+          <div key={i} style={{
+            display:"flex", alignItems:"center", gap:12,
+            padding:"12px 14px",
+            borderTop: i? "1px solid var(--border)":"none",
+          }}>
+            <div style={{
+              width:34, height:34, borderRadius:11, background:"#DDF8F2", color:"#0EA587",
+              display:"flex", alignItems:"center", justifyContent:"center",
+            }}>{b.icon}</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:14, fontWeight:600, color:"#0D1718"}}>{b.t}</div>
+              <div style={{fontSize:12, color:"#8A9998", marginTop:2}}>{b.s}</div>
+            </div>
+            <Ico.Check s={18}/>
+          </div>
+        ))}
+      </div>
+
+      {/* Plans */}
+      <div style={{margin:"22px 22px 0", display:"flex", flexDirection:"column", gap:10}}>
+        {[
+          {
+            id:"yearly", label:"Yearly", price:"$29.99 / year", sub:"Just $2.50 / month · 7-day free trial",
+            best:true,
+          },
+          {
+            id:"monthly", label:"Monthly", price:"$5.99 / month", sub:"Cancel anytime",
+          },
+          {
+            id:"lifetime", label:"Lifetime", price:"$59.99 once", sub:"Pay once · Yours forever",
+          },
+        ].map(p=>{
+          const on = plan===p.id;
+          return (
+            <button key={p.id} onClick={()=>setPlan(p.id)} style={{
+              width:"100%", padding:"14px 16px",
+              background:"#fff", textAlign:"left", cursor:"pointer",
+              borderRadius:18,
+              border: on ? "2px solid #11BC9B" : "1px solid var(--border)",
+              boxShadow: on ? "0 6px 20px rgba(17,188,155,.16)" : "none",
+              position:"relative",
+              display:"flex", alignItems:"center", justifyContent:"space-between",
+            }}>
+              <div style={{display:"flex", alignItems:"center", gap:12}}>
+                <div style={{
+                  width:22, height:22, borderRadius:99,
+                  border: on? "7px solid #11BC9B" : "2px solid #C5CFCD",
+                  boxSizing:"border-box",
+                  background:"#fff",
+                }}/>
+                <div>
+                  <div style={{display:"flex", alignItems:"center", gap:8}}>
+                    <div style={{fontSize:15.5, fontWeight:600, color:"#0D1718"}}>{p.label}</div>
+                    {p.best && <Pill color="pro" size="sm">Best value</Pill>}
+                  </div>
+                  <div style={{fontSize:12, color:"#8A9998", marginTop:3}}>{p.sub}</div>
+                </div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:15.5, fontWeight:700, color:"#0D1718"}}>{p.price}</div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* CTA */}
+      <div style={{padding:"22px 22px 8px"}}>
+        <Button variant="primary" onClick={()=>window.__nav("home")}>
+          {plan==="yearly" ? "Start free trial" : plan==="lifetime" ? "Buy lifetime" : "Continue"}
+        </Button>
+        <div style={{textAlign:"center", color:"#8A9998", fontSize:11.5, marginTop:12, lineHeight:1.5}}>
+          {plan==="yearly" && "7 days free, then $29.99/year. Cancel anytime."}
+          {plan==="monthly" && "$5.99/month, billed monthly. Cancel anytime."}
+          {plan==="lifetime" && "One-time payment. Lifetime access. No subscription."}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        display:"flex", justifyContent:"center", gap:18,
+        padding:"6px 22px 30px", color:"#8A9998", fontSize:11.5,
+      }}>
+        <span>Privacy policy</span>
+        <span>·</span>
+        <span>Terms</span>
+        <span>·</span>
+        <span>Restore</span>
+      </div>
+    </div>
+  );
+}
+window.Paywall = Paywall;
+/* Router – renders all 9 screens side by side as iPhone frames */
+const SCREENS = [
+  { id:"onboarding", label:"01 Onboarding", theme:"light",  Comp: () => <Onboarding/> },
+  { id:"home",       label:"02 Home",       theme:"light",  Comp: () => <Home/> },
+  { id:"picker",     label:"03 Picker",     theme:"light",  Comp: () => <Picker/> },
+  { id:"editor",     label:"04 Editor",     theme:"dark",   Comp: () => <Editor/> },
+  { id:"select",     label:"05 Smart select", theme:"dark", Comp: () => <SmartSelect/> },
+  { id:"background", label:"06 Background", theme:"dark",   Comp: () => <Background/> },
+  { id:"eraser",     label:"07 Eraser",     theme:"dark",   Comp: () => <Eraser/> },
+  { id:"export",     label:"08 Export",     theme:"dark",   Comp: () => <Exporter/> },
+  { id:"paywall",    label:"09 Paywall",    theme:"light",  Comp: () => <Paywall/> },
+];
+
+function Header(){
+  return (
+    <div style={{
+      width:"100%", maxWidth:1600, margin:"0 auto 28px",
+      display:"flex", alignItems:"center", justifyContent:"space-between",
+      color:"#F6F8F7", padding:"0 8px",
+    }}>
+      <div style={{display:"flex", alignItems:"center", gap:14}}>
+        <div style={{
+          width:44, height:44, borderRadius:14,
+          background:"linear-gradient(135deg,#11BC9B,#0EA587)",
+          display:"flex", alignItems:"center", justifyContent:"center",
+          color:"#04201B",
+          boxShadow:"0 6px 20px rgba(17,188,155,.35)",
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/>
+          </svg>
+        </div>
+        <div>
+          <div style={{fontSize:22, fontWeight:700, letterSpacing:-0.3}}>Blur Photo</div>
+          <div style={{fontSize:13, color:"#8A9998"}}>AI Privacy & Background Editor — iOS prototype</div>
+        </div>
+      </div>
+      <div style={{
+        display:"flex", gap:10, alignItems:"center",
+        color:"#8A9998", fontSize:13,
+      }}>
+        <Pill color="teal_d">9 screens</Pill>
+        <Pill color="dark">Interactive</Pill>
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  const [active, setActive] = React.useState(()=>{
+    return localStorage.getItem("bp.active") || "onboarding";
+  });
+  React.useEffect(()=>{ localStorage.setItem("bp.active", active); }, [active]);
+
+  // Provide nav via context-like global
+  window.__nav = (id)=>setActive(id);
+  window.__activeScreen = active;
+
+  // Build a single-screen "spotlight" view: list of all screens shown side by side,
+  // with the currently-active one slightly emphasized.
+
+  return (
+    <div style={{width:"100%", maxWidth:1600, margin:"0 auto"}}>
+      <Header/>
+
+      {/* Nav bar of screens */}
+      <div style={{
+        display:"flex", flexWrap:"wrap", gap:8, marginBottom:24,
+        padding:"10px 12px",
+        background:"rgba(255,255,255,0.04)",
+        border:"1px solid rgba(255,255,255,0.06)",
+        borderRadius:18, justifyContent:"center",
+      }}>
+        {SCREENS.map(s=> (
+          <button key={s.id} onClick={()=>{
+            setActive(s.id);
+            const el = document.getElementById("frame-"+s.id);
+            if(el) el.scrollIntoView({behavior:"smooth", inline:"center", block:"center"});
+          }} style={{
+            background: active===s.id ? "#11BC9B" : "transparent",
+            color: active===s.id ? "#04201B" : "#C5CFCD",
+            border:"1px solid "+ (active===s.id ? "#11BC9B" : "rgba(255,255,255,0.08)"),
+            borderRadius:99, padding:"8px 14px",
+            fontFamily:"var(--font)", fontSize:13, fontWeight:600, cursor:"pointer",
+            letterSpacing:.1,
+          }}>{s.label}</button>
+        ))}
+      </div>
+
+      <div className="noscroll" style={{
+        display:"flex", gap:36, alignItems:"flex-start",
+        overflowX:"auto", padding:"30px 8px 60px", scrollSnapType:"x mandatory",
+      }}>
+        {SCREENS.map(s=>{
+          const isActive = active === s.id;
+          return (
+            <div key={s.id} id={"frame-"+s.id} style={{
+              scrollSnapAlign:"center",
+              transition:"transform .35s cubic-bezier(.2,.7,.3,1), opacity .35s",
+              transform: isActive ? "scale(1)" : "scale(.96)",
+              opacity: isActive ? 1 : .82,
+            }}>
+              <Phone theme={s.theme} label={s.label}><s.Comp/></Phone>
+              <div style={{
+                marginTop:14, color:"#8A9998", fontSize:13, fontWeight:500,
+                textAlign:"center",
+              }}>{s.label}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{
+        textAlign:"center", color:"#667277", fontSize:12, padding:"12px 0 30px",
+      }}>
+        Tap any chip above to focus a screen. Tap inside the phone to navigate.
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body></html>

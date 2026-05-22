@@ -3,21 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CleanSpeaker Preview Catalog</title>
+  <title>Appstorm Preview Catalog</title>
   <style>
     :root { color-scheme: light; --bg:#f5f7fb; --panel:#fff; --text:#172033; --muted:#667085; --line:#d9e1ef; --accent:#2563eb; --accent-soft:#e8f0ff; }
     *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
     header{padding:34px 28px 22px;border-bottom:1px solid var(--line);background:var(--panel)} .wrap{width:min(1240px,calc(100vw - 32px));margin:0 auto}
     h1{margin:0 0 8px;font-size:clamp(28px,4vw,44px);line-height:1.05;letter-spacing:0}.lead{margin:0;color:var(--muted);font-size:16px;line-height:1.5}.summary{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);font-size:13px;background:#fbfcff}
-    main{padding:26px 0 44px}.projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.project{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}.project-head{padding:18px 18px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line)}
+    main{padding:26px 0 44px}.catalog-section + .catalog-section{margin-top:32px}.section-divider{display:flex;align-items:center;gap:14px;margin:4px 0 18px}.section-divider:before,.section-divider:after{content:"";height:1px;background:var(--line);flex:1}.section-divider h2{margin:0;font-size:28px;line-height:1;letter-spacing:0;color:var(--text)}
+    .projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.project{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}.project-head{padding:18px 18px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line)}
     h2{margin:0 0 4px;font-size:20px;line-height:1.2;letter-spacing:0}.meta{margin:0;color:var(--muted);font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}a.button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 12px;border-radius:6px;border:1px solid var(--line);color:var(--text);background:#fff;text-decoration:none;font-weight:700;font-size:13px;white-space:nowrap}a.button.primary{color:#fff;background:var(--accent);border-color:var(--accent)}
     .shots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px;background:#fbfcff}figure{margin:0;min-width:0}figure a{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--accent-soft);aspect-ratio:412/829}img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}figcaption{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    @media(max-width:980px){.projects{grid-template-columns:1fr}}@media(max-width:560px){header{padding:26px 18px 18px}.wrap{width:min(100vw - 20px,1240px)}.project-head{display:block}.actions{justify-content:flex-start;margin-top:12px}.shots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:980px){.projects{grid-template-columns:1fr}}@media(max-width:560px){header{padding:26px 18px 18px}.wrap{width:min(100vw - 20px,1240px)}.project-head{display:block}.actions{justify-content:flex-start;margin-top:12px}.shots{grid-template-columns:repeat(2,minmax(0,1fr))}.section-divider h2{font-size:24px}}
   </style>
 </head>
 <body>
-<header><div class="wrap"><h1>CleanSpeaker Preview Catalog</h1><p class="lead">Public GitHub Pages catalog with live HTML previews and captured app-screen galleries.</p><div class="summary"><span class="pill">11 projects</span><span class="pill">201 screenshots</span></div></div></header>
-<main class="wrap"><section class="projects" aria-label="Projects"><article class="project">
+<header><div class="wrap"><h1>Appstorm Preview Catalog</h1><p class="lead">Public GitHub Pages catalog with live HTML previews and captured app-screen galleries.</p><div class="summary"><span class="pill">17 projects</span><span class="pill">261 screenshots</span></div></div></header>
+<main class="wrap"><section class="catalog-section" aria-label="CleanSpeaker">
+  
+  <div class="projects"><article class="project">
     <div class="project-head">
       <div><h2>CleanSpeaker Claude Design v3</h2><p class="meta">23 captured screens</p></div>
       <div class="actions"><a class="button primary" href="projects/cleanspeaker-claude-design-v3/All%20Screens.html">Open</a><a class="button" href="projects/cleanspeaker-claude-design-v3/Prototype.html">Prototype</a></div>
@@ -148,6 +151,84 @@
       <figure><a href="screenshots/cleanspeaker-light-mode-2/03-03-value-toolkit.png"><img src="screenshots/cleanspeaker-light-mode-2/03-03-value-toolkit.png" alt="CleanSpeaker-light-mode-2 preview"></a><figcaption>03-03-value-toolkit</figcaption></figure>
       <figure><a href="screenshots/cleanspeaker-light-mode-2/04-04-paywall-special-offer.png"><img src="screenshots/cleanspeaker-light-mode-2/04-04-paywall-special-offer.png" alt="CleanSpeaker-light-mode-2 preview"></a><figcaption>04-04-paywall-special-offer</figcaption></figure>
     </div>
-  </article></section></main>
+  </article></div>
+</section>
+<section class="catalog-section" aria-label="Blur">
+  <div class="section-divider"><h2>Blur</h2></div>
+  <div class="projects"><article class="project">
+    <div class="project-head">
+      <div><h2>claude-design-init-blur prototype</h2><p class="meta">15 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/blur-claude-design-init-blur/prototype.html">Open</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/blur-claude-design-init-blur-prototype/01-splash.png"><img src="screenshots/blur-claude-design-init-blur-prototype/01-splash.png" alt="claude-design-init-blur prototype preview"></a><figcaption>01-splash</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-prototype/02-welcome.png"><img src="screenshots/blur-claude-design-init-blur-prototype/02-welcome.png" alt="claude-design-init-blur prototype preview"></a><figcaption>02-welcome</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-prototype/03-qual-use-case.png"><img src="screenshots/blur-claude-design-init-blur-prototype/03-qual-use-case.png" alt="claude-design-init-blur prototype preview"></a><figcaption>03-qual-use-case</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-prototype/04-qual-subjects.png"><img src="screenshots/blur-claude-design-init-blur-prototype/04-qual-subjects.png" alt="claude-design-init-blur prototype preview"></a><figcaption>04-qual-subjects</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>claude-design-init-blur directions</h2><p class="meta">6 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/blur-claude-design-init-blur/directions/index.html">Open</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/blur-claude-design-init-blur-directions/01-a-welcome.png"><img src="screenshots/blur-claude-design-init-blur-directions/01-a-welcome.png" alt="claude-design-init-blur directions preview"></a><figcaption>01-a-welcome</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-directions/02-a-paywall.png"><img src="screenshots/blur-claude-design-init-blur-directions/02-a-paywall.png" alt="claude-design-init-blur directions preview"></a><figcaption>02-a-paywall</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-directions/03-b-welcome.png"><img src="screenshots/blur-claude-design-init-blur-directions/03-b-welcome.png" alt="claude-design-init-blur directions preview"></a><figcaption>03-b-welcome</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-directions/04-b-paywall.png"><img src="screenshots/blur-claude-design-init-blur-directions/04-b-paywall.png" alt="claude-design-init-blur directions preview"></a><figcaption>04-b-paywall</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>claude-design-init-blur directions-2</h2><p class="meta">12 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/blur-claude-design-init-blur/directions/directions-2.html">Open</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/blur-claude-design-init-blur-directions-2/01-d-welcome.png"><img src="screenshots/blur-claude-design-init-blur-directions-2/01-d-welcome.png" alt="claude-design-init-blur directions-2 preview"></a><figcaption>01-d-welcome</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-directions-2/02-d-home.png"><img src="screenshots/blur-claude-design-init-blur-directions-2/02-d-home.png" alt="claude-design-init-blur directions-2 preview"></a><figcaption>02-d-home</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-directions-2/03-d-editor.png"><img src="screenshots/blur-claude-design-init-blur-directions-2/03-d-editor.png" alt="claude-design-init-blur directions-2 preview"></a><figcaption>03-d-editor</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-directions-2/04-d-paywall.png"><img src="screenshots/blur-claude-design-init-blur-directions-2/04-d-paywall.png" alt="claude-design-init-blur directions-2 preview"></a><figcaption>04-d-paywall</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>claude-design-init-blur home-v2</h2><p class="meta">3 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/blur-claude-design-init-blur/directions/home-v2.html">Open</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/blur-claude-design-init-blur-home-v2/01-d-home-empty.png"><img src="screenshots/blur-claude-design-init-blur-home-v2/01-d-home-empty.png" alt="claude-design-init-blur home-v2 preview"></a><figcaption>01-d-home-empty</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-home-v2/02-d-home-active.png"><img src="screenshots/blur-claude-design-init-blur-home-v2/02-d-home-active.png" alt="claude-design-init-blur home-v2 preview"></a><figcaption>02-d-home-active</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-home-v2/03-d-home-pro.png"><img src="screenshots/blur-claude-design-init-blur-home-v2/03-d-home-pro.png" alt="claude-design-init-blur home-v2 preview"></a><figcaption>03-d-home-pro</figcaption></figure>
+    </div>
+  </article>
+<article class="project">
+    <div class="project-head">
+      <div><h2>claude-design-init-blur-4</h2><p class="meta">9 captured screens</p></div>
+      <div class="actions"><a class="button primary" href="projects/blur-claude-design-init-blur-4/index.html">Open</a></div>
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/blur-claude-design-init-blur-4/01-01-onboarding.png"><img src="screenshots/blur-claude-design-init-blur-4/01-01-onboarding.png" alt="claude-design-init-blur-4 preview"></a><figcaption>01-01-onboarding</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-4/02-02-home.png"><img src="screenshots/blur-claude-design-init-blur-4/02-02-home.png" alt="claude-design-init-blur-4 preview"></a><figcaption>02-02-home</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-4/03-03-picker.png"><img src="screenshots/blur-claude-design-init-blur-4/03-03-picker.png" alt="claude-design-init-blur-4 preview"></a><figcaption>03-03-picker</figcaption></figure>
+      <figure><a href="screenshots/blur-claude-design-init-blur-4/04-04-editor.png"><img src="screenshots/blur-claude-design-init-blur-4/04-04-editor.png" alt="claude-design-init-blur-4 preview"></a><figcaption>04-04-editor</figcaption></figure>
+    </div>
+  </article></div>
+</section>
+<section class="catalog-section" aria-label="VPN">
+  <div class="section-divider"><h2>VPN</h2></div>
+  <div class="projects"><article class="project">
+    <div class="project-head">
+      <div><h2>vpn-claude-banana app screenshots</h2><p class="meta">15 captured screens</p></div>
+      
+    </div>
+    <div class="shots">
+      <figure><a href="screenshots/vpn-claude-banana/01-01-splash.png"><img src="screenshots/vpn-claude-banana/01-01-splash.png" alt="vpn-claude-banana app screenshots preview"></a><figcaption>01-01-splash</figcaption></figure>
+      <figure><a href="screenshots/vpn-claude-banana/02-02-welcome.png"><img src="screenshots/vpn-claude-banana/02-02-welcome.png" alt="vpn-claude-banana app screenshots preview"></a><figcaption>02-02-welcome</figcaption></figure>
+      <figure><a href="screenshots/vpn-claude-banana/03-03-benefits.png"><img src="screenshots/vpn-claude-banana/03-03-benefits.png" alt="vpn-claude-banana app screenshots preview"></a><figcaption>03-03-benefits</figcaption></figure>
+      <figure><a href="screenshots/vpn-claude-banana/04-04-goal-selection.png"><img src="screenshots/vpn-claude-banana/04-04-goal-selection.png" alt="vpn-claude-banana app screenshots preview"></a><figcaption>04-04-goal-selection</figcaption></figure>
+    </div>
+  </article></div>
+</section></main>
 </body>
 </html>

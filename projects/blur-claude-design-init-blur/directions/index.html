@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Blur — Visual Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0c;
+    --bg-2: #111114;
+    --line: #1f1f24;
+    --ink: #f5f5f0;
+    --muted: #8b8b92;
+    --muted-2: #5a5a62;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{padding:64px 48px 120px;min-height:100vh}
+  .page-head{max-width:1200px;margin:0 auto 64px}
+  .page-head .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+  .page-head h1{font-family:'Fraunces',serif;font-weight:300;font-size:64px;letter-spacing:-.03em;line-height:1.02;margin-bottom:20px}
+  .page-head h1 em{font-style:italic;font-weight:300;color:var(--muted)}
+  .page-head p{font-size:17px;line-height:1.55;color:var(--muted);max-width:640px}
+  .page-head .meta{display:flex;gap:32px;margin-top:32px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted-2)}
+  .page-head .meta b{color:var(--ink);font-weight:500}
+
+  .direction{max-width:1280px;margin:0 auto 96px;padding:48px 0;border-top:1px solid var(--line)}
+  .dir-head{display:grid;grid-template-columns:200px 1fr 320px;gap:48px;margin-bottom:48px;align-items:start}
+  .dir-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2)}
+  .dir-num .big{display:block;font-family:'Fraunces',serif;font-size:48px;font-weight:300;letter-spacing:-.02em;color:var(--ink);text-transform:none;letter-spacing:-.02em;margin-top:8px;font-feature-settings:'ss01'}
+  .dir-title{}
+  .dir-title h2{font-family:'Fraunces',serif;font-weight:400;font-size:40px;letter-spacing:-.02em;line-height:1.05;margin-bottom:8px}
+  .dir-title h2 em{font-style:italic;color:var(--muted)}
+  .dir-title .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .dir-title p{color:var(--muted);font-size:15px;line-height:1.55;max-width:540px}
+  .dir-tokens{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+  .dir-tokens .row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .dir-tokens .sw{width:18px;height:18px;border-radius:5px;border:1px solid rgba(255,255,255,.08);flex-shrink:0}
+  .dir-tokens .label{color:var(--muted-2);width:60px}
+  .dir-tokens .val{color:var(--ink)}
+
+  .frames{display:flex;gap:48px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+  .frame-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .frame-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2)}
+
+  /* iPhone frame (15 Pro-ish) */
+  .iphone{
+    width: 320px; height: 668px;
+    border-radius: 50px;
+    background:#0c0c0e;
+    padding:11px;
+    box-shadow:
+      0 0 0 1.5px #1f1f24,
+      0 0 0 8px #050507,
+      0 60px 120px rgba(0,0,0,.55),
+      0 20px 40px rgba(0,0,0,.4);
+    position:relative;
+    flex-shrink:0;
+  }
+  .iphone .screen{
+    width:100%; height:100%;
+    border-radius:39px;
+    overflow:hidden;
+    position:relative;
+    background:#000;
+  }
+  .iphone .island{
+    position:absolute; top:10px; left:50%; transform:translateX(-50%);
+    width:108px; height:32px; border-radius:18px; background:#000;
+    z-index:50;
+  }
+  .iphone .status{
+    position:absolute; top:0; left:0; right:0; height:54px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px 0; font-size:13px; font-weight:600;
+    z-index:40; pointer-events:none;
+  }
+  .iphone .status .right{display:flex;gap:5px;align-items:center}
+  .iphone .status .right svg{display:block}
+  .iphone .home-indicator{
+    position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+    width:130px; height:4px; border-radius:2px; background:rgba(255,255,255,.35);
+    z-index:40;
+  }
+
+  /* ───── DIRECTION A — APERTURE (editorial dark) ───── */
+  .a-screen{
+    --A-ink:#0B0B0C; --A-paper:#F4F1EA; --A-amber:#E8B873; --A-mute:#8a857c;
+    background:var(--A-ink); color:var(--A-paper);
+    font-family:'Inter',sans-serif;
+    width:100%;height:100%;position:relative;
+  }
+  .a-screen .bg-photo{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 110% 70% at 30% 30%, #6a4a30 0%, #2a1d14 40%, #0a0908 80%);
+  }
+  .a-screen .bg-photo::after{
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 30% 35%, rgba(232,184,115,.25) 0%, transparent 30%),
+      radial-gradient(circle at 70% 65%, rgba(120,80,50,.4) 0%, transparent 35%);
+    mix-blend-mode:screen;
+  }
+  /* faux portrait silhouette */
+  .a-screen .silhouette{
+    position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+    width:75%; height:75%;
+    background:
+      radial-gradient(ellipse 55% 35% at 50% 22%, #d4a575 0%, #8a5a3c 30%, transparent 55%),
+      radial-gradient(ellipse 60% 50% at 50% 70%, #2a1810 0%, #150a05 50%, transparent 80%);
+    filter: blur(2px);
+  }
+  .a-screen .grain{
+    position:absolute;inset:0;opacity:.08;pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .a-screen .vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.6) 100%)}
+  .a-screen .fg{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 28px 110px}
+  .a-screen .eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--A-amber);margin-bottom:18px}
+  .a-screen .eyebrow .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--A-amber);vertical-align:middle;margin-right:8px;box-shadow:0 0 10px var(--A-amber)}
+  .a-screen h1{font-family:'Fraunces',serif;font-weight:300;font-size:42px;line-height:.98;letter-spacing:-.025em;margin-bottom:14px}
+  .a-screen h1 em{font-style:italic;font-weight:300;color:var(--A-amber)}
+  .a-screen p.lede{font-size:14px;line-height:1.45;color:rgba(244,241,234,.7);max-width:240px;margin-bottom:36px}
+  .a-screen .cta{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--A-paper); color:var(--A-ink);
+    padding:18px 22px; border-radius:100px;
+    font-size:14px;font-weight:500;letter-spacing:-.01em;
+  }
+  .a-screen .cta .arrow{
+    width:32px;height:32px;border-radius:50%;background:var(--A-ink);color:var(--A-paper);
+    display:flex;align-items:center;justify-content:center;font-size:16px;
+  }
+  .a-screen .progress{position:absolute;top:78px;left:28px;right:28px;display:flex;gap:6px}
+  .a-screen .progress span{flex:1;height:2px;background:rgba(244,241,234,.15);border-radius:1px}
+  .a-screen .progress span.on{background:var(--A-paper)}
+  .a-screen .focus-mark{position:absolute;top:36%;left:42%;width:54px;height:54px;border:1px solid rgba(232,184,115,.85);border-radius:6px}
+  .a-screen .focus-mark::before,.a-screen .focus-mark::after{content:'';position:absolute;background:var(--A-amber)}
+  .a-screen .focus-mark::before{width:2px;height:8px;left:50%;top:-4px;transform:translateX(-50%)}
+  .a-screen .focus-mark::after{width:8px;height:2px;top:50%;left:-4px;transform:translateY(-50%)}
+  .a-screen .focus-readout{position:absolute;top:calc(36% + 60px);left:42%;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--A-amber);letter-spacing:.1em}
+
+  /* A paywall */
+  .a-paywall{
+    background:var(--A-ink);color:var(--A-paper);font-family:'Inter',sans-serif;
+    width:100%;height:100%;position:relative;display:flex;flex-direction:column;
+  }
+  .a-paywall .top-x{position:absolute;top:60px;right:24px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(244,241,234,.5);font-size:14px;z-index:10}
+  .a-paywall .photo-band{
+    height:240px;position:relative;overflow:hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, #b88660 0%, #5a3a25 40%, #1a1108 80%);
+  }
+  .a-paywall .photo-band::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(to bottom, transparent 50%, var(--A-ink) 100%);
+  }
+  .a-paywall .photo-band .silh{position:absolute;left:50%;bottom:-20px;transform:translateX(-50%);width:65%;height:75%;background:radial-gradient(ellipse 50% 40% at 50% 25%, #d4a575 0%, transparent 50%),radial-gradient(ellipse 55% 45% at 50% 65%, #1a0e08 0%, transparent 75%);filter:blur(1px)}
+  .a-paywall .body{flex:1;padding:24px 28px 0;position:relative;z-index:5;margin-top:-40px}
+  .a-paywall .eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--A-amber);margin-bottom:14px}
+  .a-paywall h1{font-family:'Fraunces',serif;font-weight:300;font-size:32px;line-height:1.0;letter-spacing:-.025em;margin-bottom:8px}
+  .a-paywall h1 em{font-style:italic;color:var(--A-amber)}
+  .a-paywall .sub{font-size:12px;color:rgba(244,241,234,.55);line-height:1.5;margin-bottom:20px}
+  .a-paywall .features{margin-bottom:18px}
+  .a-paywall .feat{display:flex;align-items:center;gap:10px;font-size:12px;padding:6px 0;color:rgba(244,241,234,.85);border-bottom:1px solid rgba(244,241,234,.08)}
+  .a-paywall .feat .ic{width:14px;color:var(--A-amber);font-family:'JetBrains Mono',monospace;font-size:10px}
+  .a-paywall .plans{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+  .a-paywall .plan{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 14px;border-radius:14px;border:1px solid rgba(244,241,234,.12);
+    font-size:12px;
+  }
+  .a-paywall .plan.on{border-color:var(--A-amber);background:rgba(232,184,115,.08)}
+  .a-paywall .plan .left .name{font-weight:500;margin-bottom:2px}
+  .a-paywall .plan .left .mute{color:rgba(244,241,234,.45);font-size:10px}
+  .a-paywall .plan .right{text-align:right}
+  .a-paywall .plan .right .price{font-family:'Fraunces',serif;font-size:16px;font-weight:400}
+  .a-paywall .plan .right .per{color:rgba(244,241,234,.45);font-size:9px;font-family:'JetBrains Mono',monospace}
+  .a-paywall .badge{display:inline-block;padding:2px 6px;border-radius:4px;background:var(--A-amber);color:var(--A-ink);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;margin-left:6px;vertical-align:middle}
+  .a-paywall .cta-row{padding:14px 28px 28px;background:var(--A-ink)}
+  .a-paywall .cta{display:flex;align-items:center;justify-content:center;background:var(--A-paper);color:var(--A-ink);padding:16px;border-radius:100px;font-weight:500;font-size:14px;margin-bottom:10px}
+  .a-paywall .legal{text-align:center;font-size:9px;color:rgba(244,241,234,.4);font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+  .a-paywall .legal a{color:rgba(244,241,234,.6);margin:0 8px}
+
+  /* ───── DIRECTION B — LUMEN (soft creator) ───── */
+  .b-screen{
+    --B-paper:#FFF8F1; --B-ink:#1B1224; --B-plum:#2A1B3D;
+    background:var(--B-paper);color:var(--B-ink);
+    font-family:'Plus Jakarta Sans',sans-serif;
+    width:100%;height:100%;position:relative;overflow:hidden;
+  }
+  .b-screen .mesh{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 80% 0%, #FFB8D9 0%, transparent 50%),
+      radial-gradient(circle at 20% 30%, #C9A8FF 0%, transparent 55%),
+      radial-gradient(circle at 50% 100%, #FFD1A3 0%, transparent 50%),
+      linear-gradient(180deg, #FFE8F0 0%, #F0E0FF 50%, #FFE8D6 100%);
+  }
+  .b-screen .grain{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+  .b-screen .blob1{position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle, rgba(255,184,217,.5) 0%, transparent 70%);top:-60px;left:-60px;filter:blur(40px)}
+  .b-screen .photo-card{
+    position:absolute;top:90px;left:50%;transform:translateX(-50%);
+    width:74%;aspect-ratio:3/4;border-radius:28px;
+    background:
+      linear-gradient(135deg, #C9A8FF 0%, #FFB8D9 50%, #FFD1A3 100%);
+    box-shadow:0 30px 60px rgba(118,80,180,.3),0 8px 20px rgba(118,80,180,.15);
+    overflow:hidden;
+    display:flex;align-items:flex-end;justify-content:center;
+  }
+  .b-screen .photo-card .placeholder{
+    width:90%;height:90%;border-radius:22px;
+    background:
+      radial-gradient(ellipse 50% 30% at 50% 30%, #f4cba0 0%, #d49870 30%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 50% 70%, #6a4a8a 0%, #3a2855 60%, transparent 90%),
+      linear-gradient(135deg,#a888d4,#d4a8b8);
+  }
+  .b-screen .photo-card .pill{
+    position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+    background:rgba(27,18,36,.65);backdrop-filter:blur(20px);
+    color:#fff;padding:8px 14px;border-radius:100px;font-size:11px;font-weight:500;
+    display:flex;align-items:center;gap:6px;
+  }
+  .b-screen .photo-card .pill::before{content:'';width:6px;height:6px;background:#7CFFB2;border-radius:50%;box-shadow:0 0 10px #7CFFB2}
+  .b-screen .copy-block{position:absolute;left:0;right:0;bottom:130px;padding:0 30px;text-align:center}
+  .b-screen .script{font-family:'Caveat',cursive;font-size:18px;color:#7d5fa3;margin-bottom:6px;transform:rotate(-2deg);display:inline-block}
+  .b-screen h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:30px;line-height:1.05;letter-spacing:-.02em;margin-bottom:8px;color:var(--B-plum)}
+  .b-screen p.lede{font-size:13px;line-height:1.5;color:rgba(27,18,36,.6);max-width:240px;margin:0 auto}
+  .b-screen .cta-zone{position:absolute;bottom:36px;left:24px;right:24px}
+  .b-screen .cta{
+    background:var(--B-plum);color:#fff;padding:17px;border-radius:100px;
+    text-align:center;font-weight:600;font-size:14px;
+    box-shadow:0 12px 30px rgba(42,27,61,.35);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .b-screen .cta::after{content:'→';font-weight:400}
+  .b-screen .dots{display:flex;justify-content:center;gap:5px;margin-top:14px}
+  .b-screen .dots span{width:5px;height:5px;border-radius:50%;background:rgba(27,18,36,.2)}
+  .b-screen .dots span.on{width:18px;border-radius:3px;background:var(--B-plum)}
+
+  /* B paywall */
+  .b-paywall{
+    background:linear-gradient(180deg,#F0E0FF 0%, #FFE8F0 100%);
+    color:var(--B-plum);font-family:'Plus Jakarta Sans',sans-serif;
+    width:100%;height:100%;position:relative;overflow:hidden;
+  }
+  .b-paywall .top-x{position:absolute;top:60px;right:24px;width:30px;height:30px;border-radius:50%;background:rgba(42,27,61,.08);display:flex;align-items:center;justify-content:center;color:rgba(42,27,61,.5);font-size:13px;z-index:10}
+  .b-paywall .hero{padding:80px 24px 16px;text-align:center}
+  .b-paywall .badge-pro{
+    display:inline-flex;align-items:center;gap:6px;
+    background:linear-gradient(135deg,#FFD1A3,#FFB8D9);
+    color:#2A1B3D;padding:6px 14px;border-radius:100px;
+    font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;
+    box-shadow:0 6px 16px rgba(255,184,217,.5);
+  }
+  .b-paywall h1{font-weight:700;font-size:30px;letter-spacing:-.02em;line-height:1.05;margin-bottom:6px}
+  .b-paywall h1 em{font-family:'Caveat',cursive;font-style:normal;font-weight:600;color:#7d5fa3;font-size:34px;display:block;line-height:1}
+  .b-paywall .lede{font-size:12px;color:rgba(42,27,61,.6);margin:8px auto 0;max-width:240px;line-height:1.5}
+  .b-paywall .features{padding:18px 24px 8px}
+  .b-paywall .feat{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.55);border-radius:14px;padding:12px 14px;margin-bottom:8px;backdrop-filter:blur(10px);font-size:12px}
+  .b-paywall .feat .ic{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#C9A8FF,#FFB8D9);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0}
+  .b-paywall .plans{padding:0 24px;display:flex;gap:8px;margin-bottom:14px}
+  .b-paywall .plan{
+    flex:1;padding:14px 12px;border-radius:18px;background:rgba(255,255,255,.6);
+    border:1.5px solid transparent;font-size:11px;text-align:center;position:relative;
+  }
+  .b-paywall .plan.on{border-color:var(--B-plum);background:#fff;box-shadow:0 8px 20px rgba(42,27,61,.12)}
+  .b-paywall .plan .name{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:9px;color:rgba(42,27,61,.6);margin-bottom:6px}
+  .b-paywall .plan .price{font-weight:700;font-size:18px;line-height:1}
+  .b-paywall .plan .per{font-size:9px;color:rgba(42,27,61,.5);margin-top:2px}
+  .b-paywall .plan .save{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#FF7A8F;color:#fff;font-size:8px;padding:2px 8px;border-radius:100px;font-weight:700;letter-spacing:.04em}
+  .b-paywall .cta-row{position:absolute;left:0;right:0;bottom:0;padding:14px 24px 32px;background:linear-gradient(to top, #FFE8F0 60%, transparent)}
+  .b-paywall .cta{background:var(--B-plum);color:#fff;text-align:center;padding:16px;border-radius:100px;font-weight:700;font-size:14px;box-shadow:0 14px 30px rgba(42,27,61,.4);margin-bottom:8px}
+  .b-paywall .legal{text-align:center;font-size:9px;color:rgba(42,27,61,.45)}
+
+  /* ───── DIRECTION C — LENS (technical cinematic) ───── */
+  .c-screen{
+    --C-graphite:#0e0e10; --C-paper:#fff; --C-signal:#00E0B8; --C-amber:#FF8B4A;
+    background:#000;color:#fff;font-family:'Inter',sans-serif;
+    width:100%;height:100%;position:relative;overflow:hidden;
+  }
+  .c-screen .photo{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 45%, #4a3a2a 0%, #1a1410 40%, #050404 80%);
+  }
+  .c-screen .photo::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 40% 30% at 50% 30%, #d4a575 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 50% 70%, #2a1810 0%, transparent 75%);
+  }
+  /* viewfinder grid */
+  .c-screen .grid-overlay{position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size:33.33% 33.33%;
+  }
+  .c-screen .corners::before,.c-screen .corners::after,
+  .c-screen .corners-b::before,.c-screen .corners-b::after{
+    content:'';position:absolute;width:18px;height:18px;border:1.5px solid rgba(255,255,255,.5);
+  }
+  .c-screen .corners{position:absolute;top:60px;left:20px;right:20px;height:240px;pointer-events:none}
+  .c-screen .corners::before{top:0;left:0;border-right:none;border-bottom:none}
+  .c-screen .corners::after{top:0;right:0;border-left:none;border-bottom:none}
+  .c-screen .corners-b{position:absolute;bottom:0;left:0;right:0;height:18px}
+  .c-screen .corners-b::before{bottom:0;left:0;border-right:none;border-top:none}
+  .c-screen .corners-b::after{bottom:0;right:0;border-left:none;border-top:none}
+  .c-screen .focus-ring{
+    position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);
+    width:80px;height:80px;border:1.5px solid var(--C-signal);border-radius:50%;
+    box-shadow:0 0 24px rgba(0,224,184,.3);
+  }
+  .c-screen .focus-ring::before,.c-screen .focus-ring::after{content:'';position:absolute;background:var(--C-signal)}
+  .c-screen .focus-ring::before{width:1px;height:14px;left:50%;top:-7px;transform:translateX(-50%)}
+  .c-screen .focus-ring::after{width:14px;height:1px;top:50%;left:-7px;transform:translateY(-50%)}
+  .c-screen .hud-top{position:absolute;top:60px;left:0;right:0;padding:0 22px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:rgba(255,255,255,.55);z-index:5}
+  .c-screen .hud-top .live{display:flex;align-items:center;gap:5px;color:var(--C-signal)}
+  .c-screen .hud-top .live::before{content:'';width:6px;height:6px;background:var(--C-signal);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .c-screen .readout{position:absolute;top:48%;left:54%;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--C-signal);letter-spacing:.06em;line-height:1.5}
+  .c-screen .copy{position:absolute;left:0;right:0;bottom:140px;padding:0 22px}
+  .c-screen .eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--C-signal);margin-bottom:10px}
+  .c-screen h1{font-family:'Inter',sans-serif;font-weight:200;font-size:34px;line-height:1.0;letter-spacing:-.025em;margin-bottom:10px}
+  .c-screen h1 b{font-weight:600}
+  .c-screen p.lede{font-size:12px;line-height:1.5;color:rgba(255,255,255,.5);max-width:230px}
+  .c-screen .controls{position:absolute;left:0;right:0;bottom:40px;padding:0 22px;display:flex;align-items:center;gap:12px}
+  .c-screen .ctrl-pill{flex:1;background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+  .c-screen .shutter{width:50px;height:50px;border-radius:50%;background:var(--C-signal);box-shadow:0 0 0 3px rgba(0,0,0,.6),0 0 0 4px var(--C-signal),0 0 24px rgba(0,224,184,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#000;font-size:18px}
+
+  /* C paywall */
+  .c-paywall{
+    background:#0a0a0c;color:#fff;font-family:'Inter',sans-serif;
+    width:100%;height:100%;position:relative;display:flex;flex-direction:column;
+  }
+  .c-paywall .top-bar{display:flex;justify-content:space-between;align-items:center;padding:60px 22px 0;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.5)}
+  .c-paywall .top-bar .x{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-family:'Inter';font-size:13px}
+  .c-paywall .hero{padding:30px 22px 18px;flex-shrink:0}
+  .c-paywall .hero .label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--C-signal);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+  .c-paywall .hero .label::before{content:'';width:6px;height:6px;background:var(--C-signal);border-radius:50%;box-shadow:0 0 10px var(--C-signal)}
+  .c-paywall h1{font-weight:200;font-size:32px;line-height:1.0;letter-spacing:-.025em;margin-bottom:8px}
+  .c-paywall h1 b{font-weight:600}
+  .c-paywall .lede{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;max-width:260px}
+  .c-paywall .specs{padding:0 22px 14px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);margin:0 22px;border-radius:10px;overflow:hidden}
+  .c-paywall .specs .cell{background:#0a0a0c;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:10px}
+  .c-paywall .specs .cell .k{color:rgba(255,255,255,.4);font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+  .c-paywall .specs .cell .v{color:#fff;font-size:11px;font-weight:500}
+  .c-paywall .specs .cell .v.acc{color:var(--C-signal)}
+  .c-paywall .plans{padding:18px 22px 14px}
+  .c-paywall .plan{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);margin-bottom:8px;font-size:12px;position:relative;
+  }
+  .c-paywall .plan.on{border-color:var(--C-signal);background:rgba(0,224,184,.06)}
+  .c-paywall .plan .name{font-weight:600;margin-bottom:2px}
+  .c-paywall .plan .meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,.45);letter-spacing:.06em}
+  .c-paywall .plan .price{font-weight:600;font-size:14px;text-align:right}
+  .c-paywall .plan .per{font-family:'JetBrains Mono',monospace;font-size:8px;color:rgba(255,255,255,.4);letter-spacing:.06em;margin-top:2px;text-align:right}
+  .c-paywall .plan .tag{position:absolute;top:-7px;left:14px;background:var(--C-signal);color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.08em;padding:2px 6px;border-radius:4px}
+  .c-paywall .cta-row{margin-top:auto;padding:14px 22px 28px}
+  .c-paywall .cta{background:var(--C-signal);color:#000;text-align:center;padding:16px;border-radius:14px;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+  .c-paywall .cta .arrow{font-family:'JetBrains Mono',monospace}
+  .c-paywall .legal{text-align:center;font-family:'JetBrains Mono',monospace;font-size:8px;color:rgba(255,255,255,.35);letter-spacing:.08em}
+
+  /* notes */
+  .notes{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1280px;margin-left:auto;margin-right:auto}
+  .note{padding:18px 20px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
+  .note h4{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .note p{font-size:13px;line-height:1.55;color:var(--ink)}
+  .note p+p{margin-top:8px;color:var(--muted)}
+
+  .footer{max-width:1280px;margin:80px auto 0;padding-top:48px;border-top:1px solid var(--line);text-align:center}
+  .footer p{font-size:14px;color:var(--muted);max-width:560px;margin:0 auto 12px}
+  .footer .key{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);letter-spacing:.1em}
+
+  @media (max-width:920px){
+    .dir-head{grid-template-columns:1fr}
+    .frames{justify-content:flex-start}
+    .notes{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <div class="eyebrow">BLUR · REDESIGN · STAGE 01 / DIRECTIONS</div>
+  <h1>Three directions <em>to focus on.</em></h1>
+  <p>Каждое направление показано на двух ключевых экранах — Welcome (1-й после splash) и Paywall (главная точка монетизации). Изображения — abstract placeholders; реальные портреты сгенерим под выбранную палитру.</p>
+  <div class="meta">
+    <div><b>Stage:</b> Direction lock</div>
+    <div><b>Decisions needed:</b> palette · type · mood</div>
+    <div><b>Next:</b> full inventory in chosen direction</div>
+  </div>
+</header>
+
+<!-- ─────────────  DIRECTION A — APERTURE  ───────────── -->
+<section class="direction">
+  <div class="dir-head">
+    <div class="dir-num">Direction<span class="big">A</span></div>
+    <div class="dir-title">
+      <div class="tag">Editorial · Cinematic · Confident</div>
+      <h2>Aperture <em>— depth as language</em></h2>
+      <p>Большое кинематографичное фото, серифная типографика, тёплый янтарный акцент. Глубина и фокус — не просто фича, а визуальная идентичность. Похоже на фото-журнал, который умеет редактировать.</p>
+    </div>
+    <div class="dir-tokens">
+      <div class="row"><div class="sw" style="background:#0B0B0C"></div><span class="label">ink</span><span class="val">#0B0B0C</span></div>
+      <div class="row"><div class="sw" style="background:#F4F1EA"></div><span class="label">paper</span><span class="val">#F4F1EA</span></div>
+      <div class="row"><div class="sw" style="background:#E8B873"></div><span class="label">amber</span><span class="val">#E8B873</span></div>
+      <div class="row" style="margin-top:14px"><span class="label">display</span><span class="val">Fraunces 300/italic</span></div>
+      <div class="row"><span class="label">ui</span><span class="val">Inter 400/500</span></div>
+      <div class="row"><span class="label">mono</span><span class="val">JetBrains Mono</span></div>
+    </div>
+  </div>
+
+  <div class="frames">
+    <div class="frame-wrap">
+      <div class="iphone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="right">●●●●● ⌒ ▮</span></div>
+          <div class="a-screen">
+            <div class="bg-photo"></div>
+            <div class="silhouette"></div>
+            <div class="grain"></div>
+            <div class="vignette"></div>
+            <div class="focus-mark"></div>
+            <div class="focus-readout">f/1.4 · LOCK</div>
+            <div class="progress"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+            <div class="fg">
+              <div class="eyebrow"><span class="dot"></span>WELCOME · 01 OF 05</div>
+              <h1>Bring focus<br/>to <em>what matters.</em></h1>
+              <p class="lede">Studio-grade blur, made instant. From a single tap to the full lens — yours to control.</p>
+              <div class="cta">Begin <span class="arrow">→</span></div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+      <div class="frame-label">A · Welcome</div>
+    </div>
+
+    <div class="frame-wrap">
+      <div class="iphone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="right">●●●●● ⌒ ▮</span></div>
+          <div class="a-paywall">
+            <div class="top-x">✕</div>
+            <div class="photo-band"><div class="silh"></div></div>
+            <div class="body">
+              <div class="eyebrow">UNLOCK · BLUR PRO</div>
+              <h1>The full <em>lens.</em></h1>
+              <div class="sub">3-day trial. Cancel anytime.</div>
+              <div class="features">
+                <div class="feat"><span class="ic">01</span>AI subject detection · all photos</div>
+                <div class="feat"><span class="ic">02</span>Manual brush · pro precision</div>
+                <div class="feat"><span class="ic">03</span>Restore & re-edit existing blur</div>
+                <div class="feat"><span class="ic">04</span>Export · full resolution, no watermark</div>
+              </div>
+              <div class="plans">
+                <div class="plan on">
+                  <div class="left"><div class="name">Annual <span class="badge">BEST VALUE</span></div><div class="mute">3 days free, then billed yearly</div></div>
+                  <div class="right"><div class="price">$29.99</div><div class="per">/year</div></div>
+                </div>
+                <div class="plan">
+                  <div class="left"><div class="name">Weekly</div><div class="mute">Renews every 7 days</div></div>
+                  <div class="right"><div class="price">$6.99</div><div class="per">/week</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-row">
+              <div class="cta">Start 3-day free trial</div>
+              <div class="legal"><a>Terms</a>·<a>Privacy</a>·<a>Restore</a></div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+      <div class="frame-label">A · Paywall</div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="note"><h4>Why it works</h4><p>Серифная типографика + кинематографичное фото = премиум-восприятие, которое оправдывает цену.</p><p>Янтарь как единственный акцент создаёт инстаграм-узнаваемость (в апсторе видно из миниатюр).</p></div>
+    <div class="note"><h4>Risks</h4><p>Слишком серьёзно для casual user — может отпугнуть аудиторию, которая хочет быстро размыть фон для сторис.</p></div>
+    <div class="note"><h4>Best for</h4><p>Положительный отбор фото-энтузиастов и creators. Хорошо тянет повышенный price-point.</p></div>
+  </div>
+</section>
+
+
+<!-- ─────────────  DIRECTION B — LUMEN  ───────────── -->
+<section class="direction">
+  <div class="dir-head">
+    <div class="dir-num">Direction<span class="big">B</span></div>
+    <div class="dir-title">
+      <div class="tag">Soft · Playful · Creator-friendly</div>
+      <h2>Lumen <em>— glow & gradient</em></h2>
+      <p>Тёплая mesh-палитра (lilac → coral), круглая типографика, мягкие тени. Дружелюбный creator-first язык. Близко к референсу Pico, но более «фотографически» — карточка-фото в центре композиции вместо абстрактного бренда.</p>
+    </div>
+    <div class="dir-tokens">
+      <div class="row"><div class="sw" style="background:linear-gradient(135deg,#FFB8D9,#C9A8FF,#FFD1A3)"></div><span class="label">mesh</span><span class="val">lilac → coral</span></div>
+      <div class="row"><div class="sw" style="background:#FFF8F1"></div><span class="label">cream</span><span class="val">#FFF8F1</span></div>
+      <div class="row"><div class="sw" style="background:#2A1B3D"></div><span class="label">plum</span><span class="val">#2A1B3D</span></div>
+      <div class="row" style="margin-top:14px"><span class="label">display</span><span class="val">Plus Jakarta 700</span></div>
+      <div class="row"><span class="label">accent</span><span class="val">Caveat (handwritten)</span></div>
+      <div class="row"><span class="label">ui</span><span class="val">Plus Jakarta 400/500</span></div>
+    </div>
+  </div>
+
+  <div class="frames">
+    <div class="frame-wrap">
+      <div class="iphone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status" style="color:#2A1B3D"><span>9:41</span><span class="right">●●●●● ⌒ ▮</span></div>
+          <div class="b-screen">
+            <div class="mesh"></div>
+            <div class="blob1"></div>
+            <div class="grain"></div>
+            <div class="photo-card">
+              <div class="placeholder"></div>
+              <div class="pill">Subject locked</div>
+            </div>
+            <div class="copy-block">
+              <div class="script">your story,</div>
+              <h1>in beautiful focus.</h1>
+              <p class="lede">A delightful blur tool that just gets it — fast, fun, gorgeous.</p>
+            </div>
+            <div class="cta-zone">
+              <div class="cta">Get started</div>
+              <div class="dots"><span></span><span class="on"></span><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="home-indicator" style="background:rgba(42,27,61,.4)"></div>
+        </div>
+      </div>
+      <div class="frame-label">B · Welcome</div>
+    </div>
+
+    <div class="frame-wrap">
+      <div class="iphone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status" style="color:#2A1B3D"><span>9:41</span><span class="right">●●●●● ⌒ ▮</span></div>
+          <div class="b-paywall">
+            <div class="top-x">✕</div>
+            <div class="hero">
+              <div class="badge-pro">✦ Blur Pro</div>
+              <h1>Unlock everything <em>you'll love</em></h1>
+              <div class="lede">3 days free, then $29.99/year. Cancel anytime — no awkward.</div>
+            </div>
+            <div class="features">
+              <div class="feat"><span class="ic">✦</span>AI auto-blur in one tap</div>
+              <div class="feat"><span class="ic">✿</span>Brush, lasso & shape tools</div>
+              <div class="feat"><span class="ic">⌘</span>HD export · zero watermarks</div>
+            </div>
+            <div class="plans">
+              <div class="plan">
+                <div class="name">Weekly</div>
+                <div class="price">$6.99</div>
+                <div class="per">per week</div>
+              </div>
+              <div class="plan on">
+                <div class="save">SAVE 70%</div>
+                <div class="name">Yearly</div>
+                <div class="price">$29.99</div>
+                <div class="per">$0.58 / week</div>
+              </div>
+              <div class="plan">
+                <div class="name">Lifetime</div>
+                <div class="price">$79</div>
+                <div class="per">one-time</div>
+              </div>
+            </div>
+            <div class="cta-row">
+              <div class="cta">Try free for 3 days →</div>
+              <div class="legal">Terms · Privacy · Restore</div>
+            </div>
+          </div>
+          <div class="home-indicator" style="background:rgba(42,27,61,.4)"></div>
+        </div>
+      </div>
+      <div class="frame-label">B · Paywall</div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="note"><h4>Why it works</h4><p>Тёплый, дружелюбный, low-pressure. Снижает барьер для casual creators (Instagram/TikTok).</p><p>Mesh-gradient узнаваем в миниатюрах App Store.</p></div>
+    <div class="note"><h4>Risks</h4><p>Похоже на популярный AI-photo tropes (Lensa, Pico). Сложнее differentiate. Может ощущаться «дешевле».</p></div>
+    <div class="note"><h4>Best for</h4><p>Соцсетевые крейторы, casual users, женская аудитория 18-34.</p></div>
+  </div>
+</section>
+
+
+<!-- ─────────────  DIRECTION C — LENS  ───────────── -->
+<section class="direction">
+  <div class="dir-head">
+    <div class="dir-num">Direction<span class="big">C</span></div>
+    <div class="dir-title">
+      <div class="tag">Technical · Pro-instrument · Cinematic</div>
+      <h2>Lens <em>— camera-grade controls</em></h2>
+      <p>UI как видоискатель: focus-ring, technical readouts, mono-типографика, signal-teal акцент. Юзер чувствует себя за реальным инструментом. Близко к Halide / Darkroom, но при этом доступно для casual через onboarding.</p>
+    </div>
+    <div class="dir-tokens">
+      <div class="row"><div class="sw" style="background:#0e0e10"></div><span class="label">graphite</span><span class="val">#0E0E10</span></div>
+      <div class="row"><div class="sw" style="background:#fff"></div><span class="label">paper</span><span class="val">#FFFFFF</span></div>
+      <div class="row"><div class="sw" style="background:#00E0B8"></div><span class="label">signal</span><span class="val">#00E0B8</span></div>
+      <div class="row" style="margin-top:14px"><span class="label">display</span><span class="val">Inter 200/600</span></div>
+      <div class="row"><span class="label">mono</span><span class="val">JetBrains Mono 400/500</span></div>
+      <div class="row"><span class="label">aesthetic</span><span class="val">HUD · grid · readouts</span></div>
+    </div>
+  </div>
+
+  <div class="frames">
+    <div class="frame-wrap">
+      <div class="iphone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="right">●●●●● ⌒ ▮</span></div>
+          <div class="c-screen">
+            <div class="photo"></div>
+            <div class="grid-overlay"></div>
+            <div class="hud-top">
+              <span>BLUR · v2.0</span>
+              <span class="live">PREVIEW LIVE</span>
+              <span>01/05</span>
+            </div>
+            <div class="corners"></div>
+            <div class="focus-ring"></div>
+            <div class="readout">FOCUS LOCKED<br/>SUBJECT · PORTRAIT<br/>DEPTH · 0.42m</div>
+            <div class="copy">
+              <div class="eyebrow">★ INTRODUCING</div>
+              <h1>Studio depth.<br/><b>Pocket size.</b></h1>
+              <p class="lede">Pro-grade blur with the precision of a real lens — built for everyone.</p>
+            </div>
+            <div class="controls">
+              <div class="ctrl-pill">SKIP</div>
+              <div class="shutter">→</div>
+              <div class="ctrl-pill" style="text-align:right">NEXT</div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+      <div class="frame-label">C · Welcome</div>
+    </div>
+
+    <div class="frame-wrap">
+      <div class="iphone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="right">●●●●● ⌒ ▮</span></div>
+          <div class="c-paywall">
+            <div class="top-bar">
+              <span>BLUR · PRO PLAN</span>
+              <span class="x">✕</span>
+            </div>
+            <div class="hero">
+              <div class="label">UNLOCK FULL SPEC</div>
+              <h1>The full <b>lens.</b></h1>
+              <div class="lede">3-day trial. Auto-renews unless canceled. Full control, no compromises.</div>
+            </div>
+            <div class="specs">
+              <div class="cell"><div class="k">AI DETECT</div><div class="v acc">ENABLED</div></div>
+              <div class="cell"><div class="k">RESOLUTION</div><div class="v">4K · ORIGINAL</div></div>
+              <div class="cell"><div class="k">BRUSH MODES</div><div class="v acc">5 / 5</div></div>
+              <div class="cell"><div class="k">WATERMARK</div><div class="v">REMOVED</div></div>
+            </div>
+            <div class="plans">
+              <div class="plan on">
+                <span class="tag">SAVE 70%</span>
+                <div><div class="name">YEARLY</div><div class="meta">3-DAY TRIAL · CANCEL ANYTIME</div></div>
+                <div><div class="price">$29.99</div><div class="per">$0.58/WK</div></div>
+              </div>
+              <div class="plan">
+                <div><div class="name">WEEKLY</div><div class="meta">RENEWS EVERY 7 DAYS</div></div>
+                <div><div class="price">$6.99</div><div class="per">PER WEEK</div></div>
+              </div>
+            </div>
+            <div class="cta-row">
+              <div class="cta">START FREE TRIAL <span class="arrow">→</span></div>
+              <div class="legal">TERMS · PRIVACY · RESTORE</div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+      <div class="frame-label">C · Paywall</div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="note"><h4>Why it works</h4><p>Differentiated против AI-tropes — выглядит как pro-инструмент, не как очередной AI-photo фильтр.</p><p>Signal-teal + mono создаёт «технологическую» доверительность.</p></div>
+    <div class="note"><h4>Risks</h4><p>Может выглядеть слишком pro/нишево для casual user. Требует более внимательного onboarding-копирайтинга.</p></div>
+    <div class="note"><h4>Best for</h4><p>Tech-savvy users, photographers, мужская аудитория 22-40. Хороший fit для apsell на nano-banana AI-edit фичу позже.</p></div>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <p>Дай знать, какое направление ближе — или сочетание (например, типографика A + палитра C). После lock’а раскатываю на полный inventory из 16 онбординг-экранов + 8 экранов основного приложения.</p>
+  <div class="key">[ DIRECTIONS · A / B / C ]</div>
+</footer>
+
+</body>
+</html>
